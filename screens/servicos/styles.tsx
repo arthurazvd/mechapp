@@ -24,7 +24,7 @@ export const servStyles = StyleSheet.create({
 
   crudButtons: {
     flexDirection: 'row',
-    columnGap: 10,
+    columnGap: '2%',
     width: '100%',
     justifyContent: 'center',
     marginTop: 25,
