@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text,} from 'react-native';
 import { globalStyles } from '../../styles/globalStyles';
 import { CustomInput } from '../../components/CustomInput';
 import { ExpandingTextArea } from '../../components/ExpandingTextArea';
@@ -121,11 +121,11 @@ const CadastrarServico = ({ navigation }: any) => {
                 </View>
             <View style={servStyles.crudButtons}>
                 <CustomButton 
-                    style={{width: '40%', maxWidth: 200, height: 50}} 
+                    style={{width: '39%', maxWidth: 193, height: 50}} 
                     title="Cadastrar" 
                     onPress={handleCadastrar} />
                 <CustomButton 
-                    style={{width: '40%', maxWidth: 200, height: 50}} 
+                    style={{width: '39%', maxWidth: 193, height: 50}} 
                     title="Cancelar" 
                     onPress={handleCadastrar} />
             </View>

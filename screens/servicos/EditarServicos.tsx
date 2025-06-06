@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, } from 'react-native';
 import { globalStyles } from '../../styles/globalStyles';
 import { CustomInput } from '../../components/CustomInput';
 import { ExpandingTextArea } from '../../components/ExpandingTextArea';
@@ -51,7 +51,7 @@ const EditarServico = ({ navigation }: any) => {
         </View>
               
         <View style={servStyles.initialBottom}>
-            <Text style={globalStyles.title}>Cadastrar Serviço</Text>
+            <Text style={globalStyles.title}>Editar Serviço</Text>
             <CustomInput
                 label="Nome"
                 placeholder="Digite o nome do serviço"
