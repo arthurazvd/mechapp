@@ -1,8 +1,9 @@
 import React from 'react';
-import LoginScreen from './screens/login'; // Importa do arquivo que tu acabou de criar
+import LoginScreen from './screens/login';
+import CadastrarServico from './screens/servicos';
 
 const App = () => {
-  return <LoginScreen />;
+  return <CadastrarServico />;
 };
 
 export default App;

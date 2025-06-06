@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   View,
   Text,
@@ -9,12 +8,14 @@ import {
   TextStyle,
   ViewStyle,
 } from 'react-native';
+import { globalStyles } from '../styles/globalStyles';
+
 
 interface CustomInputProps extends TextInputProps {
   onlyNumbers?: boolean;
   inputStyle?: StyleProp<TextStyle>;
-  containerStyle?: StyleProp<ViewStyle>; // Estilo da View externa (centralizadora)
-  contentStyle?: StyleProp<ViewStyle>;   // NOVO: estilo da View interna (label + input)
+  containerStyle?: StyleProp<ViewStyle>; 
+  contentStyle?: StyleProp<ViewStyle>; 
   label?: string;
 }
 
@@ -25,6 +26,7 @@ export const CustomInput: React.FC<CustomInputProps> = ({
   inputStyle,
   containerStyle,
   contentStyle,
+  style,
   label,
   ...rest
 }) => {
@@ -34,9 +36,9 @@ export const CustomInput: React.FC<CustomInputProps> = ({
   };
 
   return (
-    <View style={[styles.outerContainer, containerStyle]}>
+    <View style={[styles.outerContainer, style]}>
       <View style={[styles.innerContainer, contentStyle]}>
-        {label && <Text style={styles.label}>{label}</Text>}
+        {label && <Text style={globalStyles.label}>{label}</Text>}
         <TextInput
           value={value}
           onChangeText={handleChange}
@@ -51,18 +53,12 @@ export const CustomInput: React.FC<CustomInputProps> = ({
 const styles = StyleSheet.create({
   outerContainer: {
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 10,
     width: '100%',
   },
   innerContainer: {
     maxWidth: 400,
     width: '100%',
-  },
-  label: {
-    fontSize: 14,
-    marginBottom: 6,
-    color: '#888',
-    textAlign: 'left',
   },
   input: {
     height: 50,

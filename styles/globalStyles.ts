@@ -45,4 +45,10 @@ export const globalStyles = StyleSheet.create({
     
   },
 
+  label: {
+    fontSize: 14,
+    marginBottom: 6,
+    color: '#888',
+    textAlign: 'left',
+  },
 });

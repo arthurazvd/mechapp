@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Alert } from 'react-native';
+import { View, Text, Alert } from 'react-native';
 import { globalStyles } from '../../styles/globalStyles';
 import CustomButton from '../../components/CustomButton';
 import { CustomInput } from '../../components/CustomInput';

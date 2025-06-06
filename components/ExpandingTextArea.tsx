@@ -11,12 +11,15 @@ import {
   TextInputProps,
 } from 'react-native';
 import React, { useState } from 'react';
+import { globalStyles } from '../styles/globalStyles';
+
 
 interface ExpandingTextAreaProps extends TextInputProps {
   value: string;
   onChangeText: (text: string) => void;
   label?: string;
-  containerStyle?: StyleProp<ViewStyle>;
+  containerStyle?: StyleProp<ViewStyle>; // estilo da View externa (centralizadora)
+  contentStyle?: StyleProp<ViewStyle>;   // estilo da View interna (controla largura)
   inputStyle?: StyleProp<TextStyle>;
 }
 
@@ -26,6 +29,7 @@ export const ExpandingTextArea: React.FC<ExpandingTextAreaProps> = ({
   label,
   placeholder = 'Digite aqui...',
   containerStyle,
+  contentStyle,
   inputStyle,
   ...rest
 }) => {
@@ -38,41 +42,43 @@ export const ExpandingTextArea: React.FC<ExpandingTextAreaProps> = ({
   };
 
   return (
-    <View style={[styles.container, containerStyle]}>
-      {label && <Text style={styles.label}>{label}</Text>}
-      <TextInput
-        value={value}
-        onChangeText={onChangeText}
-        placeholder={placeholder}
-        multiline
-        onContentSizeChange={handleContentSizeChange}
-        style={[
-          styles.textArea,
-          { height: Math.max(100, height) },
-          inputStyle,
-        ]}
-        textAlignVertical="top"
-        {...rest}
-      />
+    <View style={[styles.outerContainer, containerStyle]}>
+      <View style={[styles.innerContainer, contentStyle]}>
+        {label && <Text style={globalStyles.label}>{label}</Text>}
+        <TextInput
+          value={value}
+          onChangeText={onChangeText}
+          placeholder={placeholder}
+          multiline
+          onContentSizeChange={handleContentSizeChange}
+          style={[
+            styles.textArea,
+            { height: Math.max(100, height) },
+            inputStyle,
+          ]}
+          textAlignVertical="top"
+          {...rest}
+        />
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    width: '100%',
+  outerContainer: {
+    alignItems: 'center',
     marginBottom: 16,
+    width: '80%',
   },
-  label: {
-    fontSize: 14,
-    marginBottom: 6,
-    color: '#888',
+  innerContainer: {
+    width: '100%',
+    maxWidth: 400,
   },
   textArea: {
     backgroundColor: '#242424',
     borderRadius: 8,
     padding: 16,
-    fontSize: 16,
+
     color: '#868686',
   },
 });
