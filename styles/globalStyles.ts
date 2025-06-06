@@ -1,4 +1,4 @@
-import { Button, StyleSheet } from 'react-native';
+import { Button, StyleSheet, TextInput } from 'react-native';
 
 export const globalStyles = StyleSheet.create({
   container: {
@@ -6,20 +6,26 @@ export const globalStyles = StyleSheet.create({
     backgroundColor: '#151515',
     justifyContent: 'center',
   },
+
   title: {
-    fontSize: 30,
+    fontSize: 40,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 20,
     color: 'white',
   },
-  input: {
-    height: 50,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    marginBottom: 15,
+
+  link: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: 'white',
+  },
+
+  text:{
+    fontSize: 15,
+    textAlign: 'center',
+    color: '#868686',
   },
 
   initialTop: {
@@ -28,16 +34,15 @@ export const globalStyles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#A10000',
     height: 100,
-    borderBottomRightRadius: 40,
-    borderBottomLeftRadius: 40,
+    borderBottomLeftRadius: 80,
   },
 
   initialBottom: {
-    flex: 1,
+    flex: 1.5,
     justifyContent: 'center',
     alignItems: 'center',
     rowGap: 10,
-
+    
   },
 
 });
