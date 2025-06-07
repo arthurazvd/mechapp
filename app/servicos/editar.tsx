@@ -1,22 +1,28 @@
 import React, { useState } from 'react';
-import { View, Text,} from 'react-native';
-import { globalStyles } from '../../styles/globalStyles';
-import { CustomInput } from '../../components/CustomInput';
-import { ExpandingTextArea } from '../../components/ExpandingTextArea';
-import CustomButton from '../../components/CustomButton';
-import { servStyles } from './styles';
+import { View, Text, } from 'react-native';
+import { useRouter } from 'expo-router';
 import { Picker } from '@react-native-picker/picker';
-import Checkbox from 'expo-checkbox';
-import { formatarPreco } from '../../utils/formatters';
+import { Checkbox } from 'expo-checkbox';
 import { Image } from 'react-native';
 
-const CadastrarServico = ({ navigation }: any) => {
-    const [nome, setNome] = useState('');
-    const [descricao, setDescricao] = useState('');
-    const [categoria, setCategoria] = useState('');
-    const [tempoEstimado, setTempoEstimado] = useState('');
-    const [precoMin, setPrecoMin] = useState('');
-    const [precoMax, setPrecoMax] = useState('');
+import { CustomInput } from '../../components/CustomInput';
+import { ExpandingTextArea } from '../../components/ExpandingTextArea';
+import { CustomButton } from '../../components/CustomButton';
+
+import { globalStyles } from '../../styles/globalStyles';
+import { servStyles } from './styles';
+import { formatarPreco } from '../../utils/formatters';
+
+
+const EditarServico = () => {
+    const router = useRouter();
+
+    const [nome, setNome] = useState('Troca de Oléo');
+    const [descricao, setDescricao] = useState('Substituição do óleo do motor por um novo, garantindo a lubrificação adequada das peças internas e o bom desempenho do veículo. Inclui verificação e, se necessário, troca do filtro de óleo. Recomendado conforme a quilometragem ou tempo de uso.');
+    const [categoria, setCategoria] = useState('mecanica');
+    const [tempoEstimado, setTempoEstimado] = useState('1');
+    const [precoMin, setPrecoMin] = useState('100');
+    const [precoMax, setPrecoMax] = useState('200');
     const [checked, setChecked] = useState(false);
 
 
@@ -30,7 +36,7 @@ const CadastrarServico = ({ navigation }: any) => {
       setPrecoMax(precoFormatado);
     };
 
-    const handleCadastrar = () => {
+    const handleEditar = () => {
         console.log({
         nome,
         descricao,
@@ -39,7 +45,7 @@ const CadastrarServico = ({ navigation }: any) => {
         precoMin,
         precoMax
         });
-        navigation.goBack();
+    router.back(); 
     };
 
 
@@ -51,10 +57,11 @@ const CadastrarServico = ({ navigation }: any) => {
         </View>
               
         <View style={servStyles.initialBottom}>
-            <Text style={globalStyles.title}>Cadastrar Serviço</Text>
+            <Text style={globalStyles.title}>Editar Serviço</Text>
             <CustomInput
                 label="Nome"
                 placeholder="Digite o nome do serviço"
+                value={nome}
                 onChangeText={setNome}
                 contentStyle={{ width: '80%', maxWidth: 400 }}
             />
@@ -121,13 +128,17 @@ const CadastrarServico = ({ navigation }: any) => {
                 </View>
             <View style={servStyles.crudButtons}>
                 <CustomButton 
-                    style={{width: '39%', maxWidth: 193, height: 50}} 
-                    title="Cadastrar" 
-                    onPress={handleCadastrar} />
+                    style={{width: '25%', maxWidth: 127, height: 50}} 
+                    title="Salvar" 
+                    onPress={() => router.back()} />
                 <CustomButton 
-                    style={{width: '39%', maxWidth: 193, height: 50}} 
+                    style={{width: '25%', maxWidth: 127, height: 50}} 
+                    title="Deletar" 
+                    onPress={() => router.back()} />
+                <CustomButton 
+                    style={{width: '25%', maxWidth: 127, height: 50}} 
                     title="Cancelar" 
-                    onPress={handleCadastrar} />
+                    onPress={() => router.back()} />
             </View>
 
         </View>
@@ -136,4 +147,4 @@ const CadastrarServico = ({ navigation }: any) => {
 };
 
 
-export default CadastrarServico;
+export default EditarServico;
