@@ -9,7 +9,7 @@ interface Props {
   buttonStyle?: object;
 }
 
-const ImagePickerInput = ({ imagem, setImagem, containerStyle, buttonStyle }: Props) => {
+export const ImagePickerInput = ({ imagem, setImagem, containerStyle, buttonStyle }: Props) => {
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {

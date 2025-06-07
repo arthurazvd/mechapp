@@ -6,7 +6,7 @@ interface Props {
   style?: ViewStyle;
 }
 
-const CustomButton: React.FC<Props> = ({ title, onPress, style }) => {
+export const CustomButton: React.FC<Props> = ({ title, onPress, style }) => {
   return (
     <TouchableOpacity style={[styles.button, style]} onPress={onPress}>
       <Text style={styles.text}>{title}</Text>

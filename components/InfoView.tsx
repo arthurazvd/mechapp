@@ -5,7 +5,7 @@ interface InfoViewProps {
   value: string;
 }
 
-const InfoView = ({ label, value }: InfoViewProps) => {
+export const InfoView = ({ label, value }: InfoViewProps) => {
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
