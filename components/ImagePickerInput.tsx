@@ -49,18 +49,21 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     marginTop: 16,
+    width: '100%',
   },
+  
   button: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#ccc',
+    backgroundColor:'#242424',
     borderRadius: 8,
-    padding: 10,
+    padding: 20,
     width: '80%',
+    height: 50,
     maxWidth: 400,
     justifyContent: 'space-between',
   },
+  
   preview: {
     width: 30,
     height: 30,
