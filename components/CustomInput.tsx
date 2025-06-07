@@ -1,8 +1,22 @@
-import { TextInput, StyleSheet, TextInputProps, StyleProp, TextStyle } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TextInputProps,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
+import { globalStyles } from '../styles/globalStyles';
+
 
 interface CustomInputProps extends TextInputProps {
   onlyNumbers?: boolean;
   inputStyle?: StyleProp<TextStyle>;
+  containerStyle?: StyleProp<ViewStyle>; 
+  contentStyle?: StyleProp<ViewStyle>; 
+  label?: string;
 }
 
 export const CustomInput: React.FC<CustomInputProps> = ({
@@ -10,6 +24,10 @@ export const CustomInput: React.FC<CustomInputProps> = ({
   value,
   onChangeText,
   inputStyle,
+  containerStyle,
+  contentStyle,
+  style,
+  label,
   ...rest
 }) => {
   const handleChange = (text: string) => {
@@ -18,16 +36,30 @@ export const CustomInput: React.FC<CustomInputProps> = ({
   };
 
   return (
-    <TextInput
-      value={value}
-      onChangeText={handleChange}
-      style={[styles.input, inputStyle]}
-      {...rest}
-    />
+    <View style={[styles.outerContainer, style]}>
+      <View style={[styles.innerContainer, contentStyle]}>
+        {label && <Text style={globalStyles.label}>{label}</Text>}
+        <TextInput
+          value={value}
+          onChangeText={handleChange}
+          style={[styles.input, inputStyle]}
+          {...rest}
+        />
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  outerContainer: {
+    alignItems: 'center',
+    marginBottom: 10,
+    width: '100%',
+  },
+  innerContainer: {
+    maxWidth: 400,
+    width: '100%',
+  },
   input: {
     height: 50,
     borderRadius: 8,

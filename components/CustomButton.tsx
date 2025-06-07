@@ -6,7 +6,7 @@ interface Props {
   style?: ViewStyle;
 }
 
-const CustomButton: React.FC<Props> = ({ title, onPress, style }) => {
+export const CustomButton: React.FC<Props> = ({ title, onPress, style }) => {
   return (
     <TouchableOpacity style={[styles.button, style]} onPress={onPress}>
       <Text style={styles.text}>{title}</Text>
@@ -17,10 +17,9 @@ const CustomButton: React.FC<Props> = ({ title, onPress, style }) => {
 const styles = StyleSheet.create({
   button: {
     backgroundColor: '#A10000',
-    paddingVertical: 12,
-    paddingHorizontal: 24,
     borderRadius: 8,
     alignItems: 'center',
+    justifyContent:'center',
   },
   text: {
     color: '#fff',

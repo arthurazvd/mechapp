@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Alert } from 'react-native';
+import { View, Text, Alert } from 'react-native';
 import { globalStyles } from '../../styles/globalStyles';
 import CustomButton from '../../components/CustomButton';
 import { CustomInput } from '../../components/CustomInput';
@@ -22,7 +22,7 @@ const LoginScreen = () => {
   return (
     <View style={globalStyles.container}>
         <View style={globalStyles.initialTop}>
-            <Image source={require('../../assets/logo.png')} style={{ width: 150, height: 150 }}
+            <Image source={require('../../assets/logo-vertical.png')} style={{ width: 170, height: 190 }}
   resizeMode="contain"/>
         </View>
               
@@ -30,9 +30,10 @@ const LoginScreen = () => {
           <Text style={globalStyles.title}>Login</Text>
           <CustomInput
             placeholder="E-mail"
+            label="E-mail"
             value={email}
             onChangeText={setEmail}
-            inputStyle={{ width: '80%', maxWidth: 400, height: 50 }}
+            contentStyle={{ width: '80%', maxWidth: 400 }}
           />
           <PasswordInput 
             placeholder="Senha"
