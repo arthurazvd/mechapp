@@ -59,7 +59,6 @@ erDiagram
         INT client_id FK
         INT servico_id FK
         DATE data
-        TIME hora
         ENUM status
     }
 
