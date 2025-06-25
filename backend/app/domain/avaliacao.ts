@@ -44,7 +44,7 @@ export class Avaliacao implements AvaliacaoAbstrata {
   static create(avaliacao: AvaliacaoAbstrata): void {
     try {
       // TO DO: Registrar avaliação no banco de dados
-    } catch {
+    } catch (error) {
       // TO DO: Tratamento de erros na criação
     }
   }
@@ -58,7 +58,7 @@ export class Avaliacao implements AvaliacaoAbstrata {
   save(): void {
     try {
       // TO DO: Salvar alterações da avaliação
-    } catch {
+    } catch (error) {
       // TO DO: Tratamento de erros na atualização
     }
   }
@@ -67,7 +67,7 @@ export class Avaliacao implements AvaliacaoAbstrata {
   delete(): void {
     try {
       // TO DO: Excluir avaliação permanentemente
-    } catch {
+    } catch (error) {
       // TO DO: Tratamento de erros na exclusão
     }
   }

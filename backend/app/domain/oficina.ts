@@ -31,7 +31,7 @@ export class Oficina implements OficinaAbstrata {
   static create(oficina: OficinaAbstrata): void {
     try {
       // TO DO: Adicionando oficina ao banco de dados
-    } catch {
+    } catch (error) {
       // TO DO: Tratando possíveis erros
     }
   }
@@ -45,7 +45,7 @@ export class Oficina implements OficinaAbstrata {
   save(): void {
     try {
       // TO DO: Salvar estado atual da oficina
-    } catch {
+    } catch (error) {
       // TO DO: Tratando possíveis erros
     }
   }
@@ -54,7 +54,7 @@ export class Oficina implements OficinaAbstrata {
   delete(): void {
     try {
       // TO DO: Excluindo oficina
-    } catch {
+    } catch (error) {
       // TO DO: Tratando possíveis erros
     }
   }

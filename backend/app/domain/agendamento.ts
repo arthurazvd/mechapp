@@ -44,7 +44,7 @@ export class Agendamento implements AgendamentoAbstrato {
   static create(agendamento: AgendamentoAbstrato): void {
     try {
       // TO DO: Adicionando agendamento ao banco de dados
-    } catch {
+    } catch (error) {
       // TO DO: Tratando possíveis erros
     }
   }
@@ -58,7 +58,7 @@ export class Agendamento implements AgendamentoAbstrato {
   save(): void {
     try {
       // TO DO: Atualizando agendamento no banco
-    } catch {
+    } catch (error) {
       // TO DO: Tratando possíveis erros
     }
   }
@@ -67,7 +67,7 @@ export class Agendamento implements AgendamentoAbstrato {
   delete(): void {
     try {
       // TO DO: Removendo agendamento do sistema
-    } catch {
+    } catch (error) {
       // TO DO: Tratando possíveis erros
     }
   }
@@ -75,9 +75,8 @@ export class Agendamento implements AgendamentoAbstrato {
   // Método adicional sugerido para mudança de status
   atualizarStatus(novoStatus: string): void {
     try {
-      this.status = novoStatus;
       // TO DO: Persistir mudança de status
-    } catch {
+    } catch (error) {
       // TO DO: Tratando possíveis erros
     }
   }

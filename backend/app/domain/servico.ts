@@ -39,7 +39,7 @@ export class Servico implements ServicoAbstrato {
   static create(servico: ServicoAbstrato): void {
     try {
       // TO DO: Adicionando serviço ao banco de dados
-    } catch {
+    } catch (error) {
       // TO DO: Tratando possíveis erros
     }
   }
@@ -53,7 +53,7 @@ export class Servico implements ServicoAbstrato {
   save(): void {
     try {
       // TO DO: Salvar estado atual do serviço
-    } catch {
+    } catch (error) {
       // TO DO: Tratando possíveis erros
     }
   }
@@ -62,7 +62,7 @@ export class Servico implements ServicoAbstrato {
   delete(): void {
     try {
       // TO DO: Excluindo serviço
-    } catch {
+    } catch (error) {
       // TO DO: Tratando possíveis erros
     }
   }

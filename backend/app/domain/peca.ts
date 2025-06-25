@@ -33,7 +33,7 @@ export class Peca implements PecaAbstrata {
   static create(peca: PecaAbstrata): void {
     try {
       // TO DO: Adicionando peça ao banco de dados
-    } catch {
+    } catch (error) {
       // TO DO: Tratando possíveis erros
     }
   }
@@ -47,7 +47,7 @@ export class Peca implements PecaAbstrata {
   save(): void {
     try {
       // TO DO: Salvar estado atual da peça
-    } catch {
+    } catch (error) {
       // TO DO: Tratando possíveis erros
     }
   }
@@ -56,7 +56,7 @@ export class Peca implements PecaAbstrata {
   delete(): void {
     try {
       // TO DO: Excluindo peça
-    } catch {
+    } catch (error) {
       // TO DO: Tratando possíveis erros
     }
   }

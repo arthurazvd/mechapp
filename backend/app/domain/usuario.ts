@@ -1,6 +1,8 @@
+import { client } from "../database/connection";
+
 export enum TipoUsuario {
   CLIENTE = "CLIENTE",
-  BARBEIRO = "BARBEIRO",
+  MECANICO = "MECÂNICO",
 }
 
 export interface UsuarioAbstrato {
@@ -38,7 +40,8 @@ export class Usuario implements UsuarioAbstrato {
   static create(usuario: UsuarioAbstrato): void {
     try {
       // TO DO: Adicionando usuário ao banco de dados
-    } catch {
+      console.log("Criando usuário...");
+    } catch (error) {
       // TO DO: Tratando possíveis erros
     }
   }
@@ -46,13 +49,28 @@ export class Usuario implements UsuarioAbstrato {
   // Fução estática para recuperar um usuário existente
   static get(id: number): Usuario {
     // TO DO: Recuperando usuário a partir de um identificador
+    console.log("Encontrado usuário...");
+    return new Usuario(
+      "Usuário Teste",
+      "usuario@teste.com.br",
+      "testador_de_ilusoes",
+      TipoUsuario.MECANICO
+    );
+  }
+
+  static login(email: string, password: string): any {
+    const result = client.query(
+      `SELECT * FROM usuarios u WHERE u.email = ${email} AND u.password = ${password}`
+    );
+    console.log(result);
   }
 
   // Função para salvar o estado atual do usuário
   save(): void {
     try {
       // TO DO: Salvar estado atual do usuário
-    } catch {
+      console.log("Salvando usuário...");
+    } catch (error) {
       // TO DO: Tratando possíveis erros
     }
   }
@@ -61,7 +79,8 @@ export class Usuario implements UsuarioAbstrato {
   delete(): void {
     try {
       //  TO DO: Excluindo usuário
-    } catch {
+      console.log("Excluindo usuário...");
+    } catch (error) {
       // TO DO: Traando possíveis erros
     }
   }
