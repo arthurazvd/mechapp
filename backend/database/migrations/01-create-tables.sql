@@ -6,7 +6,7 @@ CREATE TYPE status_agendamento AS ENUM(
 
 -- Criando usuário
 CREATE TABLE IF NOT EXISTS usuarios (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     senha VARCHAR(255) NOT NULL,
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
 
 -- Criando oficina
 CREATE TABLE IF NOT EXISTS oficinas (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY,
     usuario_id INT,
     nome VARCHAR(100) NOT NULL,
     cnpj VARCHAR(14) NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS oficinas (
 
 -- Criando peça
 CREATE TABLE IF NOT EXISTS pecas (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     descricao TEXT,
     quantidade INT NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS pecas (
 
 -- Criando serviço
 CREATE TABLE IF NOT EXISTS servicos (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY,
     oficina_id INT NOT NULL,
     nome VARCHAR(100) NOT NULL,
     descricao TEXT,
@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS servicos (
 
 -- Criando agendamento
 CREATE TABLE IF NOT EXISTS agendamentos (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY,
     cliente_id INT,
     servico_id INT NOT NULL,
     data TIMESTAMP NOT NULL,
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS agendamentos (
 
 -- Criando avaliação
 CREATE TABLE IF NOT EXISTS avaliacoes (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY,
     cliente_id INT NOT NULL,
     servico_id INT NOT NULL,
     nota INT NOT NULL,

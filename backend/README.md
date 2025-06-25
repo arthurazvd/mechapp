@@ -9,7 +9,7 @@ Antes de tudo, certifique-se que o banco de dados esteja rodando e que as variá
 - Crie um _virtual environment_ para a sua máquina. Recomendo o nome `.venv`
 
 ```python
-pip venv -m <nome-do-ambiente>
+pip -m venv <nome-do-ambiente>
 ```
 
 - Instale o `requirements.txt` na sua máquina virtual.
