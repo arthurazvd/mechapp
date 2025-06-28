@@ -1,14 +1,14 @@
 from enum import Enum
 
-class TipoUsuario(Enum):
-    CLIENTE = "CLIENTE"
-    MECANICO = "MECANICO"
+class TipoUsuario(str, Enum):
+    CLIENTE = "cliente"
+    MECANICO = "mecanico"
 
-class StatusAgendamento(Enum):
-    PENDENTE = "PENDENTE"
-    CONFIRMADO = "CONFIRMADO"
-    CANCELADO = "CANCELADO"
-    FINALIZADO = "FINALIZADO"
+class StatusAgendamento(str, Enum):
+    PENDENTE = "pendente"
+    CONFIRMADO = "confirmado"
+    CANCELADO = "cancelado"
+    FINALIZADO = "finalizado"
 
 class NotaAvaliacao(Enum):
     PESSIMO = 1,
