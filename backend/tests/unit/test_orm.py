@@ -1,12 +1,14 @@
 from src.domain.models import *
-from tests.mocks import (
-    usuario_base, criar_usuario,
-    peca_base, criar_peca,
-    oficina_base, criar_oficina,
-    servico_base, criar_servico,
-    criar_pecas_do_agendamento,
-)
 from datetime import datetime
+
+from tests.mocks import (
+    criar_usuario,
+    criar_peca,
+    criar_oficina,
+    criar_servico,
+    criar_pecas_do_agendamento,
+    criar_agendamento,
+)
 
 def test_orm_usuarios(session):
     usuario = Usuario(
@@ -128,5 +130,31 @@ def test_orm_agendamentos(
     session.delete(agendamento)
     assert session.query(Agendamento).filter(Agendamento.id == agendamento.id).first() == None
 
-def test_orm_avaliacoes(session):
-    pass
+def test_orm_avaliacoes(
+    session,
+    criar_usuario,
+    criar_servico,
+):
+    # Criando cliente e serviço consistnete
+    cliente = criar_usuario()
+    servico = criar_servico()
+
+    # Reconhecer objetos através da ORM
+    servico = session.merge(servico)
+    cliente = session.merge(cliente)
+    
+    avaliacao = Avaliacao(
+        nota=NotaAvaliacao.REGULAR,
+        comentario="Serviço Simples",
+        data=datetime.now(),
+        cliente=cliente,
+        servico=servico,
+    )
+
+    # Adicionando avaliação
+    session.add(avaliacao)
+    assert session.query(Avaliacao).filter(Avaliacao.id == avaliacao.id).first() == avaliacao
+
+    # Removendo avaliação
+    session.delete(avaliacao)
+    assert session.query(Avaliacao).filter(Avaliacao.id == avaliacao.id).first() == None

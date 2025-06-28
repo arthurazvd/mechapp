@@ -2,6 +2,10 @@ import pytest
 from sqlalchemy import text
 from src.domain.models import *
 
+# =========================
+# MOCK DE USUÁRIO
+# =========================
+
 @pytest.fixture
 def usuario_base():
     def _usuario_base(
@@ -61,6 +65,10 @@ def criar_usuario(session):
         )
     yield _criar_usuario
 
+# =========================
+# MOCK DE PEÇA
+# =========================
+
 @pytest.fixture
 def peca_base():
     def _peca_base(
@@ -119,6 +127,10 @@ def criar_peca(session):
             imagem=imagem,
         )
     yield _criar_peca
+
+# =========================
+# MOCK DE OFICINA
+# =========================
 
 @pytest.fixture
 def oficina_base(usuario_base):
@@ -184,6 +196,10 @@ def criar_oficina(session, criar_usuario):
             proprietario=proprietario
         )
     yield _criar_oficina
+
+# =========================
+# MOCK DE SERVIÇO
+# =========================
 
 @pytest.fixture
 def servico_base(oficina_base):
@@ -261,6 +277,24 @@ def criar_servico(session, criar_oficina):
         )
     yield _criar_servico
 
+# =========================
+# MOCKS AGENDAMENTO
+# =========================
+
+@pytest.fixture
+def peca_do_agendamento_base(peca_base):
+    def _peca_do_agendamento_base(
+        id: str = None,
+        quantidade: int = 1,
+        peca: Peca = None,
+    ):
+        return PecaDoAgendamento(
+            id=id or str(uuid4()),
+            quantidade=quantidade,
+            peca=peca or peca_base()
+        )
+    yield _peca_do_agendamento_base
+
 @pytest.fixture
 def criar_pecas_do_agendamento(session, criar_peca):
     def _criar_pecas_do_agendamento(
@@ -301,3 +335,105 @@ def criar_pecas_do_agendamento(session, criar_peca):
             quantidade=quantidade,
         )
     yield _criar_pecas_do_agendamento
+
+@pytest.fixture
+def agendamento_base(
+    peca_do_agendamento_base, 
+    usuario_base, 
+    servico_base,
+):
+    def _agendamento_base(
+        id: str = None,
+        data: datetime = datetime.now(),
+        status: StatusAgendamento = StatusAgendamento.PENDENTE,
+        cliente: Usuario = None,
+        servico: Servico = None,
+        pecas_do_agendamento: list[PecaDoAgendamento] = [],
+    ):
+        return Agendamento(
+            id=id or str(uuid4()),
+            data=data,
+            status=status,
+            cliente=cliente or usuario_base(),
+            servico=servico or servico_base(),
+            pecas_do_agendamento=pecas_do_agendamento or [peca_do_agendamento_base()],
+        )
+    yield _agendamento_base
+
+@pytest.fixture
+def criar_agendamento(
+    session,
+    criar_pecas_do_agendamento,
+    criar_servico,
+    criar_usuario,
+):
+    def _criar_agendamento(
+        id: str = None,
+        data: datetime = datetime.now(),
+        status: StatusAgendamento = StatusAgendamento.PENDENTE,
+        cliente: Usuario = None,
+        servico: Servico = None,
+        pecas_do_agendamento: list[PecaDoAgendamento] = [],
+        persistir_servico: bool = False,
+        persistir_oficina: bool = False,
+        persistir_proprietario: bool = False,
+        persistir_cliente: bool = False,
+        persistir_pecas_do_agendamento: bool = False,
+    ):
+        id = id or str(uuid4())
+
+        # Persistir serviço
+        if servico and persistir_servico:
+            criar_servico(**servico, persistir_oficina=persistir_oficina, persistir_proprietario=persistir_proprietario)
+
+        # Criar novo serviço
+        if servico is None:
+            servico = criar_servico()
+
+        # Persistir usuário
+        if cliente and persistir_cliente:
+            criar_usuario(**cliente)
+
+        # Criar novo usuário
+        if cliente is None:
+            cliente = criar_usuario()
+
+        session.execute(
+            text(
+                """
+                INSERT INTO agendamentos
+                (id, data, status, cliente_id, servico_id)
+                VALUES
+                (:id, :data, :status, :cliente_id, :servico_id)
+                """
+            ),
+            params={
+                "id":id,
+                "data":data,
+                "status":status,
+                "cliente_id":cliente.id,
+                "servico_id":servico.id,
+            }
+        )
+
+        agendamento = Agendamento(
+            id=id,
+            data=data,
+            status=status,
+            cliente=cliente,
+            servico=servico,
+            pecas_do_agendamento=pecas_do_agendamento
+        )
+
+        # Persistir peça do agendamento
+        if len(pecas_do_agendamento) > 0 and persistir_pecas_do_agendamento:
+            for peca in pecas_do_agendamento:
+                criar_pecas_do_agendamento(**peca, agendamento_id=id)
+
+        # Criar nova peça do agendamento
+        if len(pecas_do_agendamento) == 0:
+            pecas_do_agendamento = [criar_pecas_do_agendamento(agendamento=agendamento)]
+            agendamento.pecas_do_agendamento = pecas_do_agendamento
+
+        return agendamento
+    yield _criar_agendamento

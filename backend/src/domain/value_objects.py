@@ -16,15 +16,15 @@ class StatusAgendamento(str, Enum):
     def __str__(self):
         return self.value
 
-class NotaAvaliacao(Enum):
-    PESSIMO = 1,
-    RUIM = 2,
-    REGULAR = 3,
-    BOM = 4,
-    EXCELENTE = 5,
+class NotaAvaliacao(int, Enum):
+    PESSIMO = 1
+    RUIM = 2
+    REGULAR = 3
+    BOM = 4
+    EXCELENTE = 5
 
     def __int__(self):
-        return int(self.value)
+        return self.value
 
     def __str__(self):
-        return self.value
+        return self.name

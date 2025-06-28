@@ -107,7 +107,7 @@ class Agendamento:
         return {
             "id": self.id,
             "data": self.data.isoformat(),
-            "status": self.status.value,
+            "status": str(self.status),
             "cliente": self.cliente.to_dict(),
             "servico": self.servico.to_dict(),
             "pecas_do_agendamento": [peca.to_dict() for peca in self.pecas_do_agendamento],
@@ -125,7 +125,7 @@ class Avaliacao:
     def to_dict(self) -> dict:
         return {
             "id": self.id,
-            "nota": self.nota.value,
+            "nota": int(self.nota),
             "comentario": self.comentario,
             "data": self.data.isoformat(),
             "cliente": self.cliente.to_dict(),
