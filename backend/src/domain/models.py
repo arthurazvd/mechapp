@@ -81,13 +81,26 @@ class Servico:
             "oficina": self.oficina.to_dict(),
         }
 
+@dataclass
+class PecaDoAgendamento:
+    peca: Peca
+    quantidade: int
+    id: str = field(default_factory=lambda: str(uuid4()))
+
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "peca":self.peca.to_dict(),
+            "quantidade":self.quantidade,
+        }
+
 @dataclass 
 class Agendamento:
     data: datetime
     status: StatusAgendamento
     cliente: Usuario
     servico: Servico
-    pecas_do_agendamento: list[Peca]
+    pecas_do_agendamento: list[PecaDoAgendamento]
     id: str = field(default_factory=lambda: str(uuid4()))
 
     def to_dict(self) -> dict:

@@ -3,7 +3,10 @@ from tests.mocks import (
     usuario_base, criar_usuario,
     peca_base, criar_peca,
     oficina_base, criar_oficina,
+    servico_base, criar_servico,
+    criar_pecas_do_agendamento,
 )
+from datetime import datetime
 
 def test_orm_usuarios(session):
     usuario = Usuario(
@@ -23,12 +26,10 @@ def test_orm_usuarios(session):
 
 def test_orm_oficinas(
     session,
-    usuario_base,
     criar_usuario,
 ):
     # Criando um mecânico persistente
-    mecanico = usuario_base(tipo=TipoUsuario.MECANICO)
-    criar_usuario(**mecanico.to_dict())
+    mecanico = criar_usuario(tipo=TipoUsuario.MECANICO)
 
     # Como o objeto foi criado somente no BANCO, é preciso fazê-lo ser reconhecido
     mecanico = session.merge(mecanico)
@@ -69,12 +70,10 @@ def test_orm_pecas(
 
 def test_orm_servicos(
     session,
-    oficina_base,
     criar_oficina,
 ):
-    # Criando ua oficina persistente
-    oficina = oficina_base()
-    criar_oficina(**oficina.to_dict(), persistir_proprietario=True)
+    # Criando uma oficina persistente
+    oficina = criar_oficina()
 
     # Como o objeto foi criado somente no BANCO, é preciso fazê-lo ser reconhecido
     oficina = session.merge(oficina)
@@ -96,8 +95,38 @@ def test_orm_servicos(
     session.delete(servico)
     assert session.query(Servico).filter(Servico.id == servico.id).first() == None
 
-def test_orm_agendamentos(session):
-    pass
+def test_orm_agendamentos(
+    session,
+    criar_pecas_do_agendamento,
+    criar_usuario,
+    criar_servico,
+):
+    
+    # Criando peça, serviço e cliente persistentes
+    peca = criar_pecas_do_agendamento()
+    cliente = criar_usuario()
+    servico = criar_servico()
+
+    # Reconhecer objetos através da ORM
+    peca = session.merge(peca)
+    servico = session.merge(servico)
+    cliente = session.merge(cliente)
+
+    agendamento = Agendamento(
+        data=datetime.today(),
+        status=StatusAgendamento.PENDENTE,
+        cliente=cliente,
+        servico=servico,
+        pecas_do_agendamento=[peca],
+    )
+
+    # Adicionando agendamento
+    session.add(agendamento)
+    assert session.query(Agendamento).filter(Agendamento.id == agendamento.id).first() == agendamento
+
+    # Removendo agendamento
+    session.delete(agendamento)
+    assert session.query(Agendamento).filter(Agendamento.id == agendamento.id).first() == None
 
 def test_orm_avaliacoes(session):
     pass

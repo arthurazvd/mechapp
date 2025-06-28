@@ -61,6 +61,18 @@ def start_mappers():
         }
     )
 
+    # Peças do Agendamento
+    mapper_registry.map_imperatively(
+        PecaDoAgendamento,
+        pecas_do_agendamento,
+        properties={
+            'peca': relationship(
+                Peca,
+                primaryjoin=pecas_do_agendamento.c.peca_id == pecas.c.id
+            ),
+        }
+    )
+
     # Agendamentos
     mapper_registry.map_imperatively(
         Agendamento,
@@ -75,10 +87,9 @@ def start_mappers():
                 primaryjoin=agendamentos.c.servico_id == servicos.c.id,
             ),
             'pecas_do_agendamento': relationship(
-                Peca,
-                secondary=pecas_do_agendamento,
+                PecaDoAgendamento,
                 primaryjoin=agendamentos.c.id == pecas_do_agendamento.c.agendamento_id,
-                secondaryjoin=pecas_do_agendamento.c.peca_id == pecas.c.id,
+                uselist=True,
             ),
         }
     )

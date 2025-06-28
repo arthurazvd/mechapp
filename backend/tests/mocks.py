@@ -18,19 +18,19 @@ def usuario_base():
             email=email, 
             senha=senha, 
             tipo=str(tipo), 
-            telefone=telefone
+            telefone=telefone,
         )
     yield _usuario_base
 
 @pytest.fixture
 def criar_usuario(session):
     def _criar_usuario(
-        id=None,
-        nome="Usuário",
-        email="usuario@teste.com.br",
-        senha="1234",
-        tipo=TipoUsuario.CLIENTE,
-        telefone="(99) 98765-4321"
+        id: str = None,
+        nome: str ="Usuário",
+        email: str ="usuario@teste.com.br",
+        senha: str ="1234",
+        tipo: TipoUsuario = TipoUsuario.CLIENTE,
+        telefone: str = "(99) 98765-4321"
     ):
         id = id or str(uuid4())
 
@@ -51,7 +51,14 @@ def criar_usuario(session):
             }
         )
 
-        return id
+        return Usuario(
+            id=id,
+            nome=nome,
+            email=email,
+            senha=senha,
+            tipo=tipo,
+            telefone=telefone,
+        )
     yield _criar_usuario
 
 @pytest.fixture
@@ -70,21 +77,22 @@ def peca_base():
             descricao=descricao,
             quantidade=quantidade,
             preco=preco,
-            imagem=imagem
+            imagem=imagem,
         )
     yield _peca_base
 
 @pytest.fixture
 def criar_peca(session):
     def _criar_peca(
-        id = None,
-        nome = "Peça Teste",
-        descricao = "Descrição da peça teste",
-        quantidade = 10,
-        preco = 99.90,
-        imagem = b"imagem_teste"
+        id: str = None,
+        nome: str = "Peça Teste",
+        descricao: str = "Descrição da peça teste",
+        quantidade: int = 10,
+        preco: float = 99.90,
+        imagem: bytes = b"imagem_teste"
     ):
         id = id or str(uuid4())
+        
         session.execute(
             text(
                 """
@@ -102,7 +110,14 @@ def criar_peca(session):
             }
         )
 
-        return id
+        return Peca(
+            id=id,
+            nome=nome,
+            descricao=descricao,
+            quantidade=quantidade,
+            preco=preco,
+            imagem=imagem,
+        )
     yield _criar_peca
 
 @pytest.fixture
@@ -126,22 +141,22 @@ def oficina_base(usuario_base):
 @pytest.fixture
 def criar_oficina(session, criar_usuario):
     def _criar_oficina(
-        id=None,
-        nome="Oficina Teste",
-        cnpj="00000000000100",
-        endereco="Rua Teste, 123",
-        proprietario = None,
-        persistir_proprietario = False,
+        id: str = None,
+        nome: str = "Oficina Teste",
+        cnpj: str = "00000000000100",
+        endereco: str= "Rua Teste, 123",
+        proprietario: Usuario = None,
+        persistir_proprietario: bool = False,
     ):
         id = id or str(uuid4())
 
         # Persistindo proprietário
         if proprietario and persistir_proprietario:
-            criar_usuario(**proprietario)
+            criar_usuario(**proprietario.to_dict())
 
         # Criando novo proprietário
         if proprietario is None:
-            proprietario = criar_usuario(tipo=TipoUsuario.MECANICO).to_dict()
+            proprietario = criar_usuario(nome="Mecanico", email="mecanico@email.com", tipo=TipoUsuario.MECANICO)
 
         session.execute(
             text(
@@ -157,9 +172,132 @@ def criar_oficina(session, criar_usuario):
                 "nome": nome,
                 "cnpj": cnpj,
                 "endereco": endereco,
-                "usuario_id": proprietario['id'],
+                "usuario_id": proprietario.id,
             }
         )
 
-        return id
+        return Oficina(
+            id=id,
+            nome=nome,
+            cnpj=cnpj,
+            endereco=endereco,
+            proprietario=proprietario
+        )
     yield _criar_oficina
+
+@pytest.fixture
+def servico_base(oficina_base):
+    def _servico_base(
+        id=None,
+        nome="Serviço Teste",
+        descricao="Serviço Genérico",
+        tempo=30,
+        preco_min=10.99,
+        preco_max=15.99,
+        oficina=None,
+    ):
+        return Servico(
+            nome=nome,
+            descricao=descricao,
+            tempo=tempo,
+            preco_min=preco_min,
+            preco_max=preco_max,
+            oficina=oficina or oficina_base(),
+            id=id or str(uuid4())
+        )
+    yield _servico_base
+
+@pytest.fixture
+def criar_servico(session, criar_oficina):
+    def _criar_servico(
+        id: str = None,
+        nome: str = "Serviço Teste",
+        descricao: str = "Serviço Genérico",
+        tempo: int = 30,
+        preco_min: float = 10.99,
+        preco_max: float = 15.99,
+        oficina: Oficina = None,
+        persistir_oficina: bool = False,
+        persistir_proprietario: bool = False,
+    ):
+        id = id or str(uuid4())
+
+        # Persistindo oficina
+        if oficina and persistir_oficina:
+            criar_oficina(**oficina, persistir_proprietario=persistir_proprietario)
+
+        # Criando nova oficina
+        if oficina is None:
+            oficina = criar_oficina()
+
+        session.execute(
+            text(
+                """
+                INSERT INTO servicos
+                (id, nome, descricao, tempo, preco_min, preco_max, oficina_id)
+                VALUES
+                (:id, :nome, :descricao, :tempo, :preco_min, :preco_max, :oficina_id)
+                """
+            ), 
+            params={
+                "id": id,
+                "nome": nome,
+                "descricao": descricao,
+                "tempo": tempo,
+                "preco_min": preco_min,
+                "preco_max": preco_max,
+                "oficina_id": oficina.id,
+            }
+        )
+
+        return Servico(
+            id=id,
+            nome=nome,
+            descricao=descricao,
+            tempo=tempo,
+            preco_min=preco_min,
+            preco_max=preco_max,
+            oficina=oficina,
+        )
+    yield _criar_servico
+
+@pytest.fixture
+def criar_pecas_do_agendamento(session, criar_peca):
+    def _criar_pecas_do_agendamento(
+        id: str = None,
+        quantidade: int = 1,
+        peca: Peca = None,
+        agendamento: Agendamento = None,
+        persistir_peca: bool = False,
+    ):
+        id = id or str(uuid4())
+
+        if peca and persistir_peca:
+            criar_peca(**peca)
+
+        if peca is None:
+            peca = criar_peca()
+        
+        session.execute(
+            text(
+                """
+                INSERT INTO pecas_do_agendamento
+                (id, agendamento_id, peca_id, quantidade)
+                VALUES
+                (:id, :agendamento_id, :peca_id, :quantidade)
+                """
+            ),
+            params={
+                "id":id,
+                "agendamento_id":agendamento.id if isinstance(agendamento, Agendamento) else None,
+                "peca_id":peca.id,
+                "quantidade":quantidade,
+            }
+        )
+
+        return PecaDoAgendamento(
+            id=id,
+            peca=peca,
+            quantidade=quantidade,
+        )
+    yield _criar_pecas_do_agendamento

@@ -59,12 +59,12 @@ INSERT INTO avaliacoes (id, cliente_id, servico_id, nota, comentario, data) VALU
 ('avaliacao-006', 'usuario-005', 'servico-006', 2, 'Não ficou bom, vou ter que levar em outro lugar', CURRENT_TIMESTAMP);
 
 -- Inserção de peças utilizadas nos agendamentos
-INSERT INTO pecas_do_agendamento (agendamento_id, peca_id, quantidade) VALUES
-('agendamento-001', 'peca-003', 1),  -- Filtro de Óleo
-('agendamento-001', 'peca-009', 4),  -- Óleo Motor (4 litros)
-('agendamento-003', 'peca-001', 1),  -- Pastilha de Freio
-('agendamento-003', 'peca-002', 1),  -- Disco de Freio
-('agendamento-003', 'peca-003', 1),  -- Filtro de Óleo
-('agendamento-006', 'peca-005', 1),  -- Correia Dentada
-('agendamento-006', 'peca-006', 2),  -- Amortecedor (2 unidades)
-('agendamento-009', 'peca-001', 2);  -- Pastilha de Freio (2 conjuntos)
+INSERT INTO pecas_do_agendamento (id, agendamento_id, peca_id, quantidade) VALUES
+('peca-do-agendamento-001','agendamento-001', 'peca-003', 1),  -- Filtro de Óleo
+('peca-do-agendamento-002','agendamento-001', 'peca-009', 4),  -- Óleo Motor (4 litros)
+('peca-do-agendamento-003','agendamento-003', 'peca-001', 1),  -- Pastilha de Freio
+('peca-do-agendamento-004','agendamento-003', 'peca-002', 1),  -- Disco de Freio
+('peca-do-agendamento-005','agendamento-003', 'peca-003', 1),  -- Filtro de Óleo
+('peca-do-agendamento-006','agendamento-006', 'peca-005', 1),  -- Correia Dentada
+('peca-do-agendamento-007','agendamento-006', 'peca-006', 2),  -- Amortecedor (2 unidades)
+('peca-do-agendamento-008','agendamento-009', 'peca-001', 2);  -- Pastilha de Freio (2 conjuntos)

@@ -83,10 +83,10 @@ CREATE TABLE IF NOT EXISTS avaliacoes (
 
 -- Criando peças do agendamento
 CREATE TABLE IF NOT EXISTS pecas_do_agendamento(
+    id VARCHAR(36) PRIMARY KEY,
     agendamento_id VARCHAR(36), 
     peca_id VARCHAR(36) NOT NULL,
     quantidade INT NOT NULL,
-    PRIMARY KEY (agendamento_id, peca_id),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(agendamento_id) REFERENCES agendamentos(id) ON DELETE SET NULL,
