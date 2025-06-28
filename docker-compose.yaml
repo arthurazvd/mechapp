@@ -11,8 +11,8 @@ services:
     ports:
       - "5555:5432"
     volumes:
-      - ./database/migrations:/docker-entrypoint-initdb.d
-      - ./database/seeds:/seeds
+      - ./backend/database/migrations:/docker-entrypoint-initdb.d
+      - ./backend/database/seeds:/seeds
     # Comando para rodar o initial_data.sql como primeiro seeder
     command: >
       sh -c "
