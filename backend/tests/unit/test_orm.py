@@ -28,7 +28,7 @@ def test_orm_oficinas(
 ):
     # Criando um mecânico persistente
     mecanico = usuario_base(tipo=TipoUsuario.MECANICO)
-    criar_usuario(**mecanico.to_dict(tipo_str=False))
+    criar_usuario(**mecanico.to_dict())
 
     # Como o objeto foi criado somente no BANCO, é preciso fazê-lo ser reconhecido
     mecanico = session.merge(mecanico)
@@ -74,7 +74,7 @@ def test_orm_servicos(
 ):
     # Criando ua oficina persistente
     oficina = oficina_base()
-    criar_oficina(**oficina.to_dict(tipo_str=False), persistir_proprietario=True)
+    criar_oficina(**oficina.to_dict(), persistir_proprietario=True)
 
     # Como o objeto foi criado somente no BANCO, é preciso fazê-lo ser reconhecido
     oficina = session.merge(oficina)

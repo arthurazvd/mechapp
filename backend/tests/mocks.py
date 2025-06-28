@@ -17,7 +17,7 @@ def usuario_base():
             nome=nome, 
             email=email, 
             senha=senha, 
-            tipo=tipo, 
+            tipo=str(tipo), 
             telefone=telefone
         )
     yield _usuario_base
@@ -46,7 +46,7 @@ def criar_usuario(session):
                 "nome":nome,
                 "email":email,
                 "senha":senha,
-                "tipo":tipo.value,
+                "tipo":str(tipo),
                 "telefone":telefone,
             }
         )

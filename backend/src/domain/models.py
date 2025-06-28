@@ -14,13 +14,13 @@ class Usuario:
     telefone: str | None = None
     id: str = field(default_factory=lambda: str(uuid4()))
 
-    def to_dict(self, tipo_str=True) -> dict:
+    def to_dict(self) -> dict:
         return {
             "id": self.id,
             "nome": self.nome,
             "email": self.email,
             "senha": self.senha,
-            "tipo": self.tipo.value if tipo_str else self.tipo,
+            "tipo": str(self.tipo),
             "telefone": self.telefone,
         }
 
@@ -51,13 +51,13 @@ class Oficina:
     proprietario: Usuario
     id: str = field(default_factory=lambda: str(uuid4()))
 
-    def to_dict(self, tipo_str=True) -> dict:
+    def to_dict(self) -> dict:
         return {
             "id": self.id,
             "nome": self.nome,
             "cnpj": self.cnpj,
             "endereco": self.endereco,
-            "proprietario": self.proprietario.to_dict(tipo_str),
+            "proprietario": self.proprietario.to_dict(),
         }
 
 @dataclass
