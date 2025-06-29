@@ -18,3 +18,16 @@ class AbstractPecaRepository():
     @abstractmethod
     def consultar(self, id: str) -> Peca|None:
         raise NotImplementedError
+    
+class PecaRepository(AbstractPecaRepository, AbstractSQLAlchemyRepository):
+    def adicionar(self, peca: Peca):
+        self.session.add(peca)
+
+    def remover(self, peca: Peca):
+        self.session.delete(peca)
+    
+    def salvar(self, peca: Peca):
+        self.session.merge(peca)
+
+    def consultar(self, id: str) -> Peca | None:    
+        return self.session.query(Peca).filter(Peca.id == id).first()
