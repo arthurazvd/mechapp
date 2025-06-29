@@ -18,3 +18,16 @@ class AbstractUsuarioRepository():
     @abstractmethod
     def consultar(self, id: str) -> Usuario|None:
         raise NotImplementedError
+    
+class UsuarioRepository(AbstractUsuarioRepository, AbstractSQLAlchemyRepository):
+    def adicionar(self, usuario: Usuario):
+        self.session.add(usuario)
+
+    def remover(self, usuario: Usuario):
+        self.session.delete(usuario)
+    
+    def salvar(self, usuario: Usuario):
+        self.session.merge(usuario)
+
+    def consultar(self, id: str) -> Usuario | None:
+        return self.session.query(Usuario).filter(Usuario.id == id).first()
