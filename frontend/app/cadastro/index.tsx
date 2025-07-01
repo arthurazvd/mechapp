@@ -12,6 +12,8 @@ import { cadStyles } from './styles';
 export default function Index() {
   const router = useRouter();
   const [email, setEmail] = useState("");
+  const [nome, setNome] = useState("");
+  const [telefone, setTelefone] = useState("");
   const [senha, setSenha] = useState("");
 
   const handleLogin = () => {
@@ -32,15 +34,15 @@ export default function Index() {
         <CustomInput
             placeholder="Nome"
             label="Nome"
-            value={email}
-            onChangeText={setEmail}
+            value={nome}
+            onChangeText={setNome}
             contentStyle={{ width: "80%", maxWidth: 400 }}
         />
         <CustomInput
             placeholder="Telefone" 
             label="Telefone"
-            value={email}
-            onChangeText={setEmail}
+            value={telefone}
+            onChangeText={setTelefone}
             contentStyle={{ width: "80%", maxWidth: 400 }}
         />
         <CustomInput

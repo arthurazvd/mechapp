@@ -12,8 +12,7 @@ export const pecStyles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#A10000',
     height: '7%',
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 80,
   },
 
   initialBottom: {
