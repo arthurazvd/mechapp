@@ -51,4 +51,11 @@ export const globalStyles = StyleSheet.create({
     color: '#888',
     textAlign: 'left',
   },
+
+  title2: {
+    fontSize: 20,
+    textAlign: 'center',
+    marginBottom: 20,
+    color: '#888',
+  }
 });
