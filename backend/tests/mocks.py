@@ -146,7 +146,7 @@ def oficina_base(usuario_base):
             nome=nome,
             cnpj=cnpj,
             endereco=endereco,
-            proprietario=proprietario or usuario_base(tipo=TipoUsuario.MECANICO)
+            proprietario=proprietario or usuario_base(tipo=TipoUsuario.MECANICO, email="mecanico@email.com")
         )
     yield _oficina_base
 
@@ -437,3 +437,88 @@ def criar_agendamento(
 
         return agendamento
     yield _criar_agendamento
+
+# =========================
+# MOCK DE AVALIAÇÃO
+# =========================
+
+@pytest.fixture
+def avaliacao_base(usuario_base, servico_base):
+    def _avaliacao_base(
+        id=None,
+        nota=NotaAvaliacao.BOM,
+        comentario="Serviço muito bom, recomendo!",
+        data=datetime.now(),
+        cliente=None,
+        servico=None,
+    ):
+        return Avaliacao(
+            id=id or str(uuid4()),
+            nota=nota,
+            comentario=comentario,
+            data=data,
+            cliente=cliente or usuario_base(),
+            servico=servico or servico_base(),
+        )
+    yield _avaliacao_base
+
+@pytest.fixture
+def criar_avaliacao(session, criar_usuario, criar_servico):
+    def _criar_avaliacao(
+        id: str = None,
+        nota: NotaAvaliacao = NotaAvaliacao.BOM,
+        comentario: str = "Serviço muito bom, recomendo!",
+        data: datetime = datetime.now(),
+        cliente: Usuario = None,
+        servico: Servico = None,
+        persistir_cliente: bool = False,
+        persistir_servico: bool = False,
+        persistir_oficina: bool = False,
+        persistir_proprietario: bool = False,
+    ):
+        id = id or str(uuid4())
+
+        # Persistir cliente
+        if cliente and persistir_cliente:
+            criar_usuario(**cliente.to_dict())
+
+        # Criar novo cliente
+        if cliente is None:
+            cliente = criar_usuario()
+
+        # Persistir serviço
+        if servico and persistir_servico:
+            criar_servico(**servico.to_dict(), persistir_oficina=persistir_oficina, persistir_proprietario=persistir_proprietario)
+
+        # Criar novo serviço
+        if servico is None:
+            servico = criar_servico()
+
+        session.execute(
+            text(
+                """
+                INSERT INTO avaliacoes
+                (id, nota, comentario, data, cliente_id, servico_id)
+                VALUES
+                (:id, :nota, :comentario, :data, :cliente_id, :servico_id)
+                """
+            ),
+            params={
+                "id": id,
+                "nota": int(nota),
+                "comentario": comentario,
+                "data": data,
+                "cliente_id": cliente.id,
+                "servico_id": servico.id,
+            }
+        )
+
+        return Avaliacao(
+            id=id,
+            nota=nota,
+            comentario=comentario,
+            data=data,
+            cliente=cliente,
+            servico=servico,
+        )
+    yield _criar_avaliacao

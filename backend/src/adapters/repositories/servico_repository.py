@@ -1,40 +1,40 @@
 from src.adapters.repository import AbstractSQLAlchemyRepository
-from src.domain.models import Agendamento
+from src.domain.models import Servico
 from abc import abstractmethod
 
 class AbstractServicoRepository():
     @abstractmethod
-    def adicionar(self, servico: Agendamento):
+    def adicionar(self, servico: Servico):
         raise NotImplementedError
     
     @abstractmethod
-    def remover(self, servico: Agendamento):
+    def remover(self, servico: Servico):
         raise NotImplementedError
     
     @abstractmethod
-    def salvar(self, servico: Agendamento):
+    def salvar(self, servico: Servico):
         raise NotImplementedError
     
     @abstractmethod
-    def consultar(self, id: str) -> Agendamento|None:
+    def consultar(self, id: str) -> Servico|None:
         raise NotImplementedError
     
     @abstractmethod
-    def consultar_por_nome(self, nome: str) -> list[Agendamento]:
+    def consultar_por_nome(self, nome: str) -> list[Servico]:
         raise NotImplementedError
     
 class ServicoRepository(AbstractServicoRepository, AbstractSQLAlchemyRepository):
-    def adicionar(self, servico: Agendamento):
+    def adicionar(self, servico: Servico):
         self.session.add(servico)
 
-    def remover(self, servico: Agendamento):
+    def remover(self, servico: Servico):
         self.session.delete(servico)
     
-    def salvar(self, servico: Agendamento):
+    def salvar(self, servico: Servico):
         self.session.merge(servico)
 
-    def consultar(self, id: str) -> Agendamento | None:
-        return self.session.query(Agendamento).filter(Agendamento.id == id).first()
+    def consultar(self, id: str) -> Servico | None:
+        return self.session.query(Servico).filter(Servico.id == id).first()
     
-    def consultar_por_nome(self, nome: str) -> list[Agendamento]:
-        return self.session.query(Agendamento).filter(Agendamento.nome == nome).all()
+    def consultar_por_nome(self, nome: str) -> list[Servico]:
+        return self.session.query(Servico).filter(Servico.nome == nome).all()

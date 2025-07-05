@@ -45,4 +45,4 @@ class OficinaRepository(AbstractOficinaRepository, AbstractSQLAlchemyRepository)
         return self.session.query(Oficina).filter(Oficina.cnpj == cnpj).first()
 
     def consultar_por_proprietario(self, proprietario_id: str) -> list[Oficina]:
-        return self.session.query(Oficina).filter(Oficina.proprietario_id == proprietario_id).all()
+        return self.session.query(Oficina).filter(Oficina.usuario_id == proprietario_id).all()
