@@ -1,6 +1,7 @@
-from uuid import uuid4
 from dataclasses import dataclass, field
 from datetime import datetime
+from uuid import uuid4
+from re import match
 
 from .value_objects import *
 from .exceptions import *
@@ -14,6 +15,10 @@ class Usuario:
     telefone: str | None = None
     id: str = field(default_factory=lambda: str(uuid4()))
 
+    def __post_init__(self):
+        """ Criptografar senha de usuário """
+        self.senha = str(hash(self.senha))
+
     def to_dict(self) -> dict:
         return {
             "id": self.id,
@@ -23,6 +28,13 @@ class Usuario:
             "tipo": str(self.tipo),
             "telefone": self.telefone,
         }
+
+    @staticmethod
+    def validar_email(email: str) -> bool:
+        padrao = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+        if not match(padrao, email):
+            return False
+        return True
 
 @dataclass
 class Peca:

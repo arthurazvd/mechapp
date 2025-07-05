@@ -6,6 +6,12 @@ class TipoUsuario(str, Enum):
 
     def __str__(self):
         return self.value
+    
+    @staticmethod
+    def valor_valido(valor: str) -> bool:
+        if valor in ["cliente","mecanico"]:
+            return True
+        return False
 
 class StatusAgendamento(str, Enum):
     PENDENTE = "pendente"
@@ -15,6 +21,12 @@ class StatusAgendamento(str, Enum):
 
     def __str__(self):
         return self.value
+    
+    @staticmethod
+    def valor_valido(valor: str) -> bool:
+        if valor in ["pendente","confirmado","cancelado","finalizado"]:
+            return True
+        return False
 
 class NotaAvaliacao(int, Enum):
     PESSIMO = 1
@@ -28,3 +40,9 @@ class NotaAvaliacao(int, Enum):
 
     def __str__(self):
         return self.name
+
+    @staticmethod
+    def valor_valido(valor: int) -> bool:
+        if 1 <= valor <= 5:
+            return True
+        return False
