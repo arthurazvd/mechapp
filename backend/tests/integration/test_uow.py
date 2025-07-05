@@ -104,6 +104,22 @@ def test_uow_pecas_do_agendamento(session_maker, peca_do_agendamento_base):
         peca_do_agendamento_encontrada = uow.pecas_do_agendamento.consultar(peca_do_agendamento.id)
         assert peca_do_agendamento_encontrada is None
 
+def test_uow_avaliacao(session_maker, avaliacao_base):
+    avaliacao = avaliacao_base()
+    with UnidadeDeTrabalho(session_maker) as uow:
+        # Adição
+        uow.avaliacoes.adicionar(avaliacao)
+
+        # Consulta
+        avaliacao_encontrada = uow.avaliacoes.consultar(avaliacao.id)
+        assert avaliacao_encontrada.id == avaliacao.id
+        assert avaliacao_encontrada.nota == avaliacao.nota
+
+        # Remoção
+        uow.avaliacoes.remover(avaliacao_encontrada)
+        avaliacao_encontrada = uow.avaliacoes.consultar(avaliacao.id)
+        assert avaliacao_encontrada is None
+
 def test_uow_faz_rollback_se_nao_comitar(session_maker, usuario_base):
     usuario = usuario_base()
     
@@ -125,7 +141,6 @@ def test_uow_faz_rollback_em_erro(session_maker, usuario_base):
         with UnidadeDeTrabalho(session_maker) as uow:
             uow.usuarios.adicionar(usuario)
             raise ExcecaoTeste()
-            uow.commit()
         
     with UnidadeDeTrabalho(session_maker) as uow:
         usuario_encontrado = uow.usuarios.consultar(usuario.id)
