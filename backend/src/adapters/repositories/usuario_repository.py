@@ -19,6 +19,10 @@ class AbstractUsuarioRepository():
     def consultar(self, id: str) -> Usuario|None:
         raise NotImplementedError
     
+    @abstractmethod
+    def consultar_por_email(self, email: str) -> Usuario|None:
+        raise NotImplementedError
+    
 class UsuarioRepository(AbstractUsuarioRepository, AbstractSQLAlchemyRepository):
     def adicionar(self, usuario: Usuario):
         self.session.add(usuario)
@@ -29,5 +33,8 @@ class UsuarioRepository(AbstractUsuarioRepository, AbstractSQLAlchemyRepository)
     def salvar(self, usuario: Usuario):
         self.session.merge(usuario)
 
-    def consultar(self, id: str) -> Usuario | None:
+    def consultar(self, id: str) -> Usuario|None:
         return self.session.query(Usuario).filter(Usuario.id == id).first()
+    
+    def consultar_por_email(self, email: str) -> Usuario|None:
+        return self.session.query(Usuario).filter(Usuario.email == email).first()

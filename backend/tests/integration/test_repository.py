@@ -38,6 +38,10 @@ def test_usuario_repository(session, usuario_base):
     usuario_encontrado = usuario_repo.consultar(usuario.id)
     assert usuario_encontrado == usuario
 
+    # Consultar por email
+    usuario_encontrado = usuario_repo.consultar_por_email(usuario.email)
+    assert usuario_encontrado == usuario
+
     # Salvar
     usuario_encontrado.nome = "Novo Nome"
     usuario_encontrado.email = "novo@email.com"
