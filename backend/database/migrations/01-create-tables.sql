@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS pecas (
     descricao TEXT,
     quantidade INT NOT NULL,
     preco DECIMAL(10, 2) NOT NULL,
-    imagem BYTEA,
+    imagem BLOB,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

@@ -409,7 +409,7 @@ def criar_agendamento(
             ),
             params={
                 "id":id,
-                "data":data,
+                "data":data.isoformat(),
                 "status":status,
                 "cliente_id":cliente.id,
                 "servico_id":servico.id,

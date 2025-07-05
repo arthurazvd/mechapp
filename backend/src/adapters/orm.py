@@ -1,23 +1,106 @@
-from sqlalchemy import MetaData
+from sqlalchemy import (
+    Table, Column, ForeignKey,
+    String, Text, Integer, DECIMAL, TIMESTAMP, Enum as SQLEnum, BLOB, func
+)
 from sqlalchemy.orm import registry, relationship
-from database.connection import engine
 from src.domain.models import *
+from enum import Enum
+import enum
 
+# Definindo o enum ANTES de usá-lo
+class TipoUsuarioEnum(enum.Enum):
+    cliente = 'cliente'
+    mecanico = 'mecanico'
 
-metadata = MetaData()
-metadata.reflect(bind=engine)
+class StatusAgendamentoEnum(enum.Enum):
+    pendente = 'pendente'
+    confirmado = 'confirmado'
+    concluido = 'concluido'
+    cancelado = 'cancelado'
 
-# Tabelas já geradas
-usuarios = metadata.tables['usuarios']
-oficinas = metadata.tables['oficinas']
-pecas = metadata.tables['pecas']
-servicos = metadata.tables['servicos']
-agendamentos = metadata.tables['agendamentos']
-avaliacoes = metadata.tables['avaliacoes']
-pecas_do_agendamento = metadata.tables['pecas_do_agendamento']
-
-# Mapeando relações
 mapper_registry = registry()
+metadata = mapper_registry.metadata
+
+usuarios = Table(
+    'usuarios', metadata,
+    Column('id', String(36), primary_key=True),
+    Column('nome', String(100), nullable=False),
+    Column('email', String(100), unique=True, nullable=False),
+    Column('senha', String(255), nullable=False),
+    Column('tipo', SQLEnum(TipoUsuarioEnum), nullable=False),
+    Column('telefone', String(15)),
+    Column('created_at', TIMESTAMP, nullable=True, default=func.now()),
+    Column('updated_at', TIMESTAMP, nullable=True, default=func.now()),
+)
+
+oficinas = Table(
+    'oficinas', metadata,
+    Column('id', String(36), primary_key=True),
+    Column('usuario_id', String(36), ForeignKey('usuarios.id', ondelete='SET NULL')),
+    Column('nome', String(100), nullable=False),
+    Column('cnpj', String(14), nullable=False),
+    Column('endereco', Text),
+    Column('created_at', TIMESTAMP, nullable=True, default=func.now()),
+    Column('updated_at', TIMESTAMP, nullable=True, default=func.now()),
+)
+
+pecas = Table(
+    'pecas', metadata,
+    Column('id', String(36), primary_key=True),
+    Column('nome', String(100), nullable=False),
+    Column('descricao', Text),
+    Column('quantidade', Integer, nullable=False),
+    Column('preco', DECIMAL(10, 2), nullable=False),
+    Column('imagem', BLOB),
+    Column('created_at', TIMESTAMP, nullable=True, default=func.now()),
+    Column('updated_at', TIMESTAMP, nullable=True, default=func.now()),
+)
+
+servicos = Table(
+    'servicos', metadata,
+    Column('id', String(36), primary_key=True),
+    Column('oficina_id', String(36), ForeignKey('oficinas.id', ondelete='CASCADE'), nullable=False),
+    Column('nome', String(100), nullable=False),
+    Column('descricao', Text),
+    Column('tempo', Integer, nullable=False),
+    Column('preco_max', DECIMAL(10, 2)),
+    Column('preco_min', DECIMAL(10, 2)),
+    Column('created_at', TIMESTAMP, nullable=True, default=func.now()),
+    Column('updated_at', TIMESTAMP, nullable=True, default=func.now()),
+)
+
+agendamentos = Table(
+    'agendamentos', metadata,
+    Column('id', String(36), primary_key=True),
+    Column('cliente_id', String(36), ForeignKey('usuarios.id', ondelete='SET NULL')),
+    Column('servico_id', String(36), ForeignKey('servicos.id', ondelete='CASCADE'), nullable=False),
+    Column('data', TIMESTAMP, nullable=False),
+    Column('status', SQLEnum(StatusAgendamentoEnum), nullable=False),
+    Column('created_at', TIMESTAMP, nullable=True, default=func.now()),
+    Column('updated_at', TIMESTAMP, nullable=True, default=func.now()),
+)
+
+avaliacoes = Table(
+    'avaliacoes', metadata,
+    Column('id', String(36), primary_key=True),
+    Column('cliente_id', String(36), ForeignKey('usuarios.id', ondelete='CASCADE'), nullable=False),
+    Column('servico_id', String(36), ForeignKey('servicos.id', ondelete='CASCADE'), nullable=False),
+    Column('nota', Integer, nullable=False),
+    Column('comentario', Text),
+    Column('data', TIMESTAMP, nullable=False),
+    Column('created_at', TIMESTAMP, nullable=True, default=func.now()),
+    Column('updated_at', TIMESTAMP, nullable=True, default=func.now()),
+)
+
+pecas_do_agendamento = Table(
+    'pecas_do_agendamento', metadata,
+    Column('id', String(36), primary_key=True),
+    Column('agendamento_id', String(36), ForeignKey('agendamentos.id', ondelete='SET NULL')),
+    Column('peca_id', String(36), ForeignKey('pecas.id', ondelete='CASCADE'), nullable=False),
+    Column('quantidade', Integer, nullable=False),
+    Column('created_at', TIMESTAMP, nullable=True, default=func.now()),
+    Column('updated_at', TIMESTAMP, nullable=True, default=func.now()),
+)
 
 def start_mappers():
     """
