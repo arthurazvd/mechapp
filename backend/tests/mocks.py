@@ -27,7 +27,7 @@ def usuario_base():
     yield _usuario_base
 
 @pytest.fixture
-def criar_usuario(session):
+def mock_criar_usuario(session):
     def _criar_usuario(
         id: str = None,
         nome: str ="Usuário",
@@ -49,7 +49,7 @@ def criar_usuario(session):
                 "id":id,
                 "nome":nome,
                 "email":email,
-                "senha":senha,
+                "senha":hash(senha),
                 "tipo":str(tipo),
                 "telefone":telefone,
             }
@@ -90,7 +90,7 @@ def peca_base():
     yield _peca_base
 
 @pytest.fixture
-def criar_peca(session):
+def mock_criar_peca(session):
     def _criar_peca(
         id: str = None,
         nome: str = "Peça Teste",
@@ -151,7 +151,7 @@ def oficina_base(usuario_base):
     yield _oficina_base
 
 @pytest.fixture
-def criar_oficina(session, criar_usuario):
+def mock_criar_oficina(session, mock_criar_usuario):
     def _criar_oficina(
         id: str = None,
         nome: str = "Oficina Teste",
@@ -164,11 +164,11 @@ def criar_oficina(session, criar_usuario):
 
         # Persistindo proprietário
         if proprietario and persistir_proprietario:
-            criar_usuario(**proprietario.to_dict())
+            mock_criar_usuario(**proprietario.to_dict())
 
         # Criando novo proprietário
         if proprietario is None:
-            proprietario = criar_usuario(nome="Mecanico", email="mecanico@email.com", tipo=TipoUsuario.MECANICO)
+            proprietario = mock_criar_usuario(nome="Mecanico", email="mecanico@email.com", tipo=TipoUsuario.MECANICO)
 
         session.execute(
             text(
@@ -224,7 +224,7 @@ def servico_base(oficina_base):
     yield _servico_base
 
 @pytest.fixture
-def criar_servico(session, criar_oficina):
+def mock_criar_servico(session, mock_criar_oficina):
     def _criar_servico(
         id: str = None,
         nome: str = "Serviço Teste",
@@ -240,11 +240,11 @@ def criar_servico(session, criar_oficina):
 
         # Persistindo oficina
         if oficina and persistir_oficina:
-            criar_oficina(**oficina, persistir_proprietario=persistir_proprietario)
+            mock_criar_oficina(**oficina, persistir_proprietario=persistir_proprietario)
 
         # Criando nova oficina
         if oficina is None:
-            oficina = criar_oficina()
+            oficina = mock_criar_oficina()
 
         session.execute(
             text(
@@ -296,7 +296,7 @@ def peca_do_agendamento_base(peca_base):
     yield _peca_do_agendamento_base
 
 @pytest.fixture
-def criar_pecas_do_agendamento(session, criar_peca):
+def mock_criar_pecas_do_agendamento(session, mock_criar_peca):
     def _criar_pecas_do_agendamento(
         id: str = None,
         quantidade: int = 1,
@@ -307,10 +307,10 @@ def criar_pecas_do_agendamento(session, criar_peca):
         id = id or str(uuid4())
 
         if peca and persistir_peca:
-            criar_peca(**peca)
+            mock_criar_peca(**peca)
 
         if peca is None:
-            peca = criar_peca()
+            peca = mock_criar_peca()
         
         session.execute(
             text(
@@ -361,11 +361,11 @@ def agendamento_base(
     yield _agendamento_base
 
 @pytest.fixture
-def criar_agendamento(
+def mock_criar_agendamento(
     session,
-    criar_pecas_do_agendamento,
-    criar_servico,
-    criar_usuario,
+    mock_criar_pecas_do_agendamento,
+    mock_criar_servico,
+    mock_criar_usuario,
 ):
     def _criar_agendamento(
         id: str = None,
@@ -384,19 +384,19 @@ def criar_agendamento(
 
         # Persistir serviço
         if servico and persistir_servico:
-            criar_servico(**servico, persistir_oficina=persistir_oficina, persistir_proprietario=persistir_proprietario)
+            mock_criar_servico(**servico, persistir_oficina=persistir_oficina, persistir_proprietario=persistir_proprietario)
 
         # Criar novo serviço
         if servico is None:
-            servico = criar_servico()
+            servico = mock_criar_servico()
 
         # Persistir usuário
         if cliente and persistir_cliente:
-            criar_usuario(**cliente)
+            mock_criar_usuario(**cliente)
 
         # Criar novo usuário
         if cliente is None:
-            cliente = criar_usuario()
+            cliente = mock_criar_usuario()
 
         session.execute(
             text(
@@ -428,11 +428,11 @@ def criar_agendamento(
         # Persistir peça do agendamento
         if len(pecas_do_agendamento) > 0 and persistir_pecas_do_agendamento:
             for peca in pecas_do_agendamento:
-                criar_pecas_do_agendamento(**peca, agendamento_id=id)
+                mock_criar_pecas_do_agendamento(**peca, agendamento_id=id)
 
         # Criar nova peça do agendamento
         if len(pecas_do_agendamento) == 0:
-            pecas_do_agendamento = [criar_pecas_do_agendamento(agendamento=agendamento)]
+            pecas_do_agendamento = [mock_criar_pecas_do_agendamento(agendamento=agendamento)]
             agendamento.pecas_do_agendamento = pecas_do_agendamento
 
         return agendamento
@@ -463,7 +463,7 @@ def avaliacao_base(usuario_base, servico_base):
     yield _avaliacao_base
 
 @pytest.fixture
-def criar_avaliacao(session, criar_usuario, criar_servico):
+def mock_criar_avaliacao(session, mock_criar_usuario, mock_criar_servico):
     def _criar_avaliacao(
         id: str = None,
         nota: NotaAvaliacao = NotaAvaliacao.BOM,
@@ -480,19 +480,19 @@ def criar_avaliacao(session, criar_usuario, criar_servico):
 
         # Persistir cliente
         if cliente and persistir_cliente:
-            criar_usuario(**cliente.to_dict())
+            mock_criar_usuario(**cliente.to_dict())
 
         # Criar novo cliente
         if cliente is None:
-            cliente = criar_usuario()
+            cliente = mock_criar_usuario()
 
         # Persistir serviço
         if servico and persistir_servico:
-            criar_servico(**servico.to_dict(), persistir_oficina=persistir_oficina, persistir_proprietario=persistir_proprietario)
+            mock_criar_servico(**servico.to_dict(), persistir_oficina=persistir_oficina, persistir_proprietario=persistir_proprietario)
 
         # Criar novo serviço
         if servico is None:
-            servico = criar_servico()
+            servico = mock_criar_servico()
 
         session.execute(
             text(

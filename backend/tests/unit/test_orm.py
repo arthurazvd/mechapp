@@ -2,12 +2,12 @@ from src.domain.models import *
 from datetime import datetime
 
 from tests.mocks import (
-    criar_usuario,
-    criar_peca,
-    criar_oficina,
-    criar_servico,
-    criar_pecas_do_agendamento,
-    criar_agendamento,
+    mock_criar_usuario,
+    mock_criar_peca,
+    mock_criar_oficina,
+    mock_criar_servico,
+    mock_criar_pecas_do_agendamento,
+    mock_criar_agendamento,
 )
 
 def test_orm_usuarios(session):
@@ -28,10 +28,10 @@ def test_orm_usuarios(session):
 
 def test_orm_oficinas(
     session,
-    criar_usuario,
+    mock_criar_usuario,
 ):
     # Criando um mecânico persistente
-    mecanico = criar_usuario(tipo=TipoUsuario.MECANICO)
+    mecanico = mock_criar_usuario(tipo=TipoUsuario.MECANICO)
 
     # Como o objeto foi criado somente no BANCO, é preciso fazê-lo ser reconhecido
     mecanico = session.merge(mecanico)
@@ -72,10 +72,10 @@ def test_orm_pecas(
 
 def test_orm_servicos(
     session,
-    criar_oficina,
+    mock_criar_oficina,
 ):
     # Criando uma oficina persistente
-    oficina = criar_oficina()
+    oficina = mock_criar_oficina()
 
     # Como o objeto foi criado somente no BANCO, é preciso fazê-lo ser reconhecido
     oficina = session.merge(oficina)
@@ -99,15 +99,15 @@ def test_orm_servicos(
 
 def test_orm_agendamentos(
     session,
-    criar_pecas_do_agendamento,
-    criar_usuario,
-    criar_servico,
+    mock_criar_pecas_do_agendamento,
+    mock_criar_usuario,
+    mock_criar_servico,
 ):
     
     # Criando peça, serviço e cliente persistentes
-    peca = criar_pecas_do_agendamento()
-    cliente = criar_usuario()
-    servico = criar_servico()
+    peca = mock_criar_pecas_do_agendamento()
+    cliente = mock_criar_usuario()
+    servico = mock_criar_servico()
 
     # Reconhecer objetos através da ORM
     peca = session.merge(peca)
@@ -132,12 +132,12 @@ def test_orm_agendamentos(
 
 def test_orm_avaliacoes(
     session,
-    criar_usuario,
-    criar_servico,
+    mock_criar_usuario,
+    mock_criar_servico,
 ):
     # Criando cliente e serviço consistnete
-    cliente = criar_usuario()
-    servico = criar_servico()
+    cliente = mock_criar_usuario()
+    servico = mock_criar_servico()
 
     # Reconhecer objetos através da ORM
     servico = session.merge(servico)

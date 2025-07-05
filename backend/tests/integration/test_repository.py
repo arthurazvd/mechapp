@@ -158,11 +158,11 @@ def test_agendamento_repository(session, agendamento_base):
 
 def test_pecas_do_agendamento_repository(
     session, 
-    criar_agendamento,
+    mock_criar_agendamento,
     peca_do_agendamento_base,
 ):
     peca_do_agendamento = peca_do_agendamento_base()
-    agendamento = criar_agendamento()
+    agendamento = mock_criar_agendamento()
     pecas_repo = PecasDoAgendamentoRepository(session)
 
     # Persistindo agendamento na sessão atual
