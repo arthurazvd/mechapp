@@ -12,7 +12,7 @@ from src.domain.exceptions import (
     EmailExistente,
     UsuarioNaoEncontrado,
 )
-from tests.mocks import usuario_base, mock_criar_usuario as mock_criar_usuario
+from tests.mocks import usuario_base, mock_criar_usuario
 import pytest
 
 def test_criar_usuario_service(session_maker, usuario_base):
