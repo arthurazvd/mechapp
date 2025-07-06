@@ -3,10 +3,13 @@ import { View, Text, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Picker } from '@react-native-picker/picker';
 import { Checkbox } from 'expo-checkbox';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 
 import { CustomInput } from '../../components/CustomInput';
 import { ExpandingTextArea } from '../../components/ExpandingTextArea';
 import { CustomButton } from '../../components/CustomButton';
+import { BackButton } from '../../components/BackButton';
 
 import { globalStyles } from '../../styles/globalStyles';
 import { servStyles } from './styles';
@@ -35,6 +38,8 @@ const CadastrarServico = () => {
       setPrecoMax(precoFormatado);
     };
 
+    const insets = useSafeAreaInsets();
+
     const handleCadastrar = () => {
         console.log({
         nome,
@@ -49,17 +54,18 @@ const CadastrarServico = () => {
 
 
   return (
-    <View style={globalStyles.container}>
-        <View style={servStyles.initialTop}>
-            <Image source={require('../../assets/logo-nome.png')} style={{ width: 100, height: 190 }}
-  resizeMode="contain"/>
+    <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
+        <View style={globalStyles.crudTop}>
+            <BackButton />
+            <Image source={require('../../assets/logo-nome.png')} style={{ width: 100 }} resizeMode="contain"/>
         </View>
               
-        <View style={servStyles.initialBottom}>
+        <View style={globalStyles.crudBottom}>
             <Text style={globalStyles.title}>Cadastrar Serviço</Text>
             <CustomInput
                 label="Nome"
                 placeholder="Digite o nome do serviço"
+                placeholderTextColor="#868686"
                 onChangeText={setNome}
                 contentStyle={{ width: '80%', maxWidth: 400 }}
             />
@@ -68,6 +74,7 @@ const CadastrarServico = () => {
                 value={descricao}
                 onChangeText={setDescricao}
                 placeholder="Digite a descrição do serviço..."
+                placeholderTextColor="#868686"
                 containerStyle={{ alignItems: 'center' }}
                 inputStyle={{ maxWidth: 400, width: '100%' }}
             />
@@ -89,6 +96,7 @@ const CadastrarServico = () => {
             <CustomInput
                 label="Tempo estimado"
                 placeholder="Digite o tempo"
+                placeholderTextColor="#868686"
                 keyboardType='numeric'
                 onlyNumbers={true}
                 value={tempoEstimado}
@@ -99,6 +107,7 @@ const CadastrarServico = () => {
                 <CustomInput
                     label="Preço Min"
                     placeholder="R$ 0,00"
+                    placeholderTextColor="#868686"
                     keyboardType='numeric'
                     onChangeText={handlePrecoMinChange}
                     value={precoMin}
@@ -108,6 +117,7 @@ const CadastrarServico = () => {
                 <CustomInput
                     label="Preço Max"
                     placeholder="R$ 0,00"
+                    placeholderTextColor="#868686"
                     keyboardType='numeric'
                     onChangeText={handlePrecoMaxChange}
                     value={precoMax}

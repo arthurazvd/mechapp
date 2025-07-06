@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { View, Text, } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Image } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import CustomButton from '../../components/CustomButton';
 import InfoView from '../../components/InfoView';
+import { BackButton } from '../../components/BackButton';
 
 import { globalStyles } from '../../styles/globalStyles';
-import { servStyles } from './styles';
 
 const VisualizarServico = () => {
     const router = useRouter();
@@ -17,6 +18,8 @@ const VisualizarServico = () => {
     const [categoria] = useState('Mecânica');
     const [tempoEstimado] = useState('30 minutos');
     const [preco] = useState('R$ 100,00 - R$ 200,00');
+
+    const insets = useSafeAreaInsets();
 
     const handleVisualizar = () => {
         console.log({
@@ -31,13 +34,14 @@ const VisualizarServico = () => {
 
 
   return (
-    <View style={globalStyles.container}>
-        <View style={servStyles.initialTop}>
-            <Image source={require('../../assets/logo-nome.png')} style={{ width: 100, height: 190 }}
+    <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
+        <View style={globalStyles.crudTop}>
+          <BackButton />
+          <Image source={require('../../assets/logo-nome.png')} style={{ width: 100, height: 190 }}
   resizeMode="contain"/>
         </View>
               
-        <View style={servStyles.initialBottom}>
+        <View style={globalStyles.crudBottom}>
             <Text style={globalStyles.title}>{nome}</Text>
             <InfoView label="Descrição" value={descricao} />
             <InfoView label="Categoria" value={categoria} />

@@ -4,10 +4,12 @@ import { useRouter } from 'expo-router';
 import { Picker } from '@react-native-picker/picker';
 import { Checkbox } from 'expo-checkbox';
 import { Image } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CustomInput } from '../../components/CustomInput';
 import { ExpandingTextArea } from '../../components/ExpandingTextArea';
 import { CustomButton } from '../../components/CustomButton';
+import { BackButton } from '../../components/BackButton';
 
 import { globalStyles } from '../../styles/globalStyles';
 import { servStyles } from './styles';
@@ -21,10 +23,12 @@ const EditarServico = () => {
     const [descricao, setDescricao] = useState('Substituição do óleo do motor por um novo, garantindo a lubrificação adequada das peças internas e o bom desempenho do veículo. Inclui verificação e, se necessário, troca do filtro de óleo. Recomendado conforme a quilometragem ou tempo de uso.');
     const [categoria, setCategoria] = useState('mecanica');
     const [tempoEstimado, setTempoEstimado] = useState('1');
-    const [precoMin, setPrecoMin] = useState('100');
-    const [precoMax, setPrecoMax] = useState('200');
+    const [precoMin, setPrecoMin] = useState('R$ 100,00');
+    const [precoMax, setPrecoMax] = useState('R$ 200,00');
     const [checked, setChecked] = useState(false);
 
+    const insets = useSafeAreaInsets();
+    
 
     const handlePrecoMinChange = (text: string) => {
       const precoFormatado = formatarPreco(text);
@@ -50,17 +54,19 @@ const EditarServico = () => {
 
 
   return (
-    <View style={globalStyles.container}>
-        <View style={servStyles.initialTop}>
+    <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
+        <View style={globalStyles.crudTop}>
+            <BackButton />
             <Image source={require('../../assets/logo-nome.png')} style={{ width: 100, height: 190 }}
   resizeMode="contain"/>
         </View>
               
-        <View style={servStyles.initialBottom}>
+        <View style={globalStyles.crudBottom}>
             <Text style={globalStyles.title}>Editar Serviço</Text>
             <CustomInput
                 label="Nome"
                 placeholder="Digite o nome do serviço"
+                placeholderTextColor="#868686"
                 value={nome}
                 onChangeText={setNome}
                 contentStyle={{ width: '80%', maxWidth: 400 }}
@@ -70,6 +76,7 @@ const EditarServico = () => {
                 value={descricao}
                 onChangeText={setDescricao}
                 placeholder="Digite a descrição do serviço..."
+                placeholderTextColor="#868686"
                 containerStyle={{ alignItems: 'center' }}
                 inputStyle={{ maxWidth: 400, width: '100%' }}
             />
@@ -91,6 +98,7 @@ const EditarServico = () => {
             <CustomInput
                 label="Tempo estimado"
                 placeholder="Digite o tempo"
+                placeholderTextColor="#868686"
                 keyboardType='numeric'
                 onlyNumbers={true}
                 value={tempoEstimado}
@@ -101,6 +109,7 @@ const EditarServico = () => {
                 <CustomInput
                     label="Preço Min"
                     placeholder="R$ 0,00"
+                    placeholderTextColor="#868686"
                     keyboardType='numeric'
                     onChangeText={handlePrecoMinChange}
                     value={precoMin}
@@ -110,6 +119,7 @@ const EditarServico = () => {
                 <CustomInput
                     label="Preço Max"
                     placeholder="R$ 0,00"
+                    placeholderTextColor="#868686"
                     keyboardType='numeric'
                     onChangeText={handlePrecoMaxChange}
                     value={precoMax}

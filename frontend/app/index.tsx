@@ -23,12 +23,12 @@ export default function Index() {
         <CustomButton
           title="Entrar"
           style={{ height: 50, width: "80%", maxWidth: 400, marginBottom: 5 }}
-          onPress={() => router.back()}
+          onPress={() => router.push('/login')}
         />
         <CustomButton
           title="Cadastra-se"
           style={{ height: 50, width: "80%", maxWidth: 400, marginBottom: 5 }}
-          onPress={() => router.back()}
+          onPress={() => router.push('/cadastro/escolher')}
         />
       </View>
     </View>
