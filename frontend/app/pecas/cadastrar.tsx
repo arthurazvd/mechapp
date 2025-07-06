@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, Image } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CustomInput } from '../../components/CustomInput';
 import { ExpandingTextArea } from '../../components/ExpandingTextArea';
 import { CustomButton } from '../../components/CustomButton';
 import { ImagePickerInput } from '../../components/ImagePickerInput';
+import { BackButton } from '../../components/BackButton';
 
 import { globalStyles } from '../../styles/globalStyles';
 import { pecStyles } from './styles';
@@ -20,6 +22,8 @@ const CadastrarPecas = () => {
   const [fabricante, setFabricante] = useState('');
   const [preco, setPreco] = useState('');
   const [imagem, setImagem] = useState<string | null>(null);
+
+  const insets = useSafeAreaInsets();
 
   const handlePrecoChange = (text: string) => {
     const precoFormatado = formatarPreco(text);
@@ -39,8 +43,9 @@ const CadastrarPecas = () => {
   };
 
   return (
-    <View style={globalStyles.container}>
-      <View style={pecStyles.initialTop}>
+    <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
+      <View style={globalStyles.crudTop}>
+        <BackButton />
         <Image
           source={require('../../assets/logo-nome.png')}
           style={{ width: 100, height: 190 }}
@@ -48,12 +53,13 @@ const CadastrarPecas = () => {
         />
       </View>
 
-      <View style={pecStyles.initialBottom}>
+      <View style={globalStyles.crudBottom}>
         <Text style={globalStyles.title}>Cadastrar Peça</Text>
 
         <CustomInput
           label="Nome"
           placeholder="Digite o nome do peciço"
+          placeholderTextColor="#868686"
           onChangeText={setNome}
           contentStyle={{ width: '80%', maxWidth: 400 }}
         />
@@ -62,7 +68,8 @@ const CadastrarPecas = () => {
           label="Descrição"
           value={descricao}
           onChangeText={setDescricao}
-          placeholder="Digite a descrição do peciço..."
+          placeholder="Digite a descrição do serviço..."
+          placeholderTextColor="#868686"
           containerStyle={{ alignItems: 'center' }}
           inputStyle={{ maxWidth: 400, width: '100%' }}
         />
@@ -70,7 +77,7 @@ const CadastrarPecas = () => {
         <CustomInput
           label="Fabricante"
           placeholder="Digite o fabricante"
-          keyboardType="numeric"
+          placeholderTextColor="#868686"
           value={fabricante}
           onChangeText={setFabricante}
           contentStyle={{ width: '80%', maxWidth: 400 }}
@@ -80,6 +87,7 @@ const CadastrarPecas = () => {
           <CustomInput
             label="Quantidade"
             placeholder="0"
+            placeholderTextColor="#868686"
             keyboardType="numeric"
             onlyNumbers={true}
             onChangeText={setQuantidade}
@@ -90,6 +98,7 @@ const CadastrarPecas = () => {
           <CustomInput
             label="Preço"
             placeholder="R$ 0,00"
+            placeholderTextColor="#868686"
             keyboardType="numeric"
             onChangeText={handlePrecoChange}
             value={preco}

@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text,} from 'react-native';
+import { View, Text, Image } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Image } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CustomInput } from '../../components/CustomInput';
 import { ExpandingTextArea } from '../../components/ExpandingTextArea';
 import { CustomButton } from '../../components/CustomButton';
 import { ImagePickerInput } from '../../components/ImagePickerInput';
+import { BackButton } from '../../components/BackButton';
 
 import { globalStyles } from '../../styles/globalStyles';
 import { pecStyles } from './styles';
@@ -21,6 +22,7 @@ const EditarPecas = () => {
     const [fabricante, setFabricante] = useState('Michelin');
     const [preco, setPreco] = useState('500');
 
+    const insets = useSafeAreaInsets();
 
     const [imagem, setImagem] = useState<string | null>(null);
 
@@ -42,13 +44,14 @@ const EditarPecas = () => {
 
 
   return (
-    <View style={globalStyles.container}>
-        <View style={pecStyles.initialTop}>
+    <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
+        <View style={globalStyles.crudTop}>
+            <BackButton />
             <Image source={require('../../assets/logo-nome.png')} style={{ width: 100, height: 190 }}
   resizeMode="contain"/>
         </View>
               
-        <View style={pecStyles.initialBottom}>
+        <View style={globalStyles.crudBottom}>
             <Text style={globalStyles.title}>Editar Peça</Text>
             <CustomInput
                 label="Nome"

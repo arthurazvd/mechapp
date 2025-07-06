@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, Image } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { InfoView } from '../../components/InfoView';
 import { CustomButton } from '../../components/CustomButton';
+import { BackButton } from '../../components/BackButton';
 
 import { globalStyles } from '../../styles/globalStyles';
 import { pecStyles } from './styles';
@@ -18,6 +20,8 @@ const VisualizarPeca = () => {
     const [fabricante] = useState('Michelin');
     const [preco] = useState('R$ 500,00');
 
+  const insets = useSafeAreaInsets();
+
   const handleVisualizar = () => {
     console.log({
       nome,
@@ -30,11 +34,12 @@ const VisualizarPeca = () => {
   };
 
   return (
-    <View style={globalStyles.container}>
-      <View style={pecStyles.initialTop}>
-          <Image source={require('../../assets/logo-nome.png')} style={{ width: 100, height: 190 }} resizeMode="contain"/>
+    <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
+      <View style={globalStyles.crudTop}>
+        <BackButton />
+        <Image source={require('../../assets/logo-nome.png')} style={{ width: 100, height: 190 }} resizeMode="contain"/>
       </View>
-      <View style={pecStyles.initialBottom}>
+      <View style={globalStyles.crudBottom}>
         <View style={pecStyles.viewPecas}>
           <Text style={[globalStyles.title, { flex: 1, flexWrap: 'wrap' }]}>{nome}</Text>
           <Image

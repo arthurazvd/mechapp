@@ -6,21 +6,7 @@ export const pecStyles = StyleSheet.create({
     backgroundColor: '#151515',
     justifyContent: 'center',
   },
-
-  initialTop: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#A10000',
-    height: '7%',
-    borderBottomLeftRadius: 80,
-  },
-
-  initialBottom: {
-    height: '93%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
+  
   crudButtons: {
     flexDirection: 'row',
     columnGap: '2%',

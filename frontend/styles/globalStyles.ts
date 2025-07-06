@@ -45,6 +45,21 @@ export const globalStyles = StyleSheet.create({
     
   },
 
+  crudTop: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#A10000',
+    height: '7%',
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+  },
+
+  crudBottom: {
+    height: '93%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
   label: {
     fontSize: 14,
     marginBottom: 6,
