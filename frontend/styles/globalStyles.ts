@@ -55,7 +55,7 @@ export const globalStyles = StyleSheet.create({
   },
 
   crudBottom: {
-    height: '93%',
+    height: '83%',
     justifyContent: 'center',
     alignItems: 'center',
   },
