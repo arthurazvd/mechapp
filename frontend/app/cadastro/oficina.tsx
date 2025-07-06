@@ -24,6 +24,7 @@ export default function Index() {
       <View style={globalStyles.initialBottom}>
         <CustomInput
             placeholder="Nome da oficina"
+            placeholderTextColor="#868686"
             label="Nome da oficina"
             value={oficina}
             onChangeText={setOfc}
@@ -31,6 +32,7 @@ export default function Index() {
         />
         <CustomInput
             placeholder="CNPJ/CPF" 
+            placeholderTextColor="#868686"
             label="CNPJ/CPF"
             value={cnpj}
             onChangeText={setCnpj}
@@ -38,6 +40,7 @@ export default function Index() {
         />
         <CustomInput
             placeholder="Endereço"
+            placeholderTextColor="#868686"
             label="Endereço"
             value={endereco}
             onChangeText={setEnde}
@@ -45,6 +48,7 @@ export default function Index() {
         />
         <CustomInput
             placeholder="Contato"
+            placeholderTextColor="#868686"
             label="Contato"
             value={contato}
             onChangeText={setContato}
@@ -60,7 +64,7 @@ export default function Index() {
             marginBottom: 20,
             }}
             title="Cadastrar"
-            onPress={() => console.log('Botão pressionado, mas sem ação!')}
+            onPress={() => router.push('/login')}
         />
 
         <Text style={globalStyles.text}>Já tem uma conta?</Text>

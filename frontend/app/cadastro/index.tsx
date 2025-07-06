@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, Alert, Image } from "react-native";
+import { View, Text, Alert, TouchableOpacity} from "react-native";
 import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 
 import { CustomButton } from '../../components/CustomButton';
 import { CustomInput } from "../../components/CustomInput";
@@ -15,24 +17,20 @@ export default function Index() {
   const [nome, setNome] = useState("");
   const [telefone, setTelefone] = useState("");
   const [senha, setSenha] = useState("");
+  const [confsenha, setConfsenha] = useState("");
 
-  const handleLogin = () => {
-      if (!email || !senha) {
-        Alert.alert("Erro", "Preencha todos os campos!");
-        return;
-      }
-  
-      Alert.alert("Login", "Login realizado com sucesso!");
-    };
+
+  const insets = useSafeAreaInsets();
   
   return (
-    <View style={globalStyles.container}>
+    <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
     <View style={cadStyles.initialTop}>
         <Text style={globalStyles.title}>Cadastro</Text>
     </View>
       <View style={globalStyles.initialBottom}>
         <CustomInput
             placeholder="Nome"
+            placeholderTextColor="#868686"
             label="Nome"
             value={nome}
             onChangeText={setNome}
@@ -40,6 +38,7 @@ export default function Index() {
         />
         <CustomInput
             placeholder="Telefone" 
+            placeholderTextColor="#868686"
             label="Telefone"
             value={telefone}
             onChangeText={setTelefone}
@@ -47,6 +46,7 @@ export default function Index() {
         />
         <CustomInput
             placeholder="E-mail"
+            placeholderTextColor="#868686"
             label="E-mail"
             value={email}
             onChangeText={setEmail}
@@ -54,13 +54,17 @@ export default function Index() {
         />
         <PasswordInput
             placeholder="Senha"
+            label="Senha"
+            placeholderTextColor="#868686"
             value={senha}
             onChangeText={setSenha}
         />
         <PasswordInput
             placeholder="Confirmar Senha"
-            value={senha}
-            onChangeText={setSenha}
+            label="Confirmar Senha"
+            placeholderTextColor="#868686"
+            value={confsenha}
+            onChangeText={setConfsenha}
         />
 
         <CustomButton
@@ -72,11 +76,13 @@ export default function Index() {
             marginBottom: 20,
             }}
             title="Cadastrar"
-            onPress={handleLogin}
+            onPress={() => router.push('/cadastro/oficina')}
         />
 
         <Text style={globalStyles.text}>Já tem uma conta?</Text>
-        <Text style={globalStyles.link}>Fazer Login</Text>
+                <TouchableOpacity onPress={() => router.push('/login')}>
+                  <Text style={globalStyles.link}>Fazer Login</Text>
+                </TouchableOpacity>
       </View>
     </View>
   );

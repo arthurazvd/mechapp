@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, Alert, Image } from "react-native";
+import { View, Text, Alert, Image, TouchableOpacity} from "react-native";
 import { useRouter } from 'expo-router';
 
 // Componentes
@@ -68,7 +68,9 @@ const LoginScreen = () => {
         />
 
         <Text style={globalStyles.text}>Não tem uma conta?</Text>
-        <Text style={globalStyles.link}>Cadastre-se</Text>
+        <TouchableOpacity onPress={() => router.push('/cadastro/escolher')}>
+          <Text style={globalStyles.link}>Cadastre-se</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

@@ -20,12 +20,12 @@ export default function Index() {
         <CustomButton
           title="Cliente"
           style={{ height: 50, width: "80%", maxWidth: 400, marginBottom: 5 }}
-          onPress={() => router.back()}
+          onPress={() => router.push('/cadastro')}
         />
         <CustomButton
           title="Mecânico"
           style={{ height: 50, width: "80%", maxWidth: 400, marginBottom: 5 }}
-          onPress={() => router.back()}
+          onPress={() => router.push('/cadastro')}
         />
       </View>
     </View>
