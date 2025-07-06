@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, Alert, Image } from "react-native";
+import { useRouter } from 'expo-router';
 
 // Componentes
 import { CustomButton } from "../../components/CustomButton";
@@ -8,11 +9,12 @@ import { PasswordInput } from "../../components/PasswordInput";
 import { globalStyles } from "../../styles/globalStyles";
 
 // Controller
-import { usuarioController } from "../../controllers/usuario_controller";
+//import { usuarioController } from "../../controllers/usuario_controller";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const router = useRouter();
 
   const handleLogin = () => {
     if (!email || !senha) {
@@ -37,6 +39,7 @@ const LoginScreen = () => {
         <Text style={globalStyles.title}>Login</Text>
         <CustomInput
           placeholder="E-mail"
+          placeholderTextColor="#868686"
           label="E-mail"
           value={email}
           onChangeText={setEmail}
@@ -44,6 +47,8 @@ const LoginScreen = () => {
         />
         <PasswordInput
           placeholder="Senha"
+          label="Senha"
+          placeholderTextColor="#868686"
           value={senha}
           onChangeText={setSenha}
         />
@@ -59,7 +64,7 @@ const LoginScreen = () => {
             marginBottom: 20,
           }}
           title="Entrar"
-          onPress={handleLogin}
+          onPress={() => router.push('/pecas/visualizar')}
         />
 
         <Text style={globalStyles.text}>Não tem uma conta?</Text>
