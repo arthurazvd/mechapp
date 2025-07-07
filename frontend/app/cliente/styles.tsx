@@ -3,16 +3,17 @@ import { StyleSheet } from 'react-native';
 export const cliStyles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
-    paddingHorizontal: 20,
-    marginTop: 10,
+    marginTop: 25,
     alignItems: 'center',
+    width: '80%',
+    alignSelf: 'center',
   },
   searchInput: {
     flex: 1,
     backgroundColor: '#242424',
     color: '#fff',
     paddingHorizontal: 16,
-    paddingVertical: 10,
+    paddingVertical: 13,
     borderRadius: 8,
   },
   filterButton: {
@@ -22,7 +23,10 @@ export const cliStyles = StyleSheet.create({
     borderRadius: 8,
   },
   listContent: {
-    padding: 20,
+    paddingBottom: 20,
+    paddingTop: 20,
+    width: '100%',
+    alignSelf: 'center',
   },
   avaliarButton: {
     marginTop: 10,
@@ -30,6 +34,8 @@ export const cliStyles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 6,
     alignItems: 'center',
+    width: '80%',
+    alignSelf: 'center',
   },
   avaliarText: {
     color: '#fff',
@@ -45,6 +51,8 @@ export const cliStyles = StyleSheet.create({
     padding: 20,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
+    width: '100%',
+    alignSelf: 'center',
   },
   modalTitle: {
     color: '#fff',
@@ -58,12 +66,16 @@ export const cliStyles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 8,
     marginBottom: 16,
+    width: '100%',
+    alignSelf: 'center',
   },
   modalButton: {
     backgroundColor: '#A10000',
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: 'center',
+    width: '100%',
+    alignSelf: 'center',
   },
   modalButtonText: {
     color: '#fff',
@@ -76,6 +88,8 @@ export const cliStyles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 16,
     alignItems: 'center',
+    width: '80%',
+    alignSelf: 'center',
   },
   cardImage: {
     width: 60,
@@ -119,6 +133,42 @@ export const cliStyles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 12,
   },
-
+  infoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 50,
+    width: '80%',
+    alignSelf: 'center',
+    padding: 20,
+    backgroundColor: '#242424',
+    borderRadius: 20,
+  },
+  imageBox: {
+    width: 100,
+    height: 100,
+    borderRadius: 12,
+    backgroundColor: '#2e2e2e',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  nome: {
+    color: '#fff',
+    fontSize: 17,
+    fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  descricao: {
+    color: '#aaa',
+    fontSize: 14,
+  },
+  modalText: {
+    color: '#ccc',
+    fontSize: 14,
+    marginBottom: 20,
+  },
+  infoTextBox: {
+    flex: 1,
+  },
 
 });

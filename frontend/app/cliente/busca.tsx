@@ -58,11 +58,7 @@ const BuscarOficina = () => {
       <StatusBar backgroundColor="#A10000" barStyle="light-content" />
 
       <View
-        style={[
-          globalStyles.container,
-          { paddingTop: insets.top, paddingBottom: insets.bottom },
-        ]}
-      >
+        style={[globalStyles.container,{ paddingTop: insets.top, paddingBottom: insets.bottom },]}>
         <View style={globalStyles.crudTop}>
           <BackButton />
           <Image

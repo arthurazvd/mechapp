@@ -75,7 +75,6 @@ export const globalStyles = StyleSheet.create({
   },
 
   homeButtons: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
