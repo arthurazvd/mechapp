@@ -72,5 +72,13 @@ export const globalStyles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 20,
     color: '#888',
+  },
+
+  homeButtons: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    rowGap: 10,
   }
 });

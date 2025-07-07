@@ -64,7 +64,7 @@ const LoginScreen = () => {
             marginBottom: 20,
           }}
           title="Entrar"
-          onPress={() => router.push('/servicos/cadastrar')}
+          onPress={() => router.push('/cliente/busca')}
         />
 
         <Text style={globalStyles.text}>Não tem uma conta?</Text>
