@@ -8,6 +8,7 @@ import { ExpandingTextArea } from '../../components/ExpandingTextArea';
 import { CustomButton } from '../../components/CustomButton';
 import { ImagePickerInput } from '../../components/ImagePickerInput';
 import { BackButton } from '../../components/BackButton';
+import { BottomNavigation } from '../../components/BottomNavigation';
 
 import { globalStyles } from '../../styles/globalStyles';
 import { pecStyles } from './styles';
@@ -30,18 +31,6 @@ const EditarPecas = () => {
       const precoFormatado = formatarPreco(text);
       setPreco(precoFormatado);
     };
-
-    const handleEditar = () => {
-        console.log({
-            nome,
-            descricao,
-            fabricante,
-            quantidade,
-            preco,
-        });
-        router.back(); 
-    };
-
 
   return (
     <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
@@ -102,20 +91,21 @@ const EditarPecas = () => {
 
             <View style={pecStyles.crudButtons}>
                 <CustomButton 
-                    style={{width: '25%', maxWidth: 127, height: 50}} 
-                    title="Salvar" 
-                    onPress={() => router.back()} />
+                    style={{width: '25%', maxWidth: 127, height: 50, backgroundColor: '#868686'}} 
+                    title="Cancelar" 
+                    onPress={() => router.back()} />                
                 <CustomButton 
-                    style={{width: '25%', maxWidth: 127, height: 50}} 
+                    style={{width: '25%', maxWidth: 127, height: 50, backgroundColor: '#868686'}} 
                     title="Deletar" 
                     onPress={() => router.back()} />
                 <CustomButton 
                     style={{width: '25%', maxWidth: 127, height: 50}} 
-                    title="Cancelar" 
+                    title="Salvar" 
                     onPress={() => router.back()} />
             </View>
 
         </View>
+        <BottomNavigation />
     </View>
   );
 };

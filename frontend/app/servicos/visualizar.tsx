@@ -7,6 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import CustomButton from '../../components/CustomButton';
 import InfoView from '../../components/InfoView';
 import { BackButton } from '../../components/BackButton';
+import { BottomNavigation } from '../../components/BottomNavigation';
 
 import { globalStyles } from '../../styles/globalStyles';
 
@@ -20,18 +21,6 @@ const VisualizarServico = () => {
     const [preco] = useState('R$ 100,00 - R$ 200,00');
 
     const insets = useSafeAreaInsets();
-
-    const handleVisualizar = () => {
-        console.log({
-        nome,
-        descricao,
-        categoria,
-        tempoEstimado,
-        preco,
-      });
-      router.back();
-    };
-
 
   return (
     <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
@@ -52,6 +41,7 @@ const VisualizarServico = () => {
                 title="Editar" 
                 onPress={() => router.push('/servicos/editar')} />
         </View>
+        <BottomNavigation />
     </View>
   );
 };

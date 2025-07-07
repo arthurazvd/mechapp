@@ -5,11 +5,11 @@ import { Picker } from '@react-native-picker/picker';
 import { Checkbox } from 'expo-checkbox';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-
 import { CustomInput } from '../../components/CustomInput';
 import { ExpandingTextArea } from '../../components/ExpandingTextArea';
 import { CustomButton } from '../../components/CustomButton';
 import { BackButton } from '../../components/BackButton';
+import { BottomNavigation } from '../../components/BottomNavigation';
 
 import { globalStyles } from '../../styles/globalStyles';
 import { servStyles } from './styles';
@@ -136,16 +136,17 @@ const CadastrarServico = () => {
                 </View>
             <View style={servStyles.crudButtons}>
                 <CustomButton 
-                    style={{width: '39%', maxWidth: 193, height: 50}} 
-                    title="Cadastrar" 
+                    style={{width: '39%', maxWidth: 193, height: 50, backgroundColor: '#868686'}} 
+                    title="Cancelar" 
                     onPress={handleCadastrar} />
                 <CustomButton 
                     style={{width: '39%', maxWidth: 193, height: 50}} 
-                    title="Cancelar" 
+                    title="Cadastrar" 
                     onPress={handleCadastrar} />
             </View>
 
         </View>
+        <BottomNavigation />
     </View>
   );
 };

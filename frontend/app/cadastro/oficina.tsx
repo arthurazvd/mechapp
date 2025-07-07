@@ -1,25 +1,40 @@
 import React, { useState } from 'react';
 import { View, Text, Alert, Image } from "react-native";
 import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CustomButton } from '../../components/CustomButton';
 import { CustomInput } from "../../components/CustomInput";
+import { BackButton } from '../../components/BackButton';
 
 import { globalStyles } from '../../styles/globalStyles';
 import { cadStyles } from './styles';
+import { formatarDocumento, formatarContato } from '../../utils/formatters';
 
 export default function Index() {
   const router = useRouter();
   const [oficina, setOfc] = useState("");
   const [cnpj, setCnpj] = useState("");
   const [endereco, setEnde] = useState("");
-  const [contato, setContato] = useState("");
+  const [telefone, setTelefone] = useState("");
 
+  const handleCnpjChange = (text: string) => {
+    const DocFormatado = formatarDocumento(text);
+    setCnpj(DocFormatado);
+  };
+
+  const handleTelefoneChange = (text: string) => {
+    const TelefoneFormatado = formatarContato(text);
+    setTelefone(TelefoneFormatado);
+  };
+
+  const insets = useSafeAreaInsets();
   
   return (
-    <View style={globalStyles.container}>
+    <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
     <View style={cadStyles.initialTop}>
-        <Text style={globalStyles.title}>Cadastro</Text>
+      <BackButton />
+      <Text style={globalStyles.title}>Cadastro</Text>
     </View>
       <View style={globalStyles.initialBottom}>
         <CustomInput
@@ -34,8 +49,9 @@ export default function Index() {
             placeholder="CNPJ/CPF" 
             placeholderTextColor="#868686"
             label="CNPJ/CPF"
+            keyboardType='numeric'
             value={cnpj}
-            onChangeText={setCnpj}
+            onChangeText={handleCnpjChange}
             contentStyle={{ width: "80%", maxWidth: 400 }}
         />
         <CustomInput
@@ -47,11 +63,12 @@ export default function Index() {
             contentStyle={{ width: "80%", maxWidth: 400 }}
         />
         <CustomInput
-            placeholder="Contato"
+            placeholder="Telefone"
             placeholderTextColor="#868686"
-            label="Contato"
-            value={contato}
-            onChangeText={setContato}
+            label="Telefone"
+            keyboardType='numeric'
+            value={telefone}
+            onChangeText={handleTelefoneChange}
             contentStyle={{ width: "80%", maxWidth: 400 }}
         />
 

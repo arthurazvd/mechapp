@@ -3,13 +3,15 @@ import { View, Text, Alert, TouchableOpacity} from "react-native";
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-
 import { CustomButton } from '../../components/CustomButton';
 import { CustomInput } from "../../components/CustomInput";
 import { PasswordInput } from "../../components/PasswordInput";
+import { BackButton } from '../../components/BackButton';
 
 import { globalStyles } from '../../styles/globalStyles';
 import { cadStyles } from './styles';
+import { formatarContato } from '../../utils/formatters';
+
 
 export default function Index() {
   const router = useRouter();
@@ -19,13 +21,18 @@ export default function Index() {
   const [senha, setSenha] = useState("");
   const [confsenha, setConfsenha] = useState("");
 
+  const handleContatoChange = (text: string) => {
+    const ContatoFormatado = formatarContato(text);
+    setTelefone(ContatoFormatado);
+  };
 
   const insets = useSafeAreaInsets();
   
   return (
     <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
     <View style={cadStyles.initialTop}>
-        <Text style={globalStyles.title}>Cadastro</Text>
+      <BackButton />
+      <Text style={globalStyles.title}>Cadastro</Text>
     </View>
       <View style={globalStyles.initialBottom}>
         <CustomInput
@@ -40,8 +47,9 @@ export default function Index() {
             placeholder="Telefone" 
             placeholderTextColor="#868686"
             label="Telefone"
+            keyboardType='numeric'
             value={telefone}
-            onChangeText={setTelefone}
+            onChangeText={handleContatoChange}
             contentStyle={{ width: "80%", maxWidth: 400 }}
         />
         <CustomInput

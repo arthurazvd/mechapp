@@ -10,6 +10,7 @@ import { CustomInput } from '../../components/CustomInput';
 import { ExpandingTextArea } from '../../components/ExpandingTextArea';
 import { CustomButton } from '../../components/CustomButton';
 import { BackButton } from '../../components/BackButton';
+import { BottomNavigation } from '../../components/BottomNavigation';
 
 import { globalStyles } from '../../styles/globalStyles';
 import { servStyles } from './styles';
@@ -39,19 +40,6 @@ const EditarServico = () => {
       const precoFormatado = formatarPreco(text);
       setPrecoMax(precoFormatado);
     };
-
-    const handleEditar = () => {
-        console.log({
-        nome,
-        descricao,
-        categoria,
-        tempoEstimado,
-        precoMin,
-        precoMax
-        });
-    router.back(); 
-    };
-
 
   return (
     <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
@@ -138,20 +126,21 @@ const EditarServico = () => {
                 </View>
             <View style={servStyles.crudButtons}>
                 <CustomButton 
-                    style={{width: '25%', maxWidth: 127, height: 50}} 
-                    title="Salvar" 
+                    style={{width: '25%', maxWidth: 127, height: 50, backgroundColor: '#868686'}} 
+                    title="Cancelar" 
                     onPress={() => router.back()} />
                 <CustomButton 
-                    style={{width: '25%', maxWidth: 127, height: 50}} 
+                    style={{width: '25%', maxWidth: 127, height: 50, backgroundColor: '#868686'}} 
                     title="Deletar" 
                     onPress={() => router.back()} />
                 <CustomButton 
                     style={{width: '25%', maxWidth: 127, height: 50}} 
-                    title="Cancelar" 
+                    title="Salvar" 
                     onPress={() => router.back()} />
             </View>
 
         </View>
+        <BottomNavigation />
     </View>
   );
 };

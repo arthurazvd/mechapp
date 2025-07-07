@@ -6,10 +6,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { InfoView } from '../../components/InfoView';
 import { CustomButton } from '../../components/CustomButton';
 import { BackButton } from '../../components/BackButton';
+import { BottomNavigation } from '../../components/BottomNavigation';
 
 import { globalStyles } from '../../styles/globalStyles';
 import { pecStyles } from './styles';
-
 
 const VisualizarPeca = () => {
     const router = useRouter();
@@ -21,17 +21,6 @@ const VisualizarPeca = () => {
     const [preco] = useState('R$ 500,00');
 
   const insets = useSafeAreaInsets();
-
-  const handleVisualizar = () => {
-    console.log({
-      nome,
-      descricao,
-      fabricante,
-      quantidade,
-      preco,
-    });
-    router.back();
-  };
 
   return (
     <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
@@ -60,6 +49,7 @@ const VisualizarPeca = () => {
           onPress={() => router.push('/pecas/editar')}
         />
       </View>
+      <BottomNavigation />
     </View>
   );
 };

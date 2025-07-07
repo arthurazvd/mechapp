@@ -8,6 +8,7 @@ import { ExpandingTextArea } from '../../components/ExpandingTextArea';
 import { CustomButton } from '../../components/CustomButton';
 import { ImagePickerInput } from '../../components/ImagePickerInput';
 import { BackButton } from '../../components/BackButton';
+import { BottomNavigation } from '../../components/BottomNavigation';
 
 import { globalStyles } from '../../styles/globalStyles';
 import { pecStyles } from './styles';
@@ -30,18 +31,6 @@ const CadastrarPecas = () => {
     setPreco(precoFormatado);
   };
 
-  const handleCadastrar = () => {
-    console.log({
-      nome,
-      descricao,
-      fabricante,
-      quantidade,
-      preco,
-    });
-
-    router.back(); 
-  };
-
   return (
     <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
       <View style={globalStyles.crudTop}>
@@ -58,7 +47,7 @@ const CadastrarPecas = () => {
 
         <CustomInput
           label="Nome"
-          placeholder="Digite o nome do peciço"
+          placeholder="Digite o nome da peça"
           placeholderTextColor="#868686"
           onChangeText={setNome}
           contentStyle={{ width: '80%', maxWidth: 400 }}
@@ -68,7 +57,7 @@ const CadastrarPecas = () => {
           label="Descrição"
           value={descricao}
           onChangeText={setDescricao}
-          placeholder="Digite a descrição do serviço..."
+          placeholder="Digite a descrição da peça..."
           placeholderTextColor="#868686"
           containerStyle={{ alignItems: 'center' }}
           inputStyle={{ maxWidth: 400, width: '100%' }}
@@ -111,17 +100,19 @@ const CadastrarPecas = () => {
 
         <View style={pecStyles.crudButtons}>
           <CustomButton
-            style={{ width: '39%', maxWidth: 193, height: 50 }}
-            title="Cadastrar"
+            style={{ width: '39%', maxWidth: 193, height: 50, backgroundColor: '#868686'}}
+            title="Cancelar"
             onPress={() => router.back()}
           />
           <CustomButton
             style={{ width: '39%', maxWidth: 193, height: 50 }}
-            title="Cancelar"
+            title="Cadastrar"
             onPress={() => router.back()}
           />
         </View>
+        
       </View>
+      <BottomNavigation />
     </View>
   );
 };
