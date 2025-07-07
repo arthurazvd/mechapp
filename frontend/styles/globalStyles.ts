@@ -79,5 +79,50 @@ export const globalStyles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     rowGap: 10,
-  }
+  },
+
+  telaServicos: {
+    justifyContent: 'flex-start',
+    width: '100%',
+    paddingTop: 30,
+    height: '83%',
+  },
+
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: '#000000aa',
+    justifyContent: 'flex-end',
+  },
+
+  modalContent: {
+    backgroundColor: '#1e1e1e',
+    padding: 20,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    alignItems: 'center',
+  },
+
+  modalTitle: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+
+  modalButton: {
+    backgroundColor: '#A10000',
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+    marginTop: 20,
+    alignItems: 'center',
+  },
+
+  modalButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 15,
+  },
+
 });
