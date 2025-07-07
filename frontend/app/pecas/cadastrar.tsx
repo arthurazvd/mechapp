@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, StatusBar } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -32,88 +32,91 @@ const CadastrarPecas = () => {
   };
 
   return (
-    <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
-      <View style={globalStyles.crudTop}>
-        <BackButton />
-        <Image
-          source={require('../../assets/logo-nome.png')}
-          style={{ width: 100, height: 190 }}
-          resizeMode="contain"
-        />
-      </View>
-
-      <View style={globalStyles.crudBottom}>
-        <Text style={globalStyles.title}>Cadastrar Peça</Text>
-
-        <CustomInput
-          label="Nome"
-          placeholder="Digite o nome da peça"
-          placeholderTextColor="#868686"
-          onChangeText={setNome}
-          contentStyle={{ width: '80%', maxWidth: 400 }}
-        />
-
-        <ExpandingTextArea
-          label="Descrição"
-          value={descricao}
-          onChangeText={setDescricao}
-          placeholder="Digite a descrição da peça..."
-          placeholderTextColor="#868686"
-          containerStyle={{ alignItems: 'center' }}
-          inputStyle={{ maxWidth: 400, width: '100%' }}
-        />
-
-        <CustomInput
-          label="Fabricante"
-          placeholder="Digite o fabricante"
-          placeholderTextColor="#868686"
-          value={fabricante}
-          onChangeText={setFabricante}
-          contentStyle={{ width: '80%', maxWidth: 400 }}
-        />
-
-        <View style={pecStyles.precoInput}>
-          <CustomInput
-            label="Quantidade"
-            placeholder="0"
-            placeholderTextColor="#868686"
-            keyboardType="numeric"
-            onlyNumbers={true}
-            onChangeText={setQuantidade}
-            value={quantidade}
-            contentStyle={{ width: '100%', maxWidth: 200 }}
-            style={{ width: '49%' }}
-          />
-          <CustomInput
-            label="Preço"
-            placeholder="R$ 0,00"
-            placeholderTextColor="#868686"
-            keyboardType="numeric"
-            onChangeText={handlePrecoChange}
-            value={preco}
-            contentStyle={{ width: '100%', maxWidth: 200 }}
-            style={{ width: '49%' }}
+    <>
+      <StatusBar backgroundColor="#A10000" barStyle="light-content" />
+      <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
+        <View style={globalStyles.crudTop}>
+          <BackButton />
+          <Image
+            source={require('../../assets/logo-nome.png')}
+            style={{ width: 100, height: 190 }}
+            resizeMode="contain"
           />
         </View>
 
-        <ImagePickerInput imagem={imagem} setImagem={setImagem} />
+        <View style={globalStyles.crudBottom}>
+          <Text style={globalStyles.title}>Cadastrar Peça</Text>
 
-        <View style={pecStyles.crudButtons}>
-          <CustomButton
-            style={{ width: '39%', maxWidth: 193, height: 50, backgroundColor: '#868686'}}
-            title="Cancelar"
-            onPress={() => router.back()}
+          <CustomInput
+            label="Nome"
+            placeholder="Digite o nome da peça"
+            placeholderTextColor="#868686"
+            onChangeText={setNome}
+            contentStyle={{ width: '80%', maxWidth: 400 }}
           />
-          <CustomButton
-            style={{ width: '39%', maxWidth: 193, height: 50 }}
-            title="Cadastrar"
-            onPress={() => router.back()}
+
+          <ExpandingTextArea
+            label="Descrição"
+            value={descricao}
+            onChangeText={setDescricao}
+            placeholder="Digite a descrição da peça..."
+            placeholderTextColor="#868686"
+            containerStyle={{ alignItems: 'center' }}
+            inputStyle={{ maxWidth: 400, width: '100%' }}
           />
+
+          <CustomInput
+            label="Fabricante"
+            placeholder="Digite o fabricante"
+            placeholderTextColor="#868686"
+            value={fabricante}
+            onChangeText={setFabricante}
+            contentStyle={{ width: '80%', maxWidth: 400 }}
+          />
+
+          <View style={pecStyles.precoInput}>
+            <CustomInput
+              label="Quantidade"
+              placeholder="0"
+              placeholderTextColor="#868686"
+              keyboardType="numeric"
+              onlyNumbers={true}
+              onChangeText={setQuantidade}
+              value={quantidade}
+              contentStyle={{ width: '100%', maxWidth: 200 }}
+              style={{ width: '49%' }}
+            />
+            <CustomInput
+              label="Preço"
+              placeholder="R$ 0,00"
+              placeholderTextColor="#868686"
+              keyboardType="numeric"
+              onChangeText={handlePrecoChange}
+              value={preco}
+              contentStyle={{ width: '100%', maxWidth: 200 }}
+              style={{ width: '49%' }}
+            />
+          </View>
+
+          <ImagePickerInput imagem={imagem} setImagem={setImagem} />
+
+          <View style={pecStyles.crudButtons}>
+            <CustomButton
+              style={{ width: '39%', maxWidth: 193, height: 50, backgroundColor: '#868686'}}
+              title="Cancelar"
+              onPress={() => router.back()}
+            />
+            <CustomButton
+              style={{ width: '39%', maxWidth: 193, height: 50 }}
+              title="Cadastrar"
+              onPress={() => router.back()}
+            />
+          </View>
+          
         </View>
-        
+        <BottomNavigation />
       </View>
-      <BottomNavigation />
-    </View>
+    </>
   );
 };
 

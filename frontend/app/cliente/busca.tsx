@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   FlatList,
   StyleSheet,
+  StatusBar,
   Modal,
   Image,
 } from 'react-native';
@@ -42,7 +43,6 @@ const oficinasMock = [
   },
 ];
 
-
 const BuscarOficina = () => {
   const insets = useSafeAreaInsets();
   const [busca, setBusca] = useState('');
@@ -54,91 +54,100 @@ const BuscarOficina = () => {
   );
 
   return (
-    <View style={[globalStyles.container,{ paddingTop: insets.top, paddingBottom: insets.bottom },]}>
-      <View style={globalStyles.crudTop}>
-        <BackButton />
-        <Image
-          source={require('../../assets/logo-nome.png')}
-          style={{ width: 100, height: 190 }}
-          resizeMode="contain"
-        />
-      </View>
+    <>
+      <StatusBar backgroundColor="#A10000" barStyle="light-content" />
 
-      <View style={cliStyles.searchContainer}>
-        <TextInput
-          placeholder="Buscar oficina..."
-          placeholderTextColor="#aaa"
-          value={busca}
-          onChangeText={setBusca}
-          style={cliStyles.searchInput}
-        />
-        <TouchableOpacity
-          style={cliStyles.filterButton}
-          onPress={() => setModalVisible(true)}
-        >
-          <Feather name="filter" size={20} color="#fff" />
-        </TouchableOpacity>
-      </View>
-
-      <FlatList
-        data={oficinasFiltradas}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={cliStyles.listContent}
-        renderItem={({ item }) => (
-        <View style={cliStyles.card}>
-            {item.imagem ? (
-            <Image source={item.imagem} style={cliStyles.cardImage} />
-            ) : (
-            <View style={cliStyles.placeholderImage}>
-                <Feather name="image" size={24} color="#888" />
-            </View>
-            )}
-
-            <View style={cliStyles.cardInfo}>
-            <Text style={cliStyles.cardTitle}>{item.nome}</Text>
-            <Text style={cliStyles.cardSubtitle}>{item.servicos}</Text>
-            </View>
-
-            <View style={cliStyles.cardRating}>
-            {item.avaliacao ? (
-                <>
-                <Feather name="star" size={16} color="#FFD700" />
-                <Text style={cliStyles.ratingText}>{item.avaliacao.toFixed(1)}</Text>
-                </>
-            ) : (
-                <Text style={cliStyles.noRating}>Sem avaliações</Text>
-            )}
-            </View>
+      <View
+        style={[
+          globalStyles.container,
+          { paddingTop: insets.top, paddingBottom: insets.bottom },
+        ]}
+      >
+        <View style={globalStyles.crudTop}>
+          <BackButton />
+          <Image
+            source={require('../../assets/logo-nome.png')}
+            style={{ width: 100, height: 190 }}
+            resizeMode="contain"
+          />
         </View>
-        )}
 
-      />
+        <View style={cliStyles.searchContainer}>
+          <TextInput
+            placeholder="Buscar oficina..."
+            placeholderTextColor="#aaa"
+            value={busca}
+            onChangeText={setBusca}
+            style={cliStyles.searchInput}
+          />
+          <TouchableOpacity
+            style={cliStyles.filterButton}
+            onPress={() => setModalVisible(true)}
+          >
+            <Feather name="filter" size={20} color="#fff" />
+          </TouchableOpacity>
+        </View>
 
-      <Modal visible={modalVisible} transparent animationType='slide'>
-        <View style={cliStyles.modalOverlay}>
-          <View style={cliStyles.modalContent}>
-            <Text style={cliStyles.modalTitle}>Filtrar por local</Text>
-            <TextInput
-              placeholder="Digite o local"
-              placeholderTextColor="#aaa"
-              value={filtroLocal}
-              onChangeText={setFiltroLocal}
-              style={cliStyles.modalInput}
-            />
-            <TouchableOpacity
-              style={cliStyles.modalButton}
-              onPress={() => setModalVisible(false)}
-            >
-              <Text style={cliStyles.modalButtonText}>Aplicar</Text>
-            </TouchableOpacity>
+        <FlatList
+          data={oficinasFiltradas}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={cliStyles.listContent}
+          renderItem={({ item }) => (
+            <View style={cliStyles.card}>
+              {item.imagem ? (
+                <Image source={item.imagem} style={cliStyles.cardImage} />
+              ) : (
+                <View style={cliStyles.placeholderImage}>
+                  <Feather name="image" size={24} color="#888" />
+                </View>
+              )}
+
+              <View style={cliStyles.cardInfo}>
+                <Text style={cliStyles.cardTitle}>{item.nome}</Text>
+                <Text style={cliStyles.cardSubtitle}>{item.servicos}</Text>
+              </View>
+
+              <View style={cliStyles.cardRating}>
+                {item.avaliacao ? (
+                  <>
+                    <Feather name="star" size={16} color="#FFD700" />
+                    <Text style={cliStyles.ratingText}>
+                      {item.avaliacao.toFixed(1)}
+                    </Text>
+                  </>
+                ) : (
+                  <Text style={cliStyles.noRating}>Sem avaliações</Text>
+                )}
+              </View>
+            </View>
+          )}
+        />
+
+        <Modal visible={modalVisible} transparent animationType="slide">
+          <View style={cliStyles.modalOverlay}>
+            <View style={cliStyles.modalContent}>
+              <Text style={cliStyles.modalTitle}>Filtrar por local</Text>
+              <TextInput
+                placeholder="Digite o local"
+                placeholderTextColor="#aaa"
+                value={filtroLocal}
+                onChangeText={setFiltroLocal}
+                style={cliStyles.modalInput}
+              />
+              <TouchableOpacity
+                style={cliStyles.modalButton}
+                onPress={() => setModalVisible(false)}
+              >
+                <Text style={cliStyles.modalButtonText}>Aplicar</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
 
-      <BottomNavigation />
-    </View>
+        <BottomNavigation />
+      </View>
+    </>
   );
 };
-
 
 export default BuscarOficina;

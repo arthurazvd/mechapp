@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, } from 'react-native';
+import { View, Text, StatusBar } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Picker } from '@react-native-picker/picker';
 import { Checkbox } from 'expo-checkbox';
@@ -42,106 +42,109 @@ const EditarServico = () => {
     };
 
   return (
-    <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
-        <View style={globalStyles.crudTop}>
-            <BackButton />
-            <Image source={require('../../assets/logo-nome.png')} style={{ width: 100, height: 190 }}
-  resizeMode="contain"/>
-        </View>
-              
-        <View style={globalStyles.crudBottom}>
-            <Text style={globalStyles.title}>Editar Serviço</Text>
-            <CustomInput
-                label="Nome"
-                placeholder="Digite o nome do serviço"
-                placeholderTextColor="#868686"
-                value={nome}
-                onChangeText={setNome}
-                contentStyle={{ width: '80%', maxWidth: 400 }}
-            />
-            <ExpandingTextArea
-                label="Descrição"
-                value={descricao}
-                onChangeText={setDescricao}
-                placeholder="Digite a descrição do serviço..."
-                placeholderTextColor="#868686"
-                containerStyle={{ alignItems: 'center' }}
-                inputStyle={{ maxWidth: 400, width: '100%' }}
-            />
+    <>
+        <StatusBar backgroundColor="#A10000" barStyle="light-content" />
+        <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
+            <View style={globalStyles.crudTop}>
+                <BackButton />
+                <Image source={require('../../assets/logo-nome.png')} style={{ width: 100, height: 190 }}
+    resizeMode="contain"/>
+            </View>
+                
+            <View style={globalStyles.crudBottom}>
+                <Text style={globalStyles.title}>Editar Serviço</Text>
+                <CustomInput
+                    label="Nome"
+                    placeholder="Digite o nome do serviço"
+                    placeholderTextColor="#868686"
+                    value={nome}
+                    onChangeText={setNome}
+                    contentStyle={{ width: '80%', maxWidth: 400 }}
+                />
+                <ExpandingTextArea
+                    label="Descrição"
+                    value={descricao}
+                    onChangeText={setDescricao}
+                    placeholder="Digite a descrição do serviço..."
+                    placeholderTextColor="#868686"
+                    containerStyle={{ alignItems: 'center' }}
+                    inputStyle={{ maxWidth: 400, width: '100%' }}
+                />
 
-            <View style={servStyles.pickerContainer}>
-                <Text style={globalStyles.label}>Categoria</Text>
-                <Picker
-                selectedValue={categoria}
-                onValueChange={(itemValue) => setCategoria(itemValue)}
-                style={servStyles.picker}
-                dropdownIconColor="#868686"
-                >
-                <Picker.Item label="Selecione uma categoria" value="" />
-                <Picker.Item label="Mecânica" value="mecanica" />
-                <Picker.Item label="Elétrica" value="eletrica" />
-                <Picker.Item label="Estética" value="estetica" />
-                </Picker>
-            </View>
-            <CustomInput
-                label="Tempo estimado"
-                placeholder="Digite o tempo"
-                placeholderTextColor="#868686"
-                keyboardType='numeric'
-                onlyNumbers={true}
-                value={tempoEstimado}
-                onChangeText={setTempoEstimado}
-                contentStyle={{ width: '80%', maxWidth: 400 }}
-            />
-            <View style={servStyles.precoInput}>
-                <CustomInput
-                    label="Preço Min"
-                    placeholder="R$ 0,00"
-                    placeholderTextColor="#868686"
-                    keyboardType='numeric'
-                    onChangeText={handlePrecoMinChange}
-                    value={precoMin}
-                    contentStyle={{width: '100%', maxWidth: 200 }}
-                    style={{ width: '49%' }}
-                />
-                <CustomInput
-                    label="Preço Max"
-                    placeholder="R$ 0,00"
-                    placeholderTextColor="#868686"
-                    keyboardType='numeric'
-                    onChangeText={handlePrecoMaxChange}
-                    value={precoMax}
-                    contentStyle={{ width: '100%', maxWidth: 200 }}
-                    style={{ width: '49%' }}
-                />
-            </View>
-            <View style={servStyles.checkboxContainer}>
-                    <Checkbox
-                        color={'#4CAF50'}
-                        value={checked}
-                        onValueChange={(val) => setChecked(val)}
-                        style={servStyles.checkbox}
-                    />
-                    <Text style={globalStyles.label}>Preço somente por orçamento</Text>
+                <View style={servStyles.pickerContainer}>
+                    <Text style={globalStyles.label}>Categoria</Text>
+                    <Picker
+                    selectedValue={categoria}
+                    onValueChange={(itemValue) => setCategoria(itemValue)}
+                    style={servStyles.picker}
+                    dropdownIconColor="#868686"
+                    >
+                    <Picker.Item label="Selecione uma categoria" value="" />
+                    <Picker.Item label="Mecânica" value="mecanica" />
+                    <Picker.Item label="Elétrica" value="eletrica" />
+                    <Picker.Item label="Estética" value="estetica" />
+                    </Picker>
                 </View>
-            <View style={servStyles.crudButtons}>
-                <CustomButton 
-                    style={{width: '25%', maxWidth: 127, height: 50, backgroundColor: '#868686'}} 
-                    title="Cancelar" 
-                    onPress={() => router.back()} />
-                <CustomButton 
-                    style={{width: '25%', maxWidth: 127, height: 50, backgroundColor: '#868686'}} 
-                    title="Deletar" 
-                    onPress={() => router.back()} />
-                <CustomButton 
-                    style={{width: '25%', maxWidth: 127, height: 50}} 
-                    title="Salvar" 
-                    onPress={() => router.back()} />
-            </View>
+                <CustomInput
+                    label="Tempo estimado"
+                    placeholder="Digite o tempo"
+                    placeholderTextColor="#868686"
+                    keyboardType='numeric'
+                    onlyNumbers={true}
+                    value={tempoEstimado}
+                    onChangeText={setTempoEstimado}
+                    contentStyle={{ width: '80%', maxWidth: 400 }}
+                />
+                <View style={servStyles.precoInput}>
+                    <CustomInput
+                        label="Preço Min"
+                        placeholder="R$ 0,00"
+                        placeholderTextColor="#868686"
+                        keyboardType='numeric'
+                        onChangeText={handlePrecoMinChange}
+                        value={precoMin}
+                        contentStyle={{width: '100%', maxWidth: 200 }}
+                        style={{ width: '49%' }}
+                    />
+                    <CustomInput
+                        label="Preço Max"
+                        placeholder="R$ 0,00"
+                        placeholderTextColor="#868686"
+                        keyboardType='numeric'
+                        onChangeText={handlePrecoMaxChange}
+                        value={precoMax}
+                        contentStyle={{ width: '100%', maxWidth: 200 }}
+                        style={{ width: '49%' }}
+                    />
+                </View>
+                <View style={servStyles.checkboxContainer}>
+                        <Checkbox
+                            color={'#4CAF50'}
+                            value={checked}
+                            onValueChange={(val) => setChecked(val)}
+                            style={servStyles.checkbox}
+                        />
+                        <Text style={globalStyles.label}>Preço somente por orçamento</Text>
+                    </View>
+                <View style={servStyles.crudButtons}>
+                    <CustomButton 
+                        style={{width: '25%', maxWidth: 127, height: 50, backgroundColor: '#868686'}} 
+                        title="Cancelar" 
+                        onPress={() => router.back()} />
+                    <CustomButton 
+                        style={{width: '25%', maxWidth: 127, height: 50, backgroundColor: '#868686'}} 
+                        title="Deletar" 
+                        onPress={() => router.back()} />
+                    <CustomButton 
+                        style={{width: '25%', maxWidth: 127, height: 50}} 
+                        title="Salvar" 
+                        onPress={() => router.back()} />
+                </View>
 
+            </View>
+            <BottomNavigation />
         </View>
-        <BottomNavigation />
-    </View>
+    </>
   );
 };
 

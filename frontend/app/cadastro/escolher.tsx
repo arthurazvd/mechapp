@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, StatusBar } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -15,24 +15,27 @@ export default function Index() {
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
-    <View style={cadStyles.initialTop}>
-      <BackButton />
-      <Text style={globalStyles.title}>Cadastro</Text>
-    </View>
-      <View style={globalStyles.initialBottom}>
-        <Text style={globalStyles.title2}>O que você é?</Text>
-        <CustomButton
-          title="Cliente"
-          style={{ height: 50, width: "80%", maxWidth: 400, marginBottom: 5 }}
-          onPress={() => router.push('/cadastro')}
-        />
-        <CustomButton
-          title="Mecânico"
-          style={{ height: 50, width: "80%", maxWidth: 400, marginBottom: 5 }}
-          onPress={() => router.push('/cadastro')}
-        />
+    <>
+      <StatusBar backgroundColor="#A10000" barStyle="light-content" />
+      <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
+      <View style={cadStyles.initialTop}>
+        <BackButton />
+        <Text style={globalStyles.title}>Cadastro</Text>
       </View>
-    </View>
+        <View style={globalStyles.initialBottom}>
+          <Text style={globalStyles.title2}>O que você é?</Text>
+          <CustomButton
+            title="Cliente"
+            style={{ height: 50, width: "80%", maxWidth: 400, marginBottom: 5 }}
+            onPress={() => router.push('/cadastro')}
+          />
+          <CustomButton
+            title="Mecânico"
+            style={{ height: 50, width: "80%", maxWidth: 400, marginBottom: 5 }}
+            onPress={() => router.push('/cadastro')}
+          />
+        </View>
+      </View>
+    </>
   );
 }

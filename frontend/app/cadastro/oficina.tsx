@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Alert, Image } from "react-native";
+import { View, Text, StatusBar } from "react-native";
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -31,62 +31,65 @@ export default function Index() {
   const insets = useSafeAreaInsets();
   
   return (
-    <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
-    <View style={cadStyles.initialTop}>
-      <BackButton />
-      <Text style={globalStyles.title}>Cadastro</Text>
-    </View>
-      <View style={globalStyles.initialBottom}>
-        <CustomInput
-            placeholder="Nome da oficina"
-            placeholderTextColor="#868686"
-            label="Nome da oficina"
-            value={oficina}
-            onChangeText={setOfc}
-            contentStyle={{ width: "80%", maxWidth: 400 }}
-        />
-        <CustomInput
-            placeholder="CNPJ/CPF" 
-            placeholderTextColor="#868686"
-            label="CNPJ/CPF"
-            keyboardType='numeric'
-            value={cnpj}
-            onChangeText={handleCnpjChange}
-            contentStyle={{ width: "80%", maxWidth: 400 }}
-        />
-        <CustomInput
-            placeholder="Endereço"
-            placeholderTextColor="#868686"
-            label="Endereço"
-            value={endereco}
-            onChangeText={setEnde}
-            contentStyle={{ width: "80%", maxWidth: 400 }}
-        />
-        <CustomInput
-            placeholder="Telefone"
-            placeholderTextColor="#868686"
-            label="Telefone"
-            keyboardType='numeric'
-            value={telefone}
-            onChangeText={handleTelefoneChange}
-            contentStyle={{ width: "80%", maxWidth: 400 }}
-        />
-
-        <CustomButton
-            style={{
-            width: "80%",
-            maxWidth: 400,
-            height: 50,
-            marginTop: 20,
-            marginBottom: 20,
-            }}
-            title="Cadastrar"
-            onPress={() => router.push('/login')}
-        />
-
-        <Text style={globalStyles.text}>Já tem uma conta?</Text>
-        <Text style={globalStyles.link}>Fazer Login</Text>
+    <>
+      <StatusBar backgroundColor="#A10000" barStyle="light-content" />
+      <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
+      <View style={cadStyles.initialTop}>
+        <BackButton />
+        <Text style={globalStyles.title}>Cadastro</Text>
       </View>
-    </View>
+        <View style={globalStyles.initialBottom}>
+          <CustomInput
+              placeholder="Nome da oficina"
+              placeholderTextColor="#868686"
+              label="Nome da oficina"
+              value={oficina}
+              onChangeText={setOfc}
+              contentStyle={{ width: "80%", maxWidth: 400 }}
+          />
+          <CustomInput
+              placeholder="CNPJ/CPF" 
+              placeholderTextColor="#868686"
+              label="CNPJ/CPF"
+              keyboardType='numeric'
+              value={cnpj}
+              onChangeText={handleCnpjChange}
+              contentStyle={{ width: "80%", maxWidth: 400 }}
+          />
+          <CustomInput
+              placeholder="Endereço"
+              placeholderTextColor="#868686"
+              label="Endereço"
+              value={endereco}
+              onChangeText={setEnde}
+              contentStyle={{ width: "80%", maxWidth: 400 }}
+          />
+          <CustomInput
+              placeholder="Telefone"
+              placeholderTextColor="#868686"
+              label="Telefone"
+              keyboardType='numeric'
+              value={telefone}
+              onChangeText={handleTelefoneChange}
+              contentStyle={{ width: "80%", maxWidth: 400 }}
+          />
+
+          <CustomButton
+              style={{
+              width: "80%",
+              maxWidth: 400,
+              height: 50,
+              marginTop: 20,
+              marginBottom: 20,
+              }}
+              title="Cadastrar"
+              onPress={() => router.push('/login')}
+          />
+
+          <Text style={globalStyles.text}>Já tem uma conta?</Text>
+          <Text style={globalStyles.link}>Fazer Login</Text>
+        </View>
+      </View>
+    </>
   );
 }
