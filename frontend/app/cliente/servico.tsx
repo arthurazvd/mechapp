@@ -6,18 +6,16 @@ import {
   Text,
   Modal,
   TouchableOpacity,
-  Platform,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import DateTimePicker, {
-  DateTimePickerEvent,
-} from '@react-native-community/datetimepicker';
+
 
 import { CustomButton } from '../../components/CustomButton';
 import { BackButton } from '../../components/BackButton';
 import { BottomNavigation } from '../../components/BottomNavigation';
 import { ItemCard } from '../../components/ItemCard';
+import { DatePickerModal } from '../../components/DatePickerModal';
 
 import { globalStyles } from '../../styles/globalStyles';
 
@@ -87,45 +85,46 @@ const VisualizarPeca = () => {
         </View>
 
         <Modal visible={modalVisible} transparent animationType="fade">
-        <View style={globalStyles.modalOverlay}>
+          <View style={globalStyles.modalOverlay}>
             <View style={globalStyles.modalContent}>
-            <Text style={globalStyles.modalTitle}>Escolha a data do serviço</Text>
+              <TouchableOpacity 
+                style={globalStyles.closeButton}
+                onPress={() => setModalVisible(false)}
+              >
+                <Text style={globalStyles.closeButtonText}>X</Text>
+              </TouchableOpacity>
+              
+              <Text style={globalStyles.modalTitle}>Escolha a data do serviço</Text>
 
-            <TouchableOpacity
+              <TouchableOpacity
                 style={globalStyles.modalButton}
                 onPress={() => setShowPicker(true)}
-            >
+              >
                 <Text style={globalStyles.modalButtonText}>
-                {selectedDate.toLocaleDateString('pt-BR', {
+                  {selectedDate.toLocaleDateString('pt-BR', {
                     day: '2-digit',
                     month: 'long',
                     year: 'numeric',
-                })}
+                  })}
                 </Text>
-            </TouchableOpacity>
+              </TouchableOpacity>
 
-            <TouchableOpacity
+              <TouchableOpacity
                 style={globalStyles.modalButton}
                 onPress={handleAgendar}
-            >
+              >
                 <Text style={globalStyles.modalButtonText}>Agendar Serviço</Text>
-            </TouchableOpacity>
+              </TouchableOpacity>
             </View>
-        </View>
+          </View>
         </Modal>
 
-        {showPicker && (
-        <DateTimePicker
-            value={selectedDate}
-            mode="date"
-            display={Platform.OS === 'android' ? 'calendar' : 'spinner'}
-            minimumDate={new Date()}
-            onChange={(event: DateTimePickerEvent, date?: Date) => {
-            setShowPicker(false);
-            if (date) setSelectedDate(date);
-            }}
+        <DatePickerModal
+          visible={showPicker}
+          selectedDate={selectedDate}
+          onChange={(date) => setSelectedDate(date)}
+          onClose={() => setShowPicker(false)}
         />
-        )}
 
         <BottomNavigation />
       </View>

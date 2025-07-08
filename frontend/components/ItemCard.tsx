@@ -8,7 +8,7 @@ type Props = {
   quantidade: number;
   onAdd: () => void;
   onRemove: () => void;
-  onAgendar?: () => void; // usado apenas para serviços
+  onAgendar?: () => void;
   multiplo?: boolean;
 };
 

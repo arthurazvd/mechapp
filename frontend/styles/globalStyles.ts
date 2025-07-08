@@ -91,15 +91,22 @@ export const globalStyles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
     backgroundColor: '#000000aa',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   modalContent: {
+    position: 'relative',
     backgroundColor: '#1e1e1e',
-    padding: 20,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
+    padding: 25,
+    borderRadius: 16,
+    width: '80%',
     alignItems: 'center',
+    elevation: 10, 
+    shadowColor: '#000', 
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
   },
 
   modalTitle: {
@@ -123,6 +130,20 @@ export const globalStyles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 15,
+  },
+
+  closeButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    padding: 8,
+    zIndex: 1,
+  },
+
+  closeButtonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#ff0000', 
   },
 
 });
