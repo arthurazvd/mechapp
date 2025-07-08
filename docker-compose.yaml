@@ -39,6 +39,7 @@ services:
   frontend:
     build:
       context: ./frontend
+    container_name: mechapp-front
     depends_on:
       - api
     ports:
