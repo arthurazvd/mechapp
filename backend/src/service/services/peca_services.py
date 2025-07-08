@@ -1,6 +1,9 @@
 from src.service.unit_of_work import AbstractUnidadeDeTrabalho
 from src.domain.models import Peca
-from src.domain.exceptions import *
+from src.domain.exceptions import (
+    PecaInvalida,
+    PecaNaoEncontrada,
+)
 
 def criar_peca(
     uow: AbstractUnidadeDeTrabalho,
@@ -9,8 +12,7 @@ def criar_peca(
     quantidade: int,
     preco: float,
     imagem: bytes | None = None,
-):
-    
+) -> str:
     """
     Serviço de criação de peças no sistema. Recebendo as informações de uma peça, levantando possíveis problemas
     e persistindo as informações quando possível.
@@ -22,26 +24,23 @@ def criar_peca(
         quantidade (int): Quantidade da peça em estoque.
         preco (float): Preço da peça.
         imagem (bytes | None): Imagem da peça. 
-
+    Returns:
+        str: Identificador da peça criada.
     Raises:
-        PecaInvalida: A peça informada é inválida.
+        PecaInvalida: Quantidade e preço devem ser maiores ou iguais a zero.
     """
     
-    #precisa nem comentar isso
-    if quantidade < 0 or preco < 0:
+    # Verificando preço e quantidade da peça
+    if quantidade < 0 or preco <= 0:
         raise PecaInvalida("Quantidade e preço devem ser maiores ou iguais a zero.")
-    
-    if not nome or not descricao:
-        raise PecaInvalida("Nome e descrição não podem ser vazios.")
-    
-    if not peca:
-        raise PecaNaoEncontrada("A peça informada não foi encontrada.")
 
+    # Adicionando peça
     with uow:
-        # adiciona peca
-        peca = Peca(nome, descricao, quantidade, preco, imagem)
+        peca = Peca(nome=nome, descricao=descricao, quantidade=quantidade, preco=preco, imagem=imagem)
         uow.pecas.adicionar(peca)
         uow.commit()
+
+        return peca.id
 
 def alterar_peca(
     uow: AbstractUnidadeDeTrabalho,
@@ -64,30 +63,29 @@ def alterar_peca(
         nova_quantidade (int | None): Nova quantidade da peça em estoque.
         novo_preco (float | None): Novo preço da peça.
         nova_imagem (bytes | None): Nova imagem da peça. 
-
     Raises:
+        PecaInvalida: Quantidade e preço devem ser maiores ou iguais a zero.
         PecaNaoEncontrada: A peça informada não foi encontrada.
     """
-    
+
+    # Verificando preço e quantidade da peça
+    if nova_quantidade < 0 or novo_preco <= 0:
+        raise PecaInvalida("Quantidade e preço devem ser maiores ou iguais a zero.")
+
     with uow:
         # Verifica se a peça existe
         peca = uow.pecas.consultar(peca_id)
-        if not peca:
+        if peca is None:
             raise PecaNaoEncontrada("A peça informada não foi encontrada.")
         
         # Atualiza os campos conforme necessário
-        if novo_nome is not None:
-            peca.nome = novo_nome
-        if nova_descricao is not None:
-            peca.descricao = nova_descricao
-        if nova_quantidade is not None:
-            peca.quantidade = nova_quantidade
-        if novo_preco is not None:
-            peca.preco = novo_preco
-        if nova_imagem is not None:
-            peca.imagem = nova_imagem
+        peca.nome = novo_nome or peca.nome
+        peca.preco = novo_preco or peca.preco
+        peca.imagem = nova_imagem or peca.imagem
+        peca.descricao = nova_descricao or peca.descricao
+        peca.quantidade = nova_quantidade or peca.quantidade
         
-        uow.pecas.atualizar(peca)
+        uow.pecas.salvar(peca)
         uow.commit()
 
 def remover_peca(
@@ -100,7 +98,6 @@ def remover_peca(
     Args:
         uow (AbstractUnidadeDeTrabalho): Unidade de Trabalho abstrata.
         peca_id (str): ID da peça a ser removida.
-
     Raises:
         PecaNaoEncontrada: A peça informada não foi encontrada.
     """
@@ -108,7 +105,7 @@ def remover_peca(
     with uow:
         # Verifica se a peça existe
         peca = uow.pecas.consultar(peca_id)
-        if not peca:
+        if peca is None:
             raise PecaNaoEncontrada("A peça informada não foi encontrada.")
         
         uow.pecas.remover(peca)
@@ -124,17 +121,30 @@ def consultar_peca(
     Args:
         uow (AbstractUnidadeDeTrabalho): Unidade de Trabalho abstrata.
         peca_id (str): ID da peça a ser consultada.
-
     Returns:
         dict: Dicionário com as informações da peça encontrada, ou nada caso não haja.
-
-    Raises:
-        PecaNaoEncontrada: A peça informada não foi encontrada.
     """
     
     with uow:
         peca = uow.pecas.consultar(peca_id)
-        if not peca:
-            raise PecaNaoEncontrada("A peça informada não foi encontrada.")
-        
-        return peca.to_dict()
+        if peca:
+            return peca.to_dict()
+        return {}
+
+def listar_pecas(
+    uow: AbstractUnidadeDeTrabalho,
+) -> dict:
+    """
+    Serviço de listagem de todas as peças do sistema.
+
+    Args:
+        uow (AbstractUnidadeDeTrabalho): Unidade de Trabalho abstrata.
+    Returns:
+        dict: Dicionário com as informações da peça encontrada, ou nada caso não haja.
+    """
+    
+    with uow:
+        pecas = uow.pecas.listar()
+        return [peca.to_dict() for peca in pecas]
+
+## Pesquisar Peças -- FUTURO

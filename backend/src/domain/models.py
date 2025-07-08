@@ -42,7 +42,7 @@ class Peca:
     descricao: str
     quantidade: int
     preco: float
-    imagem: bytes
+    imagem: bytes | None = None
     id: str = field(default_factory=lambda: str(uuid4()))
 
     def to_dict(self) -> dict:
@@ -71,6 +71,13 @@ class Oficina:
             "endereco": self.endereco,
             "proprietario": self.proprietario.to_dict(),
         }
+    
+    @staticmethod
+    def validar_cnpj(cnpj: str) -> bool:
+        padrao = r'^(\d{2}\.?\d{3}\.?\d{3}/?\d{4}-?\d{2})$'
+        if not match(padrao, cnpj):
+            return False
+        return True
 
 @dataclass
 class Servico:

@@ -19,6 +19,14 @@ class AbstractPecaRepository():
     def consultar(self, id: str) -> Peca|None:
         raise NotImplementedError
     
+    @abstractmethod
+    def consultar_por_nome(self, nome: str) -> Peca|None:
+        raise NotImplementedError
+
+    @abstractmethod
+    def listar(self) -> list[Peca]:
+        raise NotImplementedError
+    
 class PecaRepository(AbstractPecaRepository, AbstractSQLAlchemyRepository):
     def adicionar(self, peca: Peca):
         self.session.add(peca)
@@ -31,3 +39,9 @@ class PecaRepository(AbstractPecaRepository, AbstractSQLAlchemyRepository):
 
     def consultar(self, id: str) -> Peca | None:    
         return self.session.query(Peca).filter(Peca.id == id).first()
+    
+    def consultar_por_nome(self, nome: str) -> Peca|None:
+        return self.session.query(Peca).filter(Peca.nome.like(f'%{nome}%')).all()
+
+    def listar(self) -> list[Peca]:
+        return self.session.query(Peca).all()

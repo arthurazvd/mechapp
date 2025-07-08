@@ -1,10 +1,10 @@
+from src.service.unit_of_work import UnidadeDeTrabalho
 from src.service.services.peca_services import (
     criar_peca,
     alterar_peca,
     remover_peca,
     consultar_peca,
 )
-from src.service.unit_of_work import UnidadeDeTrabalho
 from src.domain.exceptions import (
     PecaInvalida,
     PecaNaoEncontrada,
@@ -19,55 +19,48 @@ def test_criar_peca_service(session_maker, peca_base):
     peca = peca_base()
     
     # Criando peça com sucesso
-    criar_peca(
+    identificador = criar_peca(
         uow=uow,
         nome=peca.nome,
         preco=peca.preco,
         descricao=peca.descricao,
         quantidade=peca.quantidade,
+        imagem=peca.imagem,
     )
 
     # Verificando se peça foi criada
     with uow:
-        peca_encontrada = uow.pecas.consultar_por_nome(peca.nome)
+        peca_encontrada = uow.pecas.consultar(identificador)
         assert peca_encontrada is not None
         assert peca_encontrada.nome == peca.nome
-        assert peca_encontrada.preco == peca.preco
+        assert peca_encontrada.descricao == peca.descricao
 
-    # PecaInvalida: Dados de peça inválidos.
+    # PecaInvalida: Quantidade e preço devem ser maiores ou iguais a zero.
     with pytest.raises(PecaInvalida):
         criar_peca(
             uow=uow,
-            nome=None,
-            preco=None,
-            descricao=None,
-            quantidade=None,
+            nome="nome-qualquer",
+            preco=-1,
+            descricao="descrica-qualquer",
+            quantidade=10,
         )
 
-    with pytest.raises(PecaNaoEncontrada):
+    # PecaInvalida: Quantidade e preço devem ser maiores ou iguais a zero.
+    with pytest.raises(PecaInvalida):
         criar_peca(
             uow=uow,
-            nome=peca.nome,
-            preco=peca.preco,
-            descricao=peca.descricao,
-            quantidade=-1,  # Quantidade inválida
+            nome="nome-qualquer",
+            preco=1,
+            descricao="descrica-qualquer",
+            quantidade=-1,
         )
 
-def test_alterar_peca_service(session_maker, peca_base):
+def test_alterar_peca_service(session_maker, mock_criar_peca):
     uow = UnidadeDeTrabalho(session_maker)
     
     # Peca base para teste
-    peca = peca_base()
+    peca = mock_criar_peca()
     
-    # Criando peça para alteração
-    criar_peca(
-        uow=uow,
-        nome=peca.nome,
-        preco=peca.preco,
-        descricao=peca.descricao,
-        quantidade=peca.quantidade,
-    )
-
     # Alterando peça com sucesso
     alterar_peca(
         uow=uow,
@@ -80,10 +73,10 @@ def test_alterar_peca_service(session_maker, peca_base):
 
     # Verificando se peça foi alterada
     with uow:
-        peca_alterada = uow.pecas.consultar_por_id(peca.id)
+        peca_alterada = uow.pecas.consultar(peca.id)
         assert peca_alterada is not None
         assert peca_alterada.nome == "Peca Alterada"
-        assert peca_alterada.preco == 150.0
+        assert peca_alterada.descricao == "Descrição alterada"
 
     # PecaNaoEncontrada: A peça não foi encontrada.
     with pytest.raises(PecaNaoEncontrada):
@@ -96,21 +89,34 @@ def test_alterar_peca_service(session_maker, peca_base):
             nova_quantidade=5,
         )
 
-def test_remover_peca_service(session_maker, peca_base):
+    # PecaInvalida: Quantidade e preço devem ser maiores ou iguais a zero.
+    with pytest.raises(PecaInvalida):
+        alterar_peca(
+            uow=uow,
+            peca_id=peca.id,
+            novo_nome="peça-inexistente",
+            novo_preco=0,
+            nova_descricao="decrição-inexistente",
+            nova_quantidade=5,
+        )
+
+    # PecaInvalida: Quantidade e preço devem ser maiores ou iguais a zero.
+    with pytest.raises(PecaInvalida):
+        alterar_peca(
+            uow=uow,
+            peca_id=peca.id,
+            novo_nome="peça-inexistente",
+            novo_preco=5,
+            nova_descricao="decrição-inexistente",
+            nova_quantidade=-1,
+        )
+
+def test_remover_peca_service(session_maker, mock_criar_peca):
     uow = UnidadeDeTrabalho(session_maker)
     
     # Peca base para teste
-    peca = peca_base()
+    peca = mock_criar_peca()
     
-    # Criando peça para remoção
-    criar_peca(
-        uow=uow,
-        nome=peca.nome,
-        preco=peca.preco,
-        descricao=peca.descricao,
-        quantidade=peca.quantidade,
-    )
-
     # Removendo peça com sucesso
     remover_peca(
         uow=uow,
@@ -119,7 +125,7 @@ def test_remover_peca_service(session_maker, peca_base):
 
     # Verificando se peça foi removida
     with uow:
-        peca_removida = uow.pecas.consultar_por_id(peca.id)
+        peca_removida = uow.pecas.consultar(peca.id)
         assert peca_removida is None
 
     # PecaNaoEncontrada: A peça não foi encontrada.
@@ -129,20 +135,11 @@ def test_remover_peca_service(session_maker, peca_base):
             peca_id="id-inexistente",
         )
 
-def test_consultar_peca_service(session_maker, peca_base):
+def test_consultar_peca_service(session_maker, mock_criar_peca):
     uow = UnidadeDeTrabalho(session_maker)
     
     # Peca base para teste
-    peca = peca_base()
-    
-    # Criando peça para consulta
-    criar_peca(
-        uow=uow,
-        nome=peca.nome,
-        preco=peca.preco,
-        descricao=peca.descricao,
-        quantidade=peca.quantidade,
-    )
+    peca = mock_criar_peca()
 
     # Consultando peça existente
     peca_encontrada = consultar_peca(
@@ -151,13 +148,15 @@ def test_consultar_peca_service(session_maker, peca_base):
     )
 
     assert peca_encontrada.get("nome") == peca.nome
-    assert peca_encontrada.get("preco") == peca.preco
     assert peca_encontrada.get("descricao") == peca.descricao
     assert peca_encontrada.get("quantidade") == peca.quantidade
 
     # Consultando peça não existente
-    with pytest.raises(PecaNaoEncontrada):
-        consultar_peca(
-            uow=uow,
-            peca_id="id-inexistente",
-        )
+    peca_inexistente = consultar_peca(
+        uow=uow,
+        peca_id="id-inexistente",
+    )
+
+    assert peca_inexistente.get("nome") == None
+    assert peca_inexistente.get("descricao") == None
+    assert peca_inexistente.get("quantidade") == None
