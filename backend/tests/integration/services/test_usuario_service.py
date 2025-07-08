@@ -46,7 +46,7 @@ def test_criar_usuario_service(session_maker, usuario_base):
             nome="nome-qualquer",
             email="email-invalido",
             senha="senha-qualquer",
-            tipo="cliente",
+            tipo="CLIENTE",
             telefone=None,
         )
 
@@ -68,7 +68,7 @@ def test_criar_usuario_service(session_maker, usuario_base):
             nome="nome-qualquer",
             email=usuario.email,
             senha="senha-qualquer",
-            tipo="cliente",
+            tipo="CLIENTE",
             telefone=None,
         )
 
@@ -85,7 +85,7 @@ def test_alterar_usuario_service(session_maker, mock_criar_usuario):
         novo_nome="Novo Nome",
         novo_email="novo@email.com",
         nova_senha="123456789",
-        novo_tipo="mecanico",
+        novo_tipo="MECANICO",
         novo_telefone="00912345678"
     )
 
@@ -104,7 +104,7 @@ def test_alterar_usuario_service(session_maker, mock_criar_usuario):
             novo_nome="Novo Nome",
             novo_email="email-invalido",
             nova_senha="123456789",
-            novo_tipo="mecanico",
+            novo_tipo="MECANICO",
             novo_telefone="00912345678"
         )
     
@@ -129,7 +129,7 @@ def test_alterar_usuario_service(session_maker, mock_criar_usuario):
             novo_nome="Novo Nome",
             novo_email=usuario2.email,
             nova_senha="123456789",
-            novo_tipo="mecanico",
+            novo_tipo="MECANICO",
             novo_telefone="00912345678"
         )
 
@@ -141,7 +141,7 @@ def test_alterar_usuario_service(session_maker, mock_criar_usuario):
             novo_nome="Novo Nome",
             novo_email="email-alterado@email.com",
             nova_senha="123456789",
-            novo_tipo="mecanico",
+            novo_tipo="MECANICO",
             novo_telefone="00912345678"
         )
 

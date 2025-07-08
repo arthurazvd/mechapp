@@ -21,7 +21,7 @@ def usuario_base():
             nome=nome, 
             email=email, 
             senha=senha, 
-            tipo=str(tipo), 
+            tipo=tipo, 
             telefone=telefone,
         )
     yield _usuario_base
