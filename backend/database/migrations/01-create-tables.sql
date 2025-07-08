@@ -1,7 +1,7 @@
 -- Criação do tipo ENUM 
-CREATE TYPE tipo_usuario AS ENUM ('cliente', 'mecanico');
+CREATE TYPE tipo_usuario AS ENUM ('CLIENTE', 'MECANICO');
 CREATE TYPE status_agendamento AS ENUM(
-    'pendente','confirmado','concluido','cancelado'
+    'PENDENTE','CONFIRMADO','CONCLUIDO','CANCELADO'
 );
 
 -- Criando usuário
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS pecas (
     descricao TEXT,
     quantidade INT NOT NULL,
     preco DECIMAL(10, 2) NOT NULL,
-    imagem BLOB,
+    imagem BYTEA,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
