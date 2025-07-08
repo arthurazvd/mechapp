@@ -10,7 +10,6 @@ import { globalStyles } from '../../styles/globalStyles';
 const DetalhesAgendamento = () => {
   const insets = useSafeAreaInsets();
 
-  // Mock de dados do agendamento
   const agendamento = {
     servico: 'Troca de óleo',
     descricao: 'Troca completa com filtro incluso e lubrificação.',
@@ -43,7 +42,6 @@ const DetalhesAgendamento = () => {
         <View style={globalStyles.telaServicos}>
           <Text style={globalStyles.title}>Detalhes do Agendamento</Text>
 
-          {/* Bloco: Serviço */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Serviço</Text>
             <Text style={styles.label}>Nome:</Text>
@@ -56,13 +54,11 @@ const DetalhesAgendamento = () => {
             </Text>
           </View>
 
-          {/* Bloco: Preço */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Preço estimado</Text>
             <Text style={styles.value}>R$ {agendamento.preco.toFixed(2)}</Text>
           </View>
 
-          {/* Bloco: Peças */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Peças incluídas</Text>
             <FlatList

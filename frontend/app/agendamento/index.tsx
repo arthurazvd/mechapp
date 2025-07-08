@@ -30,7 +30,7 @@ const VisualizarPeca = () => {
               servico="Troca de óleo"
               oficina="Oficina Premium"
               status="pendente"
-              onPress={() => router.push('cliente/detalhes')}
+              onPress={() => router.push('agendamento/detalhes')}
             />
 
           </View>
