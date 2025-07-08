@@ -15,6 +15,9 @@ class EmailExistente(DomainError):
 class UsuarioNaoEncontrado(DomainError):
     pass
 
+class UsuarioInvalido(DomainError):
+    pass
+
 # Peça
 
 class PecaInvalida(DomainError):
@@ -25,10 +28,10 @@ class PecaNaoEncontrada(DomainError):
 
 # Oficina
 
-class OficinaInvalida(DomainError):
+class OficinaNaoEncontrada(DomainError):
     pass
 
-class OficinaNaoEncontrada(DomainError):
+class CNPJInvalido(DomainError):
     pass
 
 # Servico

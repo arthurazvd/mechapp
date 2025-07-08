@@ -4,19 +4,6 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import registry, relationship
 from src.domain.models import *
-from enum import Enum
-import enum
-
-# Definindo o enum ANTES de usá-lo
-class TipoUsuarioEnum(enum.Enum):
-    cliente = 'cliente'
-    mecanico = 'mecanico'
-
-class StatusAgendamentoEnum(enum.Enum):
-    pendente = 'pendente'
-    confirmado = 'confirmado'
-    concluido = 'concluido'
-    cancelado = 'cancelado'
 
 mapper_registry = registry()
 metadata = mapper_registry.metadata
@@ -27,7 +14,7 @@ usuarios = Table(
     Column('nome', String(100), nullable=False),
     Column('email', String(100), unique=True, nullable=False),
     Column('senha', String(255), nullable=False),
-    Column('tipo', SQLEnum(TipoUsuarioEnum), nullable=False),
+    Column('tipo', SQLEnum(TipoUsuario), nullable=False),
     Column('telefone', String(15)),
     Column('created_at', TIMESTAMP, nullable=True, default=func.now()),
     Column('updated_at', TIMESTAMP, nullable=True, default=func.now()),
@@ -75,7 +62,7 @@ agendamentos = Table(
     Column('cliente_id', String(36), ForeignKey('usuarios.id', ondelete='SET NULL')),
     Column('servico_id', String(36), ForeignKey('servicos.id', ondelete='CASCADE'), nullable=False),
     Column('data', TIMESTAMP, nullable=False),
-    Column('status', SQLEnum(StatusAgendamentoEnum), nullable=False),
+    Column('status', SQLEnum(StatusAgendamento), nullable=False),
     Column('created_at', TIMESTAMP, nullable=True, default=func.now()),
     Column('updated_at', TIMESTAMP, nullable=True, default=func.now()),
 )

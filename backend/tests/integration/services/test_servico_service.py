@@ -1,5 +1,5 @@
 from src.service.unit_of_work import AbstractUnidadeDeTrabalho
-from src.service.services.servico_services import (
+from src.service import (
     criar_servico,
     alterar_servico,
     remover_servico,

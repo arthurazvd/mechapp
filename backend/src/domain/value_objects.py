@@ -1,15 +1,15 @@
 from enum import Enum
 
 class TipoUsuario(str, Enum):
-    CLIENTE = "cliente"
-    MECANICO = "mecanico"
+    CLIENTE = "CLIENTE"
+    MECANICO = "MECANICO"
 
     def __str__(self):
         return self.value
     
     @staticmethod
     def valor_valido(valor: str) -> bool:
-        if valor in ["cliente","mecanico"]:
+        if valor in ["CLIENTE","MECANICO"]:
             return True
         return False
 

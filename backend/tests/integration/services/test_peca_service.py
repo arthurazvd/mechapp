@@ -1,5 +1,5 @@
 from src.service.unit_of_work import UnidadeDeTrabalho
-from src.service.services.peca_services import (
+from src.service import (
     criar_peca,
     alterar_peca,
     remover_peca,

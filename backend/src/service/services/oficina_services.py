@@ -1,6 +1,11 @@
 from src.service.unit_of_work import AbstractUnidadeDeTrabalho
-from src.domain.models import Oficina
-from src.domain.exceptions import OficinaInvalida, OficinaNaoEncontrada
+from src.domain.models import Oficina, TipoUsuario
+from src.domain.exceptions import (
+    CNPJInvalido, 
+    OficinaNaoEncontrada,
+    UsuarioNaoEncontrado,
+    UsuarioInvalido,
+)
 
 def criar_oficina(
     uow: AbstractUnidadeDeTrabalho,
@@ -8,7 +13,7 @@ def criar_oficina(
     endereco: str,
     cnpj: str,
     proprietario_id: str,
-):
+) -> str:
     """
     Serviço de criação de oficinas no sistema. Recebendo as informações de uma oficina, levantando possíveis problemas
     e persistindo as informações quando possível.
@@ -17,26 +22,36 @@ def criar_oficina(
         uow (AbstractUnidadeDeTrabalho): Unidade de Trabalho abstrata.
         nome (str): Nome da oficina.
         endereco (str): Endereço da oficina.
-        telefone (str | None): Telefone da oficina.
-        email (str | None): Email da oficina.
-
+        cnpj (str): Cnpj da oficina.
+        proprietario_id (str): Proprietário da oficina.
+    Returns:
+        str: Identificador da oficina
     Raises:
-        OficinaInvalida: A oficina informada é inválida.
+        CNPJInvalido: O CNPJ informado é inválido.
+        UsuarioNaoEncontrado: O proprietário informado não foi encontrado.
+        UsuarioInvalido: O proprietário informado não é um mecânico.
     """
-    
 
-
-    if not nome or not endereco:
-        raise OficinaInvalida("Nome e endereço não podem ser vazios.")
-
-    if not oficina:
-        raise OficinaNaoEncontrada("A oficina informada não foi encontrada.")
+    # Verificar CNPJ
+    if Oficina.validar_cnpj(cnpj) is False:
+        raise CNPJInvalido("O CNPJ informado é inválido.")
 
     with uow:
-        # Adiciona oficina
-        oficina = Oficina(nome, endereco, cnpj, proprietario_id)
+        # Recuperando proprietário
+        proprietario = uow.usuarios.consultar(proprietario_id)
+
+        # Verificando problemas
+        if proprietario is None:
+            raise UsuarioNaoEncontrado("O proprietário informado não foi encontrado.")
+        if proprietario.tipo != TipoUsuario.MECANICO:
+            raise UsuarioInvalido("O proprietário informado não é um mecânico.")
+
+        # Criando oficina
+        oficina = Oficina(nome=nome, endereco=endereco, cnpj=cnpj, proprietario=proprietario)
         uow.oficinas.adicionar(oficina)
         uow.commit()
+
+        return oficina.id
 
 def alterar_oficina(
     uow: AbstractUnidadeDeTrabalho,
@@ -55,35 +70,44 @@ def alterar_oficina(
         oficina_id (str): ID da oficina a ser alterada.
         novo_nome (str | None): Novo nome da oficina.
         novo_endereco (str | None): Novo endereço da oficina.
-        novo_telefone (str | None): Novo telefone da oficina.
-        novo_email (str | None): Novo email da oficina.
-    
+        novo_cnpj (str | None): Novo CNPJ da oficina.
+        novo_proprietario_id (str | None): Novo proprietario da oficina.
     Raises:
-        OficinaInvalida: A oficina informada é inválida.
-        OficinaNaoEncontrada: A oficina com o CNPJ e Proprietario informado não foi encontrada.
+        CNPJInvalido: O CNPJ informado é inválido.
+        OficinaNaoEncontrada: A oficina informada não foi encontrada.
+        UsuarioNaoEncontrado: O proprietário informado não foi encontrado.
+        UsuarioInvalido: O proprietário informado não é um mecânico.
     """
-    
+
+    # Verificar CNPJ
+    if novo_cnpj and Oficina.validar_cnpj(novo_cnpj) is False:
+        raise CNPJInvalido("O CNPJ informado é inválido.")
+
     with uow:
         # Verifica se a oficina existe
-        oficina = uow.oficinas.consultar_por_cnpj(oficina_id)
+        oficina = uow.oficinas.consultar(oficina_id)
         if not oficina:
-            raise OficinaNaoEncontrada("A oficina com o CNPJ informado não foi encontrada.")
-        
-        oficina = uow.oficinas.consultar_por_proprietario(oficina_id)
-        if not oficina:
-            raise OficinaNaoEncontrada("A oficina com o proprietário informado não foi encontrada.")
+            raise OficinaNaoEncontrada("A oficina informada não foi encontrada.")
+
+        # Buscando novo proprietário
+        if isinstance(novo_proprietario_id, str):
+            novo_proprietario = uow.usuarios.consultar(novo_proprietario_id)
+            
+            # Verificando existência de proprietário e validade de usuário
+            if novo_proprietario is None:
+                raise UsuarioNaoEncontrado("O proprietário informado não foi encontrado.")
+            if novo_proprietario.tipo != TipoUsuario.MECANICO:
+                raise UsuarioInvalido("O proprietário informado não é um mecânico.")
+
+            oficina.proprietario_id = novo_proprietario or oficina.proprietario
+            oficina.proprietario_id = novo_proprietario_id or oficina.proprietario_id
 
         # Atualiza os campos da oficina
-        if novo_nome is not None:
-            oficina.nome = novo_nome
-        if novo_endereco is not None:
-            oficina.endereco = novo_endereco
-        if novo_cnpj is not None:
-            oficina.cnpj = novo_cnpj
-        if novo_proprietario_id is not None:
-            oficina.proprietario_id = novo_proprietario_id
+        oficina.nome = novo_nome or oficina.nome
+        oficina.cnpj = novo_cnpj or oficina.cnpj
+        oficina.endereco = novo_endereco or oficina.endereco
 
-        uow.oficinas.atualizar(oficina)
+        uow.oficinas.salvar(oficina)
         uow.commit()
 
 def remover_oficina(
@@ -96,67 +120,52 @@ def remover_oficina(
     Args:
         uow (AbstractUnidadeDeTrabalho): Unidade de Trabalho abstrata.
         oficina_id (str): ID da oficina a ser removida.
-
     Raises:
-        OficinaNaoEncontrada: A oficina com o CNPJ e Proprietario informado não foi encontrada.
+        OficinaNaoEncontrada: "A oficina informada não foi encontrada."
     """
     
     with uow:
-        # Verifica se a oficina existe
-        oficina = uow.oficinas.consultar_por_cnpj(oficina_id)
+        # Verificando existência de oficina
+        oficina = uow.oficinas.consultar(oficina_id)
         if not oficina:
-            raise OficinaNaoEncontrada("A oficina com o CNPJ informado não foi encontrada.")
+            raise OficinaNaoEncontrada("A oficina informada não foi encontrada.")
         
-        oficina = uow.oficinas.consultar_por_proprietario(oficina_id)
-        if not oficina:
-            raise OficinaNaoEncontrada("A oficina com o proprietário informado não foi encontrada.")
-
+        # Removendo a oficina
         uow.oficinas.remover(oficina)
         uow.commit()
 
 def consultar_oficina(
     uow: AbstractUnidadeDeTrabalho,
     oficina_id: str,
-):
+) -> dict:
     """
     Serviço de consulta de uma oficina no sistema. Recebendo o ID da oficina, retornando suas informações.
 
     Args:
         uow (AbstractUnidadeDeTrabalho): Unidade de Trabalho abstrata.
         oficina_id (str): ID da oficina a ser consultada.
-
     Returns:
-        Oficina: A oficina consultada.
-
-    Raises:
-        OficinaNaoEncontrada: A oficina com o CNPJ e Proprietario informado não foi encontrada.
+        dict: Dicionário com as informações da oficina encontrada.
     """
     
     with uow:
-        oficina = uow.oficinas.consultar_por_cnpj(oficina_id)
-        if not oficina:
-            raise OficinaNaoEncontrada("A oficina com o CNPJ informado não foi encontrada.")
-        
-        oficina = uow.oficinas.consultar_por_proprietario(oficina_id)
-        if not oficina:
-            raise OficinaNaoEncontrada("A oficina com o proprietário informado não foi encontrada.")
-
-        return oficina.to_dict()
+        oficina = uow.oficinas.consultar(oficina_id)
+        if oficina:
+            return oficina.to_dict()
+        return {}
     
 def listar_oficinas(
     uow: AbstractUnidadeDeTrabalho,
-):
+) -> list[dict]:
     """
     Serviço de listagem de todas as oficinas no sistema.
 
     Args:
         uow (AbstractUnidadeDeTrabalho): Unidade de Trabalho abstrata.
-
     Returns:
-        list: Lista de dicionários com as informações de todas as oficinas.
+        list[dict]: Lista de dicionários com as informações de todas as oficinas.
     """
     
     with uow:
-        oficinas = uow.oficinas.listar()
-        return [oficina.to_dict() for oficina in oficinas]
-    
+        oficinas = uow.oficinas.listar() 
+        return [oficina.to_dict() for oficina in oficinas] 
