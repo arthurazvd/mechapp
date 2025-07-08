@@ -14,17 +14,17 @@ class TipoUsuario(str, Enum):
         return False
 
 class StatusAgendamento(str, Enum):
-    PENDENTE = "pendente"
-    CONFIRMADO = "confirmado"
-    CANCELADO = "cancelado"
-    FINALIZADO = "finalizado"
+    PENDENTE = "PENDENTE"
+    CONFIRMADO = "CONFIRMADO"
+    CANCELADO = "CANCELADO"
+    FINALIZADO = "FINALIZADO"
 
     def __str__(self):
         return self.value
     
     @staticmethod
     def valor_valido(valor: str) -> bool:
-        if valor in ["pendente","confirmado","cancelado","finalizado"]:
+        if valor in ["PENDENTE","CONFIRMADO","CANCELADO","FINALIZADO"]:
             return True
         return False
 

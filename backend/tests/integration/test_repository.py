@@ -73,9 +73,8 @@ def test_oficina_repository(session, oficina_base):
     assert oficina_por_cnpj == oficina
 
     # Consultar por proprietário
-    oficinas_do_proprietario = oficina_repo.consultar_por_proprietario(oficina.proprietario.id)
-    assert len(oficinas_do_proprietario) == 1
-    assert oficinas_do_proprietario[0] == oficina
+    oficina_do_proprietario = oficina_repo.consultar_por_proprietario(oficina.proprietario.id)
+    assert oficina_do_proprietario == oficina
 
     # Salvar
     oficina_encontrada.nome = "Nova Oficina"
