@@ -58,7 +58,11 @@ const BuscarOficina = () => {
       <StatusBar backgroundColor="#A10000" barStyle="light-content" />
 
       <View
-        style={[globalStyles.container,{ paddingTop: insets.top, paddingBottom: insets.bottom },]}>
+        style={[
+          globalStyles.container,
+          { paddingTop: insets.top, paddingBottom: insets.bottom },
+        ]}
+      >
         <View style={globalStyles.crudTop}>
           <BackButton />
           <Image
@@ -89,7 +93,10 @@ const BuscarOficina = () => {
           keyExtractor={(item) => item.id}
           contentContainerStyle={cliStyles.listContent}
           renderItem={({ item }) => (
-            <View style={cliStyles.card}>
+            <TouchableOpacity
+              style={cliStyles.card}
+              onPress={() => console.log(`Abrir site da ${item.nome}`)}
+            >
               {item.imagem ? (
                 <Image source={item.imagem} style={cliStyles.cardImage} />
               ) : (
@@ -115,7 +122,7 @@ const BuscarOficina = () => {
                   <Text style={cliStyles.noRating}>Sem avaliações</Text>
                 )}
               </View>
-            </View>
+            </TouchableOpacity>
           )}
         />
 

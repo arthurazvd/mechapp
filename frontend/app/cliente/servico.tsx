@@ -29,7 +29,7 @@ const VisualizarPeca = () => {
 
   const handleAgendar = () => {
     setModalVisible(false);
-    router.push('/cliente/agendamentos');
+    router.push('/cliente/agendamento');
   };
 
   return (

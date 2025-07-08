@@ -3,10 +3,9 @@ import { View, StatusBar, Image, Text } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { CustomButton } from '../../components/CustomButton';
 import { BackButton } from '../../components/BackButton';
 import { BottomNavigation } from '../../components/BottomNavigation';
-import { ItemCard } from '../../components/ItemCard';
+import { AgendamentoCard } from '../../components/AgendamentoCard';
 
 import { globalStyles } from '../../styles/globalStyles';
 
@@ -27,6 +26,13 @@ const VisualizarPeca = () => {
           <View style={globalStyles.homeButtons}>
             <Text style={globalStyles.title}>Agendamento</Text>
             
+            <AgendamentoCard
+              servico="Troca de óleo"
+              oficina="Oficina Premium"
+              status="pendente"
+              onPress={() => router.back()}
+            />
+
           </View>
           
         </View>

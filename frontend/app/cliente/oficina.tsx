@@ -59,17 +59,7 @@ const VisualizarOficina = () => {
                 <CustomButton
                     style={{ width: '80%', height: 80}}
                     title="Serviços"
-                    onPress={() => router.back()}
-                />
-                <CustomButton
-                    style={{ width: '80%', height: 80}}
-                    title="Peças"
-                    onPress={() => router.back()}
-                />
-                <CustomButton
-                    style={{ width: '80%', height: 80}}
-                    title="Orçamento por Whatsapp"
-                    onPress={() => router.back()}
+                    onPress={() => router.push('cliente/servico')}
                 />
                 <CustomButton
                     style={{ width: '80%', height: 80}}
