@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 20,
     width: '80%',
-    height: 50,
+    height: 60,
     maxWidth: 400,
     justifyContent: 'space-between',
   },

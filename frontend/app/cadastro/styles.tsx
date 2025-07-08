@@ -1,12 +1,28 @@
 import { StyleSheet } from 'react-native';
 
-export const pecStyles = StyleSheet.create({
+export const cadStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#151515',
     justifyContent: 'center',
   },
-  
+
+  initialTop: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#A10000',
+    height: '17%',
+    borderBottomLeftRadius: 80,
+
+  },
+
+
+  initialBottom: {
+    height: '93%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
   crudButtons: {
     flexDirection: 'row',
     columnGap: '2%',

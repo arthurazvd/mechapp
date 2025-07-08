@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, } from 'react-native';
+import { View, Text, StatusBar} from 'react-native';
 import { useRouter } from 'expo-router';
 import { Image } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import CustomButton from '../../components/CustomButton';
 import InfoView from '../../components/InfoView';
+import { BackButton } from '../../components/BackButton';
+import { BottomNavigation } from '../../components/BottomNavigation';
 
 import { globalStyles } from '../../styles/globalStyles';
-import { servStyles } from './styles';
 
 const VisualizarServico = () => {
     const router = useRouter();
@@ -18,37 +20,32 @@ const VisualizarServico = () => {
     const [tempoEstimado] = useState('30 minutos');
     const [preco] = useState('R$ 100,00 - R$ 200,00');
 
-    const handleVisualizar = () => {
-        console.log({
-        nome,
-        descricao,
-        categoria,
-        tempoEstimado,
-        preco,
-      });
-      router.back();
-    };
-
+    const insets = useSafeAreaInsets();
 
   return (
-    <View style={globalStyles.container}>
-        <View style={servStyles.initialTop}>
+    <>
+      <StatusBar backgroundColor="#A10000" barStyle="light-content" />
+      <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
+          <View style={globalStyles.crudTop}>
+            <BackButton />
             <Image source={require('../../assets/logo-nome.png')} style={{ width: 100, height: 190 }}
-  resizeMode="contain"/>
-        </View>
-              
-        <View style={servStyles.initialBottom}>
-            <Text style={globalStyles.title}>{nome}</Text>
-            <InfoView label="Descrição" value={descricao} />
-            <InfoView label="Categoria" value={categoria} />
-            <InfoView label="Tempo estimado" value={tempoEstimado} />
-            <InfoView label="Preço" value={preco} />
-            <CustomButton 
-                style={{width: '80%', maxWidth: 400, height: 50, marginTop: 20}} 
-                title="Editar" 
-                onPress={() => router.push('/servicos/editar')} />
-        </View>
-    </View>
+    resizeMode="contain"/>
+          </View>
+                
+          <View style={globalStyles.crudBottom}>
+              <Text style={globalStyles.title}>{nome}</Text>
+              <InfoView label="Descrição" value={descricao} />
+              <InfoView label="Categoria" value={categoria} />
+              <InfoView label="Tempo estimado" value={tempoEstimado} />
+              <InfoView label="Preço" value={preco} />
+              <CustomButton 
+                  style={{width: '80%', maxWidth: 400, height: 50, marginTop: 20}} 
+                  title="Editar" 
+                  onPress={() => router.push('/servicos/editar')} />
+          </View>
+          <BottomNavigation />
+      </View>
+    </>
   );
 };
 
