@@ -90,8 +90,6 @@ export const globalStyles = StyleSheet.create({
 
   crudBottom: {
     height: '83%', // Consider implications of percentage heights
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 
   label: {
@@ -116,7 +114,6 @@ export const globalStyles = StyleSheet.create({
   },
 
   telaServicos: {
-    justifyContent: 'flex-start',
     width: '100%',
     paddingTop: spacing.large, // Changed from 30
     height: '83%',

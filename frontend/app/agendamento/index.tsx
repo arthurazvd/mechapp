@@ -7,7 +7,7 @@ import { BackButton } from '../../components/BackButton';
 import { BottomNavigation } from '../../components/BottomNavigation';
 import { AgendamentoCard } from '../../components/AgendamentoCard';
 
-import { globalStyles, colors, spacing } from '../../styles/globalStyles'; // Import theme
+import { globalStyles, colors, spacing, typography } from '../../styles/globalStyles'; // Import theme
 
 // Mock data for current agendamentos
 const agendamentosAtuais = [

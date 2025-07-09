@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { colors, spacing, typography } from '../../styles/globalStyles'; // Import theme
+import { globalStyles, colors, spacing, typography } from '../../styles/globalStyles';
 
 export const pecStyles = StyleSheet.create({
   // container can likely be removed if globalStyles.container is sufficient
@@ -56,12 +56,13 @@ export const pecStyles = StyleSheet.create({
     borderRadius: spacing.small,
   },
   nomePecaVisualizar: {
-    ...globalStyles.title, // Base it on global title
-    fontSize: typography.fontSizeTitle2 + 2, // Make it a bit smaller than main title
-    textAlign: 'left', // Align to left within its container
-    flex: 1, // Allow text to wrap
-    marginLeft: spacing.medium, // Space from image
+    ...globalStyles.title,
+    fontSize: typography.fontSizeTitle2 + 2,
+    textAlign: 'left',
+    flex: 1,
+    marginLeft: spacing.medium,
     color: colors.textPrimary,
   }
+
 
 });

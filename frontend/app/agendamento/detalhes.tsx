@@ -1,8 +1,6 @@
 import React from 'react';
-import { StyleSheet, ScrollView } from 'react-native'; // Added ScrollView
-import { View, StatusBar, Image, Text, FlatList } from 'react-native';
+import { StyleSheet, ScrollView, View, StatusBar, Image, Text, FlatList } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
 import { BackButton } from '../../components/BackButton';
 import { BottomNavigation } from '../../components/BottomNavigation';
 import { globalStyles, colors, spacing, typography } from '../../styles/globalStyles';
@@ -10,12 +8,11 @@ import { globalStyles, colors, spacing, typography } from '../../styles/globalSt
 const DetalhesAgendamento = () => {
   const insets = useSafeAreaInsets();
 
-  // Mock data - replace with actual data fetching
   const agendamento = {
     servico: 'Troca de óleo',
     descricao: 'Troca completa com filtro incluso e lubrificação.',
     status: 'Confirmado',
-    statusColor: colors.success, // Example: determine color based on status
+    statusColor: colors.success,
     preco: 120.0,
     pecas: [
       { id: '1', nome: 'Filtro de óleo', quantidade: 1 },
@@ -30,64 +27,57 @@ const DetalhesAgendamento = () => {
   return (
     <>
       <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
-      <View
-        style={[
-          globalStyles.container,
-          { paddingTop: insets.top, paddingBottom: insets.bottom, justifyContent: 'space-between' },
-        ]}
-      >
+      <View style={[globalStyles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
         <View style={{flex: 1}}>
-            <View style={globalStyles.crudTop}>
+          <View style={globalStyles.crudTop}>
             <BackButton color={colors.white} />
             <Image
-                source={require('../../assets/logo-nome.png')}
-                style={styles.logoNome}
-                resizeMode="contain"
+              source={require('../../assets/logo-nome.png')}
+              style={styles.logoNome}
+              resizeMode="contain"
             />
-            </View>
+          </View>
 
-            <ScrollView
-            style={globalStyles.telaServicos} // telaServicos has paddingTop
+          <ScrollView
+            style={globalStyles.telaServicos}
             contentContainerStyle={styles.scrollContentContainer}
-            >
+          >
             <Text style={[globalStyles.title, styles.pageTitle]}>Detalhes do Agendamento</Text>
 
             <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Informações Gerais</Text>
-                <InfoItem label="Serviço:" value={agendamento.servico} />
-                <InfoItem label="Oficina:" value={agendamento.oficina} />
-                <InfoItem label="Data:" value={agendamento.data} />
-                <InfoItem label="Horário:" value={agendamento.horario} />
-                <InfoItem label="Status:" value={agendamento.status} valueColor={agendamento.statusColor} />
+              <Text style={styles.sectionTitle}>Informações Gerais</Text>
+              <InfoItem label="Serviço:" value={agendamento.servico} />
+              <InfoItem label="Oficina:" value={agendamento.oficina} />
+              <InfoItem label="Data:" value={agendamento.data} />
+              <InfoItem label="Horário:" value={agendamento.horario} />
+              <InfoItem label="Status:" value={agendamento.status} valueColor={agendamento.statusColor} />
             </View>
 
             <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Descrição do Serviço</Text>
-                <Text style={styles.descriptionText}>{agendamento.descricao}</Text>
+              <Text style={styles.sectionTitle}>Descrição do Serviço</Text>
+              <Text style={styles.descriptionText}>{agendamento.descricao}</Text>
             </View>
 
             <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Preço Estimado</Text>
-                <Text style={styles.priceText}>R$ {agendamento.preco.toFixed(2)}</Text>
+              <Text style={styles.sectionTitle}>Preço Estimado</Text>
+              <Text style={styles.priceText}>R$ {agendamento.preco.toFixed(2)}</Text>
             </View>
 
             {agendamento.pecas.length > 0 && (
-                <View style={styles.section}>
+              <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Peças Incluídas</Text>
-                <FlatList
-                    data={agendamento.pecas}
-                    keyExtractor={(item) => item.id}
-                    renderItem={({ item }) => (
+                {agendamento.pecas.map((item) => (
+                  <View key={item.id}>
                     <View style={styles.pecaItem}>
-                        <Text style={styles.valueText}>{item.nome}</Text>
-                        <Text style={styles.quantityText}>x{item.quantidade}</Text>
+                      <Text style={styles.valueText}>{item.nome}</Text>
+                      <Text style={styles.quantityText}>x{item.quantidade}</Text>
                     </View>
-                    )}
-                    ItemSeparatorComponent={() => <View style={styles.separator} />}
-                />
-                </View>
+                    <View style={styles.separator} />
+                  </View>
+                ))}
+              </View>
             )}
-            </ScrollView>
+          </ScrollView>
         </View>
 
         <BottomNavigation />
@@ -96,7 +86,6 @@ const DetalhesAgendamento = () => {
   );
 };
 
-// Helper component for consistent Info Items
 const InfoItem = ({ label, value, valueColor }: { label: string; value: string; valueColor?: string }) => (
   <View style={styles.infoItemContainer}>
     <Text style={styles.labelText}>{label}</Text>
@@ -104,16 +93,13 @@ const InfoItem = ({ label, value, valueColor }: { label: string; value: string; 
   </View>
 );
 
-
-export default DetalhesAgendamento;
-
 const styles = StyleSheet.create({
   logoNome: {
     width: 100,
     height: 60,
   },
   scrollContentContainer: {
-    paddingBottom: spacing.large, // Ensure space for the last item before bottom nav
+    paddingBottom: spacing.large,
   },
   pageTitle: {
     marginBottom: spacing.large,
@@ -128,7 +114,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     color: colors.textPrimary,
-    fontSize: typography.fontSizeTitle2 - 4, // 16
+    fontSize: typography.fontSizeTitle2 - 4,
     fontWeight: typography.fontWeightBold,
     marginBottom: spacing.medium,
   },
@@ -137,15 +123,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: spacing.small,
   },
-  labelText: { // Was styles.label
-    color: colors.textLabel, // Was #aaa
-    fontSize: typography.fontSizeLabel, // Was 13
+  labelText: {
+    color: colors.textLabel,
+    fontSize: typography.fontSizeLabel,
   },
-  valueText: { // Was styles.value
-    color: colors.textPrimary, // Was #fff
-    fontSize: typography.fontSizeLabel, // Was 14
+  valueText: {
+    color: colors.textPrimary,
+    fontSize: typography.fontSizeLabel,
     fontWeight: typography.fontWeightBold,
-    flexShrink: 1, // Allow text to wrap
+    flexShrink: 1,
     textAlign: 'right',
   },
   descriptionText: {
@@ -154,7 +140,7 @@ const styles = StyleSheet.create({
     lineHeight: typography.fontSizeLabel + 6,
   },
   priceText: {
-    color: colors.success, // Or colors.textPrimary
+    color: colors.success,
     fontSize: typography.fontSizeText,
     fontWeight: typography.fontWeightBold,
   },
@@ -163,13 +149,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: spacing.small / 2,
   },
-  quantityText: { // Was styles.quantidade
-    color: colors.textHint, // Was #ccc
+  quantityText: {
+    color: colors.textHint,
     fontSize: typography.fontSizeLabel,
   },
   separator: {
     height: 1,
-    backgroundColor: colors.inputBackground, // A subtle separator line
+    backgroundColor: colors.inputBackground,
     marginVertical: spacing.small / 2,
   }
 });
+
+export default DetalhesAgendamento;

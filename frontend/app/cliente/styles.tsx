@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { colors, spacing, typography } from '../../styles/globalStyles';
+import { colors, globalStyles, spacing, typography } from '../../styles/globalStyles';
 
 export const cliStyles = StyleSheet.create({
   searchContainer: {

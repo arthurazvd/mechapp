@@ -70,7 +70,7 @@ const LoginScreen = () => {
           <CustomButton
             style={styles.loginButton}
             title="Entrar"
-            onPress={() => router.push('/agendamento/historico')} // Original navigation
+            onPress={() => router.push('/cliente')} // Original navigation
             // onPress={handleLogin} // If you want to use the handleLogin logic
           />
 
