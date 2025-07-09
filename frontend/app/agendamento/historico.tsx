@@ -24,12 +24,12 @@ const TelaAgendamento = () => {
         </View>
         <View style={globalStyles.telaServicos}>
           <View style={globalStyles.homeButtons}>
-            <Text style={globalStyles.title}>Agendamentos</Text>
+            <Text style={globalStyles.title}>Histórico</Text>
             
             <AgendamentoCard
               servico="Troca de óleo"
               oficina="Oficina Premium"
-              status="pendente"
+              status="concluido"
               onPress={() => router.push('agendamento/detalhes')}
             />
 

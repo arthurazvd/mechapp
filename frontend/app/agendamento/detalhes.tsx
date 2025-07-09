@@ -40,7 +40,7 @@ const DetalhesAgendamento = () => {
         </View>
 
         <View style={globalStyles.telaServicos}>
-          <Text style={globalStyles.title}>Detalhes do Agendamento</Text>
+          <Text style={globalStyles.title}>Agendamento</Text>
 
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Serviço</Text>
@@ -84,7 +84,7 @@ export default DetalhesAgendamento;
 
 const styles = StyleSheet.create({
   section: {
-    backgroundColor: '#2a2a2a',
+    backgroundColor: '#1e1e1e',
     borderRadius: 8,
     padding: 16,
     marginBottom: 16,

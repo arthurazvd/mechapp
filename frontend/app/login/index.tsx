@@ -40,7 +40,7 @@ const LoginScreen = () => {
     localStorage.setItem("usuario_atual", JSON.stringify(json));
 
     // Redirecionando
-    return router.replace('/pecas/cadastrar');
+    return router.replace('/agendamento/historico');
   };
 
   return (
@@ -64,7 +64,7 @@ const LoginScreen = () => {
             label="E-mail"
             value={email}
             onChangeText={setEmail}
-            contentStyle={{ width: "80%", maxWidth: 400 }}
+            contentStyle={{ width: "90%", maxWidth: 400 }}
           />
           <PasswordInput
             placeholder="Senha"
@@ -78,7 +78,7 @@ const LoginScreen = () => {
 
           <CustomButton
             style={{
-              width: "80%",
+              width: "90%",
               maxWidth: 400,
               height: 50,
               marginTop: 20,

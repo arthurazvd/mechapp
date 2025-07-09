@@ -53,7 +53,7 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
 
 const styles = StyleSheet.create({
   wrapper: {
-    width: '80%',
+    width: '90%',
     maxWidth: 400,
     marginBottom: 2,
   },
