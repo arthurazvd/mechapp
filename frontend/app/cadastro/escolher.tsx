@@ -7,7 +7,7 @@ import { CustomButton } from '../../components/CustomButton';
 import { BackButton } from '../../components/BackButton';
 
 import { globalStyles } from '../../styles/globalStyles';
-import { cadStyles } from './styles';
+import { cadStyles } from '../../styles/cadStyles';
 
 export default function Index() {
   const router = useRouter();

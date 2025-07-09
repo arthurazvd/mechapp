@@ -11,7 +11,7 @@ import { BackButton } from '../../components/BackButton';
 import { BottomNavigation } from '../../components/BottomNavigation';
 
 import { globalStyles } from '../../styles/globalStyles';
-import { pecStyles } from './styles';
+import { pecStyles } from '../../styles/pecStyles';
 import { formatarPreco } from '../../utils/formatters';
 
 const CadastrarPecas = () => {
