@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#A10000',
-    padding: 8,
+    padding: 10,
     borderRadius: 6,
   },
   quantidade: {
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
   },
   adicionar: {
     backgroundColor: '#00A100',
-    paddingVertical: 8,
+    paddingVertical: 10,
     paddingHorizontal: 16,
     borderRadius: 6,
     marginLeft: 'auto',

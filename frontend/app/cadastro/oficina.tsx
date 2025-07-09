@@ -45,7 +45,7 @@ export default function Index() {
               label="Nome da oficina"
               value={oficina}
               onChangeText={setOfc}
-              contentStyle={{ width: "80%", maxWidth: 400 }}
+              contentStyle={{ width: "90%", maxWidth: 400 }}
           />
           <CustomInput
               placeholder="CNPJ/CPF" 
@@ -54,7 +54,7 @@ export default function Index() {
               keyboardType='numeric'
               value={cnpj}
               onChangeText={handleCnpjChange}
-              contentStyle={{ width: "80%", maxWidth: 400 }}
+              contentStyle={{ width: "90%", maxWidth: 400 }}
           />
           <CustomInput
               placeholder="Endereço"
@@ -62,7 +62,7 @@ export default function Index() {
               label="Endereço"
               value={endereco}
               onChangeText={setEnde}
-              contentStyle={{ width: "80%", maxWidth: 400 }}
+              contentStyle={{ width: "90%", maxWidth: 400 }}
           />
           <CustomInput
               placeholder="Telefone"
@@ -71,12 +71,12 @@ export default function Index() {
               keyboardType='numeric'
               value={telefone}
               onChangeText={handleTelefoneChange}
-              contentStyle={{ width: "80%", maxWidth: 400 }}
+              contentStyle={{ width: "90%", maxWidth: 400 }}
           />
 
           <CustomButton
               style={{
-              width: "80%",
+              width: "90%",
               maxWidth: 400,
               height: 50,
               marginTop: 20,

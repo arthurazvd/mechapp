@@ -61,14 +61,24 @@ const EditarAgendamento = () => {
         <View style={globalStyles.telaServicos}>
           <Text style={globalStyles.title}>Editar Agendamento</Text>
 
-          <CustomInput label="Serviço" value={servico} onChangeText={setServico} />
-          <CustomInput label="Descrição" value={descricao} onChangeText={setDescricao} />
+          <CustomInput 
+            label="Serviço" value={servico} 
+            onChangeText={setServico} 
+            contentStyle={{ width: "90%", maxWidth: 400 }}
+          />
+          <CustomInput 
+            label="Descrição" 
+            value={descricao} 
+            onChangeText={setDescricao} 
+            contentStyle={{ width: "90%", maxWidth: 400 }}
+          />
           <CustomInput
             label="Preço"
             value={preco}
             onChangeText={setPreco}
             keyboardType="numeric"
             onlyNumbers
+            contentStyle={{ width: "90%", maxWidth: 400 }}
           />
 
           <View style={{ marginTop: 20, width: '90%', alignSelf: 'center' }}>
@@ -76,8 +86,8 @@ const EditarAgendamento = () => {
             <TouchableOpacity
               onPress={() => setModalVisible(true)}
               style={{
-                backgroundColor: '#2a2a2a',
-                padding: 12,
+                backgroundColor: '#242424',
+                padding: 20,
                 borderRadius: 8,
                 marginTop: 8,
               }}
@@ -120,8 +130,18 @@ const EditarAgendamento = () => {
             />
           </View>
 
-          <View style={{ marginTop: 30, width: '90%', alignSelf: 'center' }}>
-            <CustomButton title="Salvar alterações" onPress={() => {}} />
+          <View style={{alignItems: 'center' }}>
+            <CustomButton 
+              title="Salvar alterações" 
+              style={{
+                width: "90%",
+                maxWidth: 400,
+                height: 50,
+                marginTop: 20,
+                marginBottom: 20,
+              }}
+              onPress={() => {}} 
+            />
           </View>
         </View>
 

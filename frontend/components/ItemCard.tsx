@@ -65,7 +65,7 @@ export const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 3,
     alignItems: 'center',
-    width: '80%',
+    width: '90%',
     alignSelf: 'center',
   },
   buttonBox: {

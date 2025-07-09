@@ -57,12 +57,12 @@ const VisualizarOficina = () => {
             </View>
             <View style={globalStyles.homeButtons}>
                 <CustomButton
-                    style={{ width: '80%', height: 80}}
+                    style={{ width: '90%', height: 80}}
                     title="Serviços"
                     onPress={() => router.push('cliente/servico')}
                 />
                 <CustomButton
-                    style={{ width: '80%', height: 80}}
+                    style={{ width: '90%', height: 80}}
                     title="Informações"
                     onPress={() => setModalVisible(true)}
                 />

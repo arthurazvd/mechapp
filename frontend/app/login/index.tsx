@@ -51,7 +51,7 @@ const LoginScreen = () => {
             label="E-mail"
             value={email}
             onChangeText={setEmail}
-            contentStyle={{ width: "80%", maxWidth: 400 }}
+            contentStyle={{ width: "90%", maxWidth: 400 }}
           />
           <PasswordInput
             placeholder="Senha"
@@ -65,14 +65,14 @@ const LoginScreen = () => {
 
           <CustomButton
             style={{
-              width: "80%",
+              width: "90%",
               maxWidth: 400,
               height: 50,
               marginTop: 20,
               marginBottom: 20,
             }}
             title="Entrar"
-            onPress={() => router.push('/pecas/cadastrar')}
+            onPress={() => router.push('/agendamento/historico')}
           />
 
           <Text style={globalStyles.text}>Não tem uma conta?</Text>

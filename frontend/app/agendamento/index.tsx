@@ -9,7 +9,7 @@ import { AgendamentoCard } from '../../components/AgendamentoCard';
 
 import { globalStyles } from '../../styles/globalStyles';
 
-const VisualizarPeca = () => {
+const TelaAgendamento = () => {
     const router = useRouter();
 
     const insets = useSafeAreaInsets();
@@ -42,4 +42,4 @@ const VisualizarPeca = () => {
   );
 };
 
-export default VisualizarPeca;
+export default TelaAgendamento;

@@ -43,7 +43,7 @@ export default function Index() {
               label="Nome"
               value={nome}
               onChangeText={setNome}
-              contentStyle={{ width: "80%", maxWidth: 400 }}
+              contentStyle={{ width: "90%", maxWidth: 400 }}
           />
           <CustomInput
               placeholder="Telefone" 
@@ -52,7 +52,7 @@ export default function Index() {
               keyboardType='numeric'
               value={telefone}
               onChangeText={handleContatoChange}
-              contentStyle={{ width: "80%", maxWidth: 400 }}
+              contentStyle={{ width: "90%", maxWidth: 400 }}
           />
           <CustomInput
               placeholder="E-mail"
@@ -60,7 +60,7 @@ export default function Index() {
               label="E-mail"
               value={email}
               onChangeText={setEmail}
-              contentStyle={{ width: "80%", maxWidth: 400 }}
+              contentStyle={{ width: "90%", maxWidth: 400 }}
           />
           <PasswordInput
               placeholder="Senha"
@@ -79,7 +79,7 @@ export default function Index() {
 
           <CustomButton
               style={{
-              width: "80%",
+              width: "90%",
               maxWidth: 400,
               height: 50,
               marginTop: 20,
