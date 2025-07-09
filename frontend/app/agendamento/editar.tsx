@@ -8,6 +8,7 @@ import {
   Modal,
   TouchableOpacity,
   StyleSheet,
+  ScrollView, // Added ScrollView
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -17,7 +18,7 @@ import { CustomInput } from '../../components/CustomInput';
 import { CustomButton } from '../../components/CustomButton';
 import { PecaSelector } from '../../components/PecaSelector';
 
-import { globalStyles } from '../../styles/globalStyles';
+import { globalStyles, colors, spacing, typography } from '../../styles/globalStyles'; // Import theme
 
 const EditarAgendamento = () => {
   const insets = useSafeAreaInsets();
@@ -30,7 +31,8 @@ const EditarAgendamento = () => {
   const [pecaQtd, setPecaQtd] = useState(1);
   const [pecas, setPecas] = useState<{ nome: string; quantidade: number }[]>([]);
 
-  const [status, setStatus] = useState<'pendente' | 'confirmado' | 'cancelado' | 'concluido'>('pendente');
+  type StatusAgendamento = 'pendente' | 'confirmado' | 'cancelado' | 'concluido';
+  const [status, setStatus] = useState<StatusAgendamento>('pendente');
   const [modalVisible, setModalVisible] = useState(false);
 
   const adicionarPeca = () => {
@@ -40,135 +42,134 @@ const EditarAgendamento = () => {
     setPecaQtd(1);
   };
 
+  const statusOptions = [
+    { label: 'Pendente', value: 'pendente', color: colors.warning },
+    { label: 'Confirmado', value: 'confirmado', color: colors.success },
+    { label: 'Cancelado', value: 'cancelado', color: colors.error },
+    { label: 'Concluído', value: 'concluido', color: colors.secondary },
+  ];
+
+  const selectedStatusStyle = statusOptions.find(opt => opt.value === status) || statusOptions[0];
+
+
   return (
     <>
-      <StatusBar backgroundColor="#A10000" barStyle="light-content" />
+      <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
       <View
         style={[
           globalStyles.container,
-          { paddingTop: insets.top, paddingBottom: insets.bottom },
+          { paddingTop: insets.top, paddingBottom: insets.bottom, justifyContent: 'space-between' },
         ]}
       >
-        <View style={globalStyles.crudTop}>
-          <BackButton />
-          <Image
-            source={require('../../assets/logo-nome.png')}
-            style={{ width: 100, height: 190 }}
-            resizeMode="contain"
-          />
-        </View>
+        <View style={{flex: 1}}>
+            <View style={globalStyles.crudTop}>
+            <BackButton color={colors.white}/>
+            <Image
+                source={require('../../assets/logo-nome.png')}
+                style={styles.logoNome}
+                resizeMode="contain"
+            />
+            </View>
 
-        <View style={globalStyles.telaServicos}>
-          <Text style={globalStyles.title}>Editar Agendamento</Text>
-
-          <CustomInput 
-            label="Serviço" value={servico} 
-            onChangeText={setServico} 
-            contentStyle={{ width: "90%", maxWidth: 400 }}
-          />
-          <CustomInput 
-            label="Descrição" 
-            value={descricao} 
-            onChangeText={setDescricao} 
-            contentStyle={{ width: "90%", maxWidth: 400 }}
-          />
-          <CustomInput
-            label="Preço"
-            value={preco}
-            onChangeText={setPreco}
-            keyboardType="numeric"
-            onlyNumbers
-            contentStyle={{ width: "90%", maxWidth: 400 }}
-          />
-
-          <View style={{ marginTop: 20, width: '90%', alignSelf: 'center' }}>
-            <Text style={globalStyles.label}>Status atual</Text>
-            <TouchableOpacity
-              onPress={() => setModalVisible(true)}
-              style={{
-                backgroundColor: '#242424',
-                padding: 20,
-                borderRadius: 8,
-                marginTop: 8,
-              }}
+            <ScrollView
+            style={globalStyles.telaServicos}
+            contentContainerStyle={styles.scrollContentContainer}
+            keyboardShouldPersistTaps="handled"
             >
-              <Text style={{ color: '#fff', fontWeight: 'bold', textTransform: 'capitalize' }}>
-                {status}
-              </Text>
-            </TouchableOpacity>
-          </View>
+            <Text style={[globalStyles.title, styles.pageTitle]}>Editar Agendamento</Text>
 
-          <View style={{ marginTop: 20 }}>
-            <Text style={[globalStyles.label, { marginLeft: 20 }]}>Adicionar Peça</Text>
-            <PecaSelector
-              nome={pecaNome}
-              quantidade={pecaQtd}
-              onChangeNome={setPecaNome}
-              onAdd={() => setPecaQtd((q) => q + 1)}
-              onRemove={() => setPecaQtd((q) => Math.max(1, q - 1))}
-              onAdicionar={adicionarPeca}
-            />
-          </View>
+            <View style={styles.formSection}>
+                <CustomInput
+                    label="Serviço" value={servico}
+                    onChangeText={setServico}
+                    style={styles.inputField}
+                />
+                <CustomInput
+                    label="Descrição"
+                    value={descricao}
+                    onChangeText={setDescricao}
+                    style={styles.inputField}
+                    // multiline // Consider if this should be an ExpandingTextArea
+                    // numberOfLines={3}
+                />
+                <CustomInput
+                    label="Preço (R$)"
+                    value={preco}
+                    onChangeText={setPreco} // Assuming formatarPreco will be used or direct number input
+                    keyboardType="numeric"
+                    // onlyNumbers // This prop was on CustomInput, ensure it's handled
+                    style={styles.inputField}
+                />
 
-          <View style={{ marginTop: 20, width: '90%', alignSelf: 'center' }}>
-            <Text style={globalStyles.label}>Peças adicionadas</Text>
-            <FlatList
-              data={pecas}
-              keyExtractor={(item, index) => `${item.nome}-${index}`}
-              renderItem={({ item }) => (
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    paddingVertical: 6,
-                  }}
-                >
-                  <Text style={{ color: '#fff' }}>{item.nome}</Text>
-                  <Text style={{ color: '#aaa' }}>x{item.quantidade}</Text>
+                <View style={styles.statusSelectorContainer}>
+                    <Text style={globalStyles.label}>Status atual</Text>
+                    <TouchableOpacity
+                    onPress={() => setModalVisible(true)}
+                    style={[styles.statusDisplayButton, {backgroundColor: selectedStatusStyle.color}]}
+                    >
+                    <Text style={styles.statusDisplayText}>
+                        {selectedStatusStyle.label}
+                    </Text>
+                    </TouchableOpacity>
                 </View>
-              )}
-            />
-          </View>
 
-          <View style={{alignItems: 'center' }}>
+                <View style={styles.pecaSection}>
+                    <Text style={globalStyles.label}>Adicionar Peça</Text>
+                    <PecaSelector
+                    nome={pecaNome}
+                    quantidade={pecaQtd}
+                    onChangeNome={setPecaNome}
+                    onAdd={() => setPecaQtd((q) => q + 1)}
+                    onRemove={() => setPecaQtd((q) => Math.max(1, q - 1))}
+                    onAdicionar={adicionarPeca}
+                    containerStyle={styles.pecaSelector}
+                    />
+                </View>
+
+                {pecas.length > 0 && (
+                    <View style={styles.pecasListSection}>
+                    <Text style={globalStyles.label}>Peças adicionadas</Text>
+                    <FlatList
+                        data={pecas}
+                        keyExtractor={(item, index) => `${item.nome}-${index}`}
+                        renderItem={({ item }) => (
+                        <View style={styles.pecaItem}>
+                            <Text style={styles.pecaItemText}>{item.nome}</Text>
+                            <Text style={styles.pecaItemQuantity}>x{item.quantidade}</Text>
+                        </View>
+                        )}
+                        ItemSeparatorComponent={() => <View style={styles.separator} />}
+                    />
+                    </View>
+                )}
+            </View>
             <CustomButton 
-              title="Salvar alterações" 
-              style={{
-                width: "90%",
-                maxWidth: 400,
-                height: 50,
-                marginTop: 20,
-                marginBottom: 20,
-              }}
-              onPress={() => {}} 
+                title="Salvar Alterações"
+                style={styles.saveButton}
+                onPress={() => { alert("Salvo!")}} // Placeholder action
             />
-          </View>
+            </ScrollView>
         </View>
 
-        <Modal visible={modalVisible} transparent animationType="fade">
-          <View style={modalStyles.overlay}>
-            <View style={modalStyles.content}>
-              <Text style={modalStyles.title}>Selecionar novo status</Text>
 
-              {[
-                { label: 'Pendente', value: 'pendente', color: '#FFA500' },
-                { label: 'Confirmado', value: 'confirmado', color: '#00A100' },
-                { label: 'Cancelado', value: 'cancelado', color: '#D00000' },
-                { label: 'Concluído', value: 'concluido', color: '#007BFF' },
-              ].map((item) => (
+        <Modal visible={modalVisible} transparent animationType="fade" onRequestClose={() => setModalVisible(false)}>
+          <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPressOut={() => setModalVisible(false)}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Selecionar novo status</Text>
+              {statusOptions.map((item) => (
                 <TouchableOpacity
                   key={item.value}
-                  style={[modalStyles.statusButton, { backgroundColor: item.color }]}
+                  style={[styles.modalStatusButton, { backgroundColor: item.color }]}
                   onPress={() => {
-                    setStatus(item.value as any);
+                    setStatus(item.value as StatusAgendamento);
                     setModalVisible(false);
                   }}
                 >
-                  <Text style={modalStyles.statusText}>{item.label}</Text>
+                  <Text style={styles.modalStatusText}>{item.label}</Text>
                 </TouchableOpacity>
               ))}
             </View>
-          </View>
+          </TouchableOpacity>
         </Modal>
 
         <BottomNavigation />
@@ -179,37 +180,97 @@ const EditarAgendamento = () => {
 
 export default EditarAgendamento;
 
-const modalStyles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
+const styles = StyleSheet.create({
+  logoNome: {
+    width: 100,
+    height: 60,
+  },
+  scrollContentContainer: {
+    paddingBottom: spacing.large,
+    alignItems: 'center', // Center content like button
+  },
+  pageTitle: {
+    marginBottom: spacing.large,
+  },
+  formSection: {
+    width: '90%',
+    maxWidth: 500, // Max width for form elements
+    alignSelf: 'center',
+  },
+  inputField: {
+    marginBottom: spacing.medium, // Consistent margin for inputs
+  },
+  statusSelectorContainer: {
+    marginTop: spacing.medium,
+    marginBottom: spacing.medium,
+  },
+  statusDisplayButton: {
+    padding: spacing.medium,
+    borderRadius: spacing.small,
+    marginTop: spacing.small / 2,
     alignItems: 'center',
   },
-  content: {
-    backgroundColor: '#1e1e1e',
-    padding: 24,
-    borderRadius: 12,
-    width: '80%',
-    alignItems: 'center',
+  statusDisplayText: {
+    color: colors.white,
+    fontWeight: typography.fontWeightBold,
+    textTransform: 'capitalize',
+    fontSize: typography.fontSizeText,
   },
-  title: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 16,
+  pecaSection: {
+    marginTop: spacing.medium,
   },
-  statusButton: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    marginVertical: 6,
+  pecaSelector: {
+    width: '100%', // PecaSelector already has 90% width, this makes it relative to parent
+  },
+  pecasListSection: {
+    marginTop: spacing.medium,
+    // backgroundColor: colors.surface, // Optional: give a background to the list
+    // padding: spacing.medium,
+    // borderRadius: spacing.small,
+  },
+  pecaItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: spacing.small,
+  },
+  pecaItemText: {
+    color: colors.textPrimary,
+    fontSize: typography.fontSizeLabel,
+  },
+  pecaItemQuantity: {
+    color: colors.textHint,
+    fontSize: typography.fontSizeLabel,
+  },
+  separator: {
+    height: 1,
+    backgroundColor: colors.inputBackground,
+  },
+  saveButton: {
+    width: '90%',
+    maxWidth: 500,
+    height: 50,
+    marginTop: spacing.large,
+    // marginBottom is handled by scroll content padding
+  },
+  // Modal styles
+  modalOverlay: globalStyles.modalOverlay, // Use global overlay
+  modalContent: {
+    ...globalStyles.modalContent, // Inherit base styles
+    maxWidth: 350, // Specific max width for this modal
+    // alignItems: 'center', // Already in globalStyles.modalContent if it's there
+  },
+  modalTitle: globalStyles.modalTitle, // Use global title style
+  modalStatusButton: {
+    paddingVertical: spacing.medium -2, // 10
+    paddingHorizontal: spacing.large,
+    borderRadius: spacing.small,
+    marginVertical: spacing.small / 2,
     width: '100%',
     alignItems: 'center',
   },
-  statusText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 15,
+  modalStatusText: {
+    color: colors.white, // Ensure text is visible on colored buttons
+    fontWeight: typography.fontWeightBold,
+    fontSize: typography.fontSizeText,
   },
 });

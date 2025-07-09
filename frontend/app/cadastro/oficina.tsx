@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StatusBar } from "react-native";
+import { View, Text, StatusBar, StyleSheet, ScrollView, TouchableOpacity } from "react-native"; // Added ScrollView, TouchableOpacity, StyleSheet
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -7,20 +7,20 @@ import { CustomButton } from '../../components/CustomButton';
 import { CustomInput } from "../../components/CustomInput";
 import { BackButton } from '../../components/BackButton';
 
-import { globalStyles } from '../../styles/globalStyles';
-import { cadStyles } from './styles';
+import { globalStyles, colors, spacing } from '../../styles/globalStyles'; // Import theme
+import { cadStyles } from './styles'; // cadStyles.initialTop is used
 import { formatarDocumento, formatarContato } from '../../utils/formatters';
 
-export default function Index() {
+export default function CadastroOficinaScreen() { // Renamed component
   const router = useRouter();
-  const [oficina, setOfc] = useState("");
-  const [cnpj, setCnpj] = useState("");
-  const [endereco, setEnde] = useState("");
+  const [nomeOficina, setNomeOficina] = useState("");
+  const [documento, setDocumento] = useState(""); // CNPJ or CPF
+  const [endereco, setEndereco] = useState("");
   const [telefone, setTelefone] = useState("");
 
-  const handleCnpjChange = (text: string) => {
+  const handleDocumentoChange = (text: string) => {
     const DocFormatado = formatarDocumento(text);
-    setCnpj(DocFormatado);
+    setDocumento(DocFormatado);
   };
 
   const handleTelefoneChange = (text: string) => {
@@ -29,67 +29,102 @@ export default function Index() {
   };
 
   const insets = useSafeAreaInsets();
+
+  const handleCadastroOficina = () => {
+    // Add validation logic here
+    console.log("Cadastrando Oficina:", { nomeOficina, documento, endereco, telefone });
+    router.push('/login'); // Or to a dashboard/success screen
+  };
   
   return (
     <>
-      <StatusBar backgroundColor="#A10000" barStyle="light-content" />
-      <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
-      <View style={cadStyles.initialTop}>
-        <BackButton />
-        <Text style={globalStyles.title}>Cadastro</Text>
-      </View>
-        <View style={globalStyles.initialBottom}>
+      <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
+      <ScrollView
+        style={{backgroundColor: colors.background}}
+        contentContainerStyle={[
+            globalStyles.container,
+            {paddingTop: insets.top,paddingBottom: insets.bottom, justifyContent: 'flex-start'}
+        ]}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={cadStyles.initialTop}>
+          <BackButton color={colors.white}/>
+          <Text style={globalStyles.title}>Cadastro da Oficina</Text>
+        </View>
+        <View style={[globalStyles.initialBottom, styles.formContainer]}>
           <CustomInput
-              placeholder="Nome da oficina"
-              placeholderTextColor="#868686"
-              label="Nome da oficina"
-              value={oficina}
-              onChangeText={setOfc}
-              contentStyle={{ width: "90%", maxWidth: 400 }}
+              placeholder="Nome da sua oficina"
+              label="Nome da Oficina"
+              value={nomeOficina}
+              onChangeText={setNomeOficina}
+              style={styles.inputField}
           />
           <CustomInput
-              placeholder="CNPJ/CPF" 
-              placeholderTextColor="#868686"
-              label="CNPJ/CPF"
+              placeholder="00.000.000/0000-00 ou 000.000.000-00"
+              label="CNPJ / CPF"
               keyboardType='numeric'
-              value={cnpj}
-              onChangeText={handleCnpjChange}
-              contentStyle={{ width: "90%", maxWidth: 400 }}
+              value={documento}
+              onChangeText={handleDocumentoChange}
+              style={styles.inputField}
+              maxLength={18} // Max length for formatted CNPJ
           />
           <CustomInput
-              placeholder="Endereço"
-              placeholderTextColor="#868686"
-              label="Endereço"
+              placeholder="Rua, Número, Bairro, Cidade - UF"
+              label="Endereço Completo"
               value={endereco}
-              onChangeText={setEnde}
-              contentStyle={{ width: "90%", maxWidth: 400 }}
+              onChangeText={setEndereco}
+              style={styles.inputField}
           />
           <CustomInput
-              placeholder="Telefone"
-              placeholderTextColor="#868686"
-              label="Telefone"
+              placeholder="(XX) XXXXX-XXXX"
+              label="Telefone Comercial"
               keyboardType='numeric'
               value={telefone}
               onChangeText={handleTelefoneChange}
-              contentStyle={{ width: "90%", maxWidth: 400 }}
+              style={styles.inputField}
+              maxLength={15}
           />
 
           <CustomButton
-              style={{
-              width: "90%",
-              maxWidth: 400,
-              height: 50,
-              marginTop: 20,
-              marginBottom: 20,
-              }}
-              title="Cadastrar"
-              onPress={() => router.push('/login')}
+              style={styles.actionButton}
+              title="Finalizar Cadastro"
+              onPress={handleCadastroOficina}
           />
 
-          <Text style={globalStyles.text}>Já tem uma conta?</Text>
-          <Text style={globalStyles.link}>Fazer Login</Text>
+          <View style={styles.loginRedirectContainer}>
+            <Text style={globalStyles.text}>Já tem uma conta?</Text>
+            <TouchableOpacity onPress={() => router.push('/login')}>
+                <Text style={globalStyles.link}>Fazer Login</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </>
   );
 }
+
+const styles = StyleSheet.create({
+    formContainer: {
+      width: '100%',
+      paddingHorizontal: spacing.large,
+      alignItems: 'center',
+    },
+    inputField: {
+      width: '100%',
+      maxWidth: 450,
+    },
+    actionButton: {
+      width: '100%',
+      maxWidth: 450,
+      height: 50,
+      marginTop: spacing.large,
+      marginBottom: spacing.medium,
+    },
+    loginRedirectContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: spacing.medium,
+      gap: spacing.small,
+    }
+});

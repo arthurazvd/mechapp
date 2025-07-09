@@ -1,61 +1,68 @@
 import { StyleSheet } from 'react-native';
+import { colors, spacing, typography } from '../../styles/globalStyles'; // Import theme
 
 export const servStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#151515',
-    justifyContent: 'center',
-  },
+  // container can likely be removed if globalStyles.container is sufficient
+  // container: {
+  //   flex: 1,
+  //   backgroundColor: colors.background,
+  //   justifyContent: 'center',
+  // },
 
-  crudButtons: {
+  crudButtons: { // Used in cadastrar, editar
     flexDirection: 'row',
-    columnGap: '2%',
-    width: '100%',
+    gap: spacing.small,
+    width: '100%', // Will be constrained by parent in screen
     justifyContent: 'center',
-    marginTop: 25,
+    marginTop: spacing.large, // Was 25
+    // paddingHorizontal applied in screen-specific styles (styles.actionButtonsContainer)
   },
 
-  precoInput: {
+  precoInput: { // Used in cadastrar, editar
     flexDirection: 'row',
-    columnGap: '2%',
-    width: '80%',
-    maxWidth: 400,
+    gap: spacing.small,
+    width: '100%', // Will be constrained by parent in screen
+    // maxWidth: 400, // Applied in screen-specific styles (styles.inputRowContainer)
     justifyContent: 'center',
+    // paddingHorizontal applied in screen-specific styles
   },
 
-  picker:{
-    backgroundColor:'#242424',
-    borderRadius: 8,
-    borderWidth: 0,
-    color: '#868686',
-    width: '100%',
-    height: 50,
-    paddingHorizontal: 12,
+  pickerContainer: { // Used in cadastrar, editar
+    width: '100%', // Will be constrained by parent in screen
+    // maxWidth: 400, // Applied in screen-specific styles (styles.inputField)
+    marginBottom: spacing.medium, // Was 10
+    // justifyContent: 'center', // Not always needed, depends on label position
   },
   
-  pickerContainer: {
-    width: '80%',
-    maxWidth: 400,
-    marginBottom: 10,
-    justifyContent: 'center',
+  picker: { // Style for the Picker component itself (platform differences apply)
+    backgroundColor: colors.inputBackground, // Was #242424
+    borderRadius: spacing.small, // Was 8
+    borderWidth: 0, // Keep if no border is desired
+    color: colors.textPrimary, // Was #868686 - this is for selected value text
+    width: '100%',
+    height: 50, // Standard height
+    paddingHorizontal: spacing.medium, // Was 12
+    // Note: Styling Picker items (dropdown/modal) is platform-specific and limited.
+    // Consider using a custom Picker component for full control if needed.
   },
 
-  checkbox: {
-    height: 20,
-    width: 20,
-  },
-
-  checkboxContainer:{
+  checkboxContainer: { // Used in cadastrar, editar
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: 9,
-    borderRadius: 8,
-    backgroundColor: '#242424',
-    paddingHorizontal: 20,
-    height: 50,
-    width: '80%',
-    maxWidth: 400,
-    marginTop: 10,
+    // justifyContent: 'center', // Overridden in screen for left alignment
+    gap: spacing.small, // Was 9
+    // borderRadius: spacing.small, // Not needed if background is transparent
+    // backgroundColor: colors.inputBackground, // Overridden in screen to transparent
+    // paddingHorizontal: spacing.medium, // Overridden
+    height: 50, // Keep consistent height
+    width: '100%', // Will be constrained by parent
+    // maxWidth: 400, // Applied in screen
+    // marginTop: spacing.small, // Was 10, adjusted in screen
+  },
+
+  checkbox: { // Specific style for Checkbox component itself
+    height: 20, // Keep as is or make theme variable
+    width: 20,
+    // color prop for Checkbox handles the checkmark color
   },
 });

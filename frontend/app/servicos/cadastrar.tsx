@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StatusBar } from 'react-native';
+import { View, Text, Image, StatusBar, ScrollView, StyleSheet, Alert } from 'react-native'; // Added ScrollView, StyleSheet, Alert
 import { useRouter } from 'expo-router';
 import { Picker } from '@react-native-picker/picker';
 import { Checkbox } from 'expo-checkbox';
@@ -11,21 +11,22 @@ import { CustomButton } from '../../components/CustomButton';
 import { BackButton } from '../../components/BackButton';
 import { BottomNavigation } from '../../components/BottomNavigation';
 
-import { globalStyles } from '../../styles/globalStyles';
-import { servStyles } from './styles';
+import { globalStyles, colors, spacing } from '../../styles/globalStyles'; // Import theme
+import { servStyles } from './styles'; // servStyles for specific layouts
 import { formatarPreco } from '../../utils/formatters';
 
 
-const CadastrarServico = () => {
+const CadastrarServicoScreen = () => { // Renamed component
     const router = useRouter();
+    const insets = useSafeAreaInsets();
 
     const [nome, setNome] = useState('');
     const [descricao, setDescricao] = useState('');
-    const [categoria, setCategoria] = useState('');
-    const [tempoEstimado, setTempoEstimado] = useState('');
+    const [categoria, setCategoria] = useState(''); // Store category value
+    const [tempoEstimado, setTempoEstimado] = useState(''); // Em horas ou minutos? Definir
     const [precoMin, setPrecoMin] = useState('');
     const [precoMax, setPrecoMax] = useState('');
-    const [checked, setChecked] = useState(false);
+    const [somenteOrcamento, setSomenteOrcamento] = useState(false);
 
 
     const handlePrecoMinChange = (text: string) => {
@@ -38,115 +39,123 @@ const CadastrarServico = () => {
       setPrecoMax(precoFormatado);
     };
 
-    const insets = useSafeAreaInsets();
-
     const handleCadastrar = () => {
-        console.log({
-        nome,
-        descricao,
-        categoria,
-        tempoEstimado,
-        precoMin,
-        precoMax
-        });
-    router.back(); 
+        if (!nome || !descricao || !categoria || !tempoEstimado) {
+            Alert.alert("Erro", "Preencha todos os campos obrigatórios.");
+            return;
+        }
+        if (!somenteOrcamento && (!precoMin || !precoMax)) {
+            Alert.alert("Erro", "Preencha a faixa de preço ou marque 'Preço somente por orçamento'.");
+            return;
+        }
+        console.log("Cadastrando Serviço:", {nome, descricao, categoria, tempoEstimado, precoMin, precoMax, somenteOrcamento });
+        Alert.alert("Sucesso", "Serviço cadastrado!");
+        router.back();
     };
 
 
   return (
     <>
-        <StatusBar backgroundColor="#A10000" barStyle="light-content" />
-        <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
-            <View style={globalStyles.crudTop}>
-                <BackButton />
-                <Image source={require('../../assets/logo-nome.png')} style={{ width: 100 }} resizeMode="contain"/>
-            </View>
-                
-            <View style={globalStyles.crudBottom}>
-                <Text style={globalStyles.title}>Cadastrar Serviço</Text>
-                <CustomInput
-                    label="Nome"
-                    placeholder="Digite o nome do serviço"
-                    placeholderTextColor="#868686"
-                    onChangeText={setNome}
-                    contentStyle={{ width: '80%', maxWidth: 400 }}
-                />
-                <ExpandingTextArea
-                    label="Descrição"
-                    value={descricao}
-                    onChangeText={setDescricao}
-                    placeholder="Digite a descrição do serviço..."
-                    placeholderTextColor="#868686"
-                    containerStyle={{ alignItems: 'center' }}
-                    inputStyle={{ maxWidth: 400, width: '100%' }}
-                />
+        <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
+        <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom, justifyContent: 'space-between'}]}>
+            <View style={{flex:1}}>
+                <View style={globalStyles.crudTop}>
+                    <BackButton color={colors.white}/>
+                    <Image source={require('../../assets/logo-nome.png')} style={styles.logoNome} resizeMode="contain"/>
+                </View>
 
-                <View style={servStyles.pickerContainer}>
-                    <Text style={globalStyles.label}>Categoria</Text>
-                    <Picker
-                    selectedValue={categoria}
-                    onValueChange={(itemValue) => setCategoria(itemValue)}
-                    style={servStyles.picker}
-                    dropdownIconColor="#868686"
-                    >
-                    <Picker.Item label="Selecione uma categoria" value="" />
-                    <Picker.Item label="Mecânica" value="mecanica" />
-                    <Picker.Item label="Elétrica" value="eletrica" />
-                    <Picker.Item label="Estética" value="estetica" />
-                    </Picker>
-                </View>
-                <CustomInput
-                    label="Tempo estimado"
-                    placeholder="Digite o tempo"
-                    placeholderTextColor="#868686"
-                    keyboardType='numeric'
-                    onlyNumbers={true}
-                    value={tempoEstimado}
-                    onChangeText={setTempoEstimado}
-                    contentStyle={{ width: '80%', maxWidth: 400 }}
-                />
-                <View style={servStyles.precoInput}>
-                    <CustomInput
-                        label="Preço Min"
-                        placeholder="R$ 0,00"
-                        placeholderTextColor="#868686"
-                        keyboardType='numeric'
-                        onChangeText={handlePrecoMinChange}
-                        value={precoMin}
-                        contentStyle={{width: '100%', maxWidth: 200 }}
-                        style={{ width: '49%' }}
-                    />
-                    <CustomInput
-                        label="Preço Max"
-                        placeholder="R$ 0,00"
-                        placeholderTextColor="#868686"
-                        keyboardType='numeric'
-                        onChangeText={handlePrecoMaxChange}
-                        value={precoMax}
-                        contentStyle={{ width: '100%', maxWidth: 200 }}
-                        style={{ width: '49%' }}
-                    />
-                </View>
-                <View style={servStyles.checkboxContainer}>
-                        <Checkbox
-                            color={'#4CAF50'}
-                            value={checked}
-                            onValueChange={(val) => setChecked(val)}
-                            style={servStyles.checkbox}
+                <ScrollView
+                    style={globalStyles.crudBottom}
+                    contentContainerStyle={styles.scrollContentContainer}
+                    keyboardShouldPersistTaps="handled"
+                >
+                    <Text style={[globalStyles.title, styles.pageTitle]}>Cadastrar Novo Serviço</Text>
+                    <View style={styles.formContainer}>
+                        <CustomInput
+                            label="Nome do Serviço"
+                            placeholder="Ex: Troca de óleo completa"
+                            value={nome}
+                            onChangeText={setNome}
+                            style={styles.inputField}
                         />
-                        <Text style={globalStyles.label}>Preço somente por orçamento</Text>
-                    </View>
-                <View style={servStyles.crudButtons}>
-                    <CustomButton 
-                        style={{width: '39%', maxWidth: 193, height: 50, backgroundColor: '#868686'}} 
-                        title="Cancelar" 
-                        onPress={handleCadastrar} />
-                    <CustomButton 
-                        style={{width: '39%', maxWidth: 193, height: 50}} 
-                        title="Cadastrar" 
-                        onPress={handleCadastrar} />
-                </View>
+                        <ExpandingTextArea
+                            label="Descrição Detalhada do Serviço"
+                            value={descricao}
+                            onChangeText={setDescricao}
+                            placeholder="Inclua o que está incluso, diferenciais, etc."
+                            containerStyle={styles.inputField}
+                            minHeight={80}
+                        />
 
+                        <View style={[servStyles.pickerContainer, styles.inputField]}>
+                            <Text style={globalStyles.label}>Categoria do Serviço</Text>
+                            <Picker
+                                selectedValue={categoria}
+                                onValueChange={(itemValue) => setCategoria(itemValue)}
+                                style={[servStyles.picker, styles.pickerComponent]} // Applied theme color for text
+                                dropdownIconColor={colors.textHint}
+                                mode="dropdown" // Explicitly set mode for consistency
+                            >
+                                <Picker.Item label="Selecione uma categoria..." value="" style={styles.pickerItem}/>
+                                <Picker.Item label="Mecânica Geral" value="mecanica_geral" style={styles.pickerItem}/>
+                                <Picker.Item label="Elétrica Automotiva" value="eletrica" style={styles.pickerItem}/>
+                                <Picker.Item label="Funilaria e Pintura" value="funilaria_pintura" style={styles.pickerItem}/>
+                                <Picker.Item label="Estética Automotiva" value="estetica" style={styles.pickerItem}/>
+                                <Picker.Item label="Suspensão e Freios" value="suspensao_freios" style={styles.pickerItem}/>
+                                <Picker.Item label="Outros" value="outros" style={styles.pickerItem}/>
+                            </Picker>
+                        </View>
+                        <CustomInput
+                            label="Tempo Estimado (em horas)"
+                            placeholder="Ex: 1.5 (para 1h30min)"
+                            keyboardType='numeric'
+                            // onlyNumbers={true} // Assuming CustomInput handles this
+                            value={tempoEstimado}
+                            onChangeText={setTempoEstimado}
+                            style={styles.inputField}
+                        />
+                        <View style={[servStyles.precoInput, styles.inputRowContainer]}>
+                            <CustomInput
+                                label="Preço Mínimo"
+                                placeholder="R$ 0,00"
+                                keyboardType='numeric'
+                                onChangeText={handlePrecoMinChange}
+                                value={precoMin}
+                                style={styles.inputInRow}
+                                editable={!somenteOrcamento}
+                            />
+                            <CustomInput
+                                label="Preço Máximo"
+                                placeholder="R$ 0,00"
+                                keyboardType='numeric'
+                                onChangeText={handlePrecoMaxChange}
+                                value={precoMax}
+                                style={styles.inputInRow}
+                                editable={!somenteOrcamento}
+                            />
+                        </View>
+                        <View style={[servStyles.checkboxContainer, styles.inputField, styles.checkboxWrapper]}>
+                                <Checkbox
+                                    color={somenteOrcamento ? colors.success : colors.inputBackground} // Theme color for checkbox
+                                    value={somenteOrcamento}
+                                    onValueChange={setSomenteOrcamento}
+                                    style={servStyles.checkbox} // Keep original checkbox style if specific
+                                />
+                                <Text style={[globalStyles.label, styles.checkboxLabel]}>Preço somente sob orçamento</Text>
+                        </View>
+                    </View>
+                    <View style={[servStyles.crudButtons, styles.actionButtonsContainer]}>
+                        <CustomButton
+                            style={[styles.actionButton, styles.cancelButton]}
+                            textStyle={styles.cancelButtonText}
+                            title="Cancelar"
+                            onPress={() => router.back()} />
+                        <CustomButton
+                            style={styles.actionButton}
+                            title="Cadastrar Serviço"
+                            onPress={handleCadastrar} />
+                    </View>
+                </ScrollView>
             </View>
             <BottomNavigation />
         </View>
@@ -154,5 +163,70 @@ const CadastrarServico = () => {
   );
 };
 
+const styles = StyleSheet.create({
+    logoNome: {
+        width: 100,
+        height: 60,
+    },
+    scrollContentContainer: {
+        paddingBottom: spacing.large,
+        alignItems: 'center',
+    },
+    pageTitle: {
+        marginBottom: spacing.large,
+    },
+    formContainer: {
+        width: '90%',
+        maxWidth: 500,
+    },
+    inputField: {
+        marginBottom: spacing.medium,
+    },
+    inputRowContainer: {
+        width: '100%',
+        maxWidth: '100%',
+        paddingHorizontal: 0,
+    },
+    inputInRow: {
+        flex: 1,
+    },
+    pickerComponent: { // Style for the Picker itself
+        backgroundColor: colors.inputBackground,
+        color: colors.textPrimary, // Text color for selected item
+        height: 50, // Match CustomInput height
+        borderRadius: spacing.small, // Match CustomInput border radius
+    },
+    pickerItem: { // Style for Picker.Item (might have limited effect on Android dropdown)
+        backgroundColor: colors.surface, // Background for dropdown items
+        color: colors.textPrimary, // Text color for dropdown items
+    },
+    checkboxWrapper: { // Override for servStyles.checkboxContainer
+        backgroundColor: 'transparent', // Make background transparent as label is outside
+        justifyContent: 'flex-start',
+        paddingHorizontal: 0, // Reset padding
+        marginTop: spacing.small, // Adjust spacing
+    },
+    checkboxLabel: {
+        marginLeft: spacing.small,
+        color: colors.textLabel, // Consistent label color
+    },
+    actionButtonsContainer: {
+        width: '90%',
+        maxWidth: 500,
+        marginTop: spacing.large,
+        paddingHorizontal: 0,
+    },
+    actionButton: {
+        flex: 1,
+        height: 50,
+    },
+    cancelButton: {
+        backgroundColor: colors.surface,
+        marginRight: spacing.small,
+    },
+    cancelButtonText: {
+        color: colors.textSecondary,
+    }
+});
 
-export default CadastrarServico;
+export default CadastrarServicoScreen; // Renamed

@@ -1,19 +1,27 @@
 import React, { useState } from 'react';
-import { View, TouchableOpacity, Text, Image, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, Text, Image, StyleSheet, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { colors, spacing, typography } from '../styles/globalStyles';
 
 interface Props {
   imagem: string | null;
   setImagem: (uri: string) => void;
   containerStyle?: object;
   buttonStyle?: object;
+  textStyle?: object;
 }
 
-export const ImagePickerInput = ({ imagem, setImagem, containerStyle, buttonStyle }: Props) => {
+export const ImagePickerInput = ({
+  imagem,
+  setImagem,
+  containerStyle,
+  buttonStyle,
+  textStyle,
+}: Props) => {
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
-      alert('Permissão para acessar a galeria foi negada!');
+      Alert.alert('Permissão Negada', 'Permissão para acessar a galeria foi negada!');
       return;
     }
 
@@ -31,15 +39,10 @@ export const ImagePickerInput = ({ imagem, setImagem, containerStyle, buttonStyl
   return (
     <View style={[styles.container, containerStyle]}>
       <TouchableOpacity onPress={pickImage} style={[styles.button, buttonStyle]}>
-        <Text style={{ color: '#555' }}>
+        <Text style={[styles.text, textStyle]}>
           {imagem ? 'Alterar imagem' : 'Selecionar imagem'}
         </Text>
-        {imagem && (
-          <Image
-            source={{ uri: imagem }}
-            style={styles.preview}
-          />
-        )}
+        {imagem && <Image source={{ uri: imagem }} style={styles.preview} />}
       </TouchableOpacity>
     </View>
   );
@@ -47,28 +50,30 @@ export const ImagePickerInput = ({ imagem, setImagem, containerStyle, buttonStyl
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
-    marginTop: 16,
-    width: '100%',
+    // alignItems: 'center', // Let parent handle alignment or apply via containerStyle
+    marginTop: spacing.medium,
+    width: '100%', // Default to full width
   },
-  
   button: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor:'#242424',
-    borderRadius: 8,
-    padding: 20,
-    width: '80%',
-    height: 60,
-    maxWidth: 400,
+    backgroundColor: colors.inputBackground,
+    borderRadius: spacing.small,
+    padding: spacing.medium, // Adjusted padding
+    // width: '80%', // Control width via containerStyle or parent
+    height: 60, // Keep or make dynamic
+    // maxWidth: 400, // Control via containerStyle or parent
     justifyContent: 'space-between',
   },
-  
+  text: {
+    color: colors.textLabel, // Was #555
+    fontSize: typography.fontSizeText,
+  },
   preview: {
-    width: 30,
+    width: 30, // Consider making these themeable if sizes vary
     height: 30,
-    marginLeft: 10,
-    borderRadius: 8,
+    marginLeft: spacing.small,
+    borderRadius: spacing.small / 2, // Smaller radius for small image
   },
 });
 

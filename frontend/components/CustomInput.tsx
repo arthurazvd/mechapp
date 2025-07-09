@@ -8,14 +8,13 @@ import {
   TextStyle,
   ViewStyle,
 } from 'react-native';
-import { globalStyles } from '../styles/globalStyles';
-
+import { globalStyles, colors, spacing, typography } from '../styles/globalStyles';
 
 interface CustomInputProps extends TextInputProps {
   onlyNumbers?: boolean;
   inputStyle?: StyleProp<TextStyle>;
-  containerStyle?: StyleProp<ViewStyle>; 
-  contentStyle?: StyleProp<ViewStyle>; 
+  containerStyle?: StyleProp<ViewStyle>; // Style for the outermost View
+  contentStyle?: StyleProp<ViewStyle>; // Style for the View wrapping label and TextInput
   label?: string;
 }
 
@@ -24,10 +23,11 @@ export const CustomInput: React.FC<CustomInputProps> = ({
   value,
   onChangeText,
   inputStyle,
-  containerStyle,
+  // containerStyle, // Renamed to style in the original, let's stick to 'style' for the outer
   contentStyle,
-  style,
+  style, // This will be for the outermost container
   label,
+  placeholderTextColor = colors.textHint, // Default placeholder color
   ...rest
 }) => {
   const handleChange = (text: string) => {
@@ -43,6 +43,7 @@ export const CustomInput: React.FC<CustomInputProps> = ({
           value={value}
           onChangeText={handleChange}
           style={[styles.input, inputStyle]}
+          placeholderTextColor={placeholderTextColor}
           {...rest}
         />
       </View>
@@ -52,20 +53,21 @@ export const CustomInput: React.FC<CustomInputProps> = ({
 
 const styles = StyleSheet.create({
   outerContainer: {
-    alignItems: 'center',
-    marginBottom: 10,
-    width: '100%',
+    // alignItems: 'center', // Usually handled by parent or contentStyle if needed
+    marginBottom: spacing.small, // Default margin
+    width: '100%', // Default width, can be overridden by `style` prop
   },
   innerContainer: {
-    maxWidth: 400,
+    // maxWidth: 400, // This can be applied via contentStyle if needed
     width: '100%',
   },
   input: {
-    height: 50,
-    borderRadius: 8,
-    paddingHorizontal: 20,
-    backgroundColor: '#242424',
-    color: '#868686',
+    height: 50, // Consider making this more dynamic or part of theme
+    borderRadius: spacing.small,
+    paddingHorizontal: spacing.medium,
+    backgroundColor: colors.inputBackground,
+    color: colors.textHint, // Default text color for input
     width: '100%',
+    fontSize: typography.fontSizeText,
   },
 });

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, Alert, StatusBar, Image, TouchableOpacity} from "react-native";
+import { View, Text, Alert, StatusBar, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -9,7 +9,7 @@ import { CustomInput } from "../../components/CustomInput";
 import { PasswordInput } from "../../components/PasswordInput";
 import { BackButton } from '../../components/BackButton';
 
-import { globalStyles } from "../../styles/globalStyles";
+import { globalStyles, colors, spacing } from "../../styles/globalStyles";
 
 // Controller
 //import { usuarioController } from "../../controllers/usuario_controller";
@@ -28,51 +28,50 @@ const LoginScreen = () => {
     }
 
     Alert.alert("Login", "Login realizado com sucesso!");
+    // router.push('/agendamento/historico'); // Keep navigation logic
   };
 
   return (
     <>
-      <StatusBar backgroundColor="#A10000" barStyle="light-content" />
+      <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
       <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
         <View style={globalStyles.initialTop}>
-          <BackButton />
+          <BackButton color={colors.white} />
           <Image
             source={require("../../assets/logo-vertical.png")}
-            style={{ width: 170, height: 190 }}
+            style={styles.logo}
             resizeMode="contain"
           />
         </View>
 
-        <View style={globalStyles.initialBottom}>
+        <View style={[globalStyles.initialBottom, styles.formContainer]}>
           <Text style={globalStyles.title}>Login</Text>
           <CustomInput
             placeholder="E-mail"
-            placeholderTextColor="#868686"
+            // placeholderTextColor prop is now handled by CustomInput default
             label="E-mail"
             value={email}
             onChangeText={setEmail}
-            contentStyle={{ width: "90%", maxWidth: 400 }}
+            style={styles.inputField} // Using style for outer container for width control
           />
           <PasswordInput
             placeholder="Senha"
             label="Senha"
-            placeholderTextColor="#868686"
+            // placeholderTextColor prop is now handled by PasswordInput default
             value={senha}
             onChangeText={setSenha}
+            containerStyle={styles.inputField} // Using containerStyle for PasswordInput's wrapper
           />
 
-          <Text style={globalStyles.text}>Esqueci minha senha</Text>
+          <TouchableOpacity onPress={() => Alert.alert("Esqueci minha senha", "Funcionalidade a ser implementada.")}>
+            <Text style={[globalStyles.text, styles.forgotPassword]}>Esqueci minha senha</Text>
+          </TouchableOpacity>
 
           <CustomButton
-            style={{
-              width: "90%",
-              maxWidth: 400,
-              height: 50,
-              marginTop: 20,
-              marginBottom: 20,
-            }}
+            style={styles.loginButton}
             title="Entrar"
-            onPress={() => router.push('/agendamento/historico')}
+            onPress={() => router.push('/agendamento/historico')} // Original navigation
+            // onPress={handleLogin} // If you want to use the handleLogin logic
           />
 
           <Text style={globalStyles.text}>Não tem uma conta?</Text>
@@ -84,5 +83,31 @@ const LoginScreen = () => {
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  logo: {
+    width: 170,
+    height: 190,
+  },
+  formContainer: {
+    paddingHorizontal: spacing.large, // Add some horizontal padding
+  },
+  inputField: {
+    width: '100%', // Inputs take full width of their container
+    maxWidth: 400, // Max width for larger screens
+    alignSelf: 'center', // Center the input field itself if its parent is wider
+  },
+  forgotPassword: {
+    marginVertical: spacing.medium,
+  },
+  loginButton: {
+    width: '100%', // Button takes full width of its container
+    maxWidth: 400,
+    height: 50, // Keep fixed height or use padding from CustomButton
+    marginTop: spacing.medium,
+    marginBottom: spacing.large, // Increased bottom margin
+    alignSelf: 'center',
+  },
+});
 
 export default LoginScreen;

@@ -1,30 +1,34 @@
 import { TouchableOpacity, Text, StyleSheet, ViewStyle } from 'react-native';
+import { colors, spacing, typography } from '../styles/globalStyles';
 
 interface Props {
   title: string;
   onPress: () => void;
   style?: ViewStyle;
+  textStyle?: ViewStyle; // Allow passing text style overrides
 }
 
-export const CustomButton: React.FC<Props> = ({ title, onPress, style }) => {
+export const CustomButton: React.FC<Props> = ({ title, onPress, style, textStyle }) => {
   return (
     <TouchableOpacity style={[styles.button, style]} onPress={onPress}>
-      <Text style={styles.text}>{title}</Text>
+      <Text style={[styles.text, textStyle]}>{title}</Text>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#A10000',
-    borderRadius: 8,
+    backgroundColor: colors.primary,
+    borderRadius: spacing.small,
     alignItems: 'center',
-    justifyContent:'center',
+    justifyContent: 'center',
+    paddingVertical: spacing.medium, // Default padding
+    paddingHorizontal: spacing.large, // Default padding
   },
   text: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
+    color: colors.textPrimary,
+    fontWeight: typography.fontWeightBold,
+    fontSize: typography.fontSizeText, // Default font size for button text
   },
 });
 

@@ -11,16 +11,16 @@ import {
   TextInputProps,
 } from 'react-native';
 import React, { useState } from 'react';
-import { globalStyles } from '../styles/globalStyles';
-
+import { globalStyles, colors, spacing, typography } from '../styles/globalStyles';
 
 interface ExpandingTextAreaProps extends TextInputProps {
   value: string;
   onChangeText: (text: string) => void;
   label?: string;
-  containerStyle?: StyleProp<ViewStyle>; // estilo da View externa (centralizadora)
-  contentStyle?: StyleProp<ViewStyle>;   // estilo da View interna (controla largura)
+  containerStyle?: StyleProp<ViewStyle>;
+  contentStyle?: StyleProp<ViewStyle>;
   inputStyle?: StyleProp<TextStyle>;
+  minHeight?: number;
 }
 
 export const ExpandingTextArea: React.FC<ExpandingTextAreaProps> = ({
@@ -28,12 +28,14 @@ export const ExpandingTextArea: React.FC<ExpandingTextAreaProps> = ({
   onChangeText,
   label,
   placeholder = 'Digite aqui...',
+  placeholderTextColor = colors.textHint,
   containerStyle,
   contentStyle,
   inputStyle,
+  minHeight = 100, // Default min height
   ...rest
 }) => {
-  const [height, setHeight] = useState(100);
+  const [height, setHeight] = useState(minHeight);
 
   const handleContentSizeChange = (
     e: NativeSyntheticEvent<TextInputContentSizeChangeEventData>
@@ -49,11 +51,12 @@ export const ExpandingTextArea: React.FC<ExpandingTextAreaProps> = ({
           value={value}
           onChangeText={onChangeText}
           placeholder={placeholder}
+          placeholderTextColor={placeholderTextColor}
           multiline
           onContentSizeChange={handleContentSizeChange}
           style={[
             styles.textArea,
-            { height: Math.max(100, height) },
+            { height: Math.max(minHeight, height) },
             inputStyle,
           ]}
           textAlignVertical="top"
@@ -66,19 +69,20 @@ export const ExpandingTextArea: React.FC<ExpandingTextAreaProps> = ({
 
 const styles = StyleSheet.create({
   outerContainer: {
-    alignItems: 'center',
-    marginBottom: 16,
-    width: '80%',
+    // alignItems: 'center', // Let parent or contentStyle handle this
+    marginBottom: spacing.medium,
+    width: '100%', // Default to full width, can be overridden
   },
   innerContainer: {
     width: '100%',
-    maxWidth: 400,
+    // maxWidth: 400, // Apply via contentStyle if needed
   },
   textArea: {
-    backgroundColor: '#242424',
-    borderRadius: 8,
-    padding: 16,
-
-    color: '#868686',
+    backgroundColor: colors.inputBackground,
+    borderRadius: spacing.small,
+    padding: spacing.medium,
+    color: colors.textHint,
+    fontSize: typography.fontSizeText,
+    textAlignVertical: 'top', // Already there, just confirming
   },
 });

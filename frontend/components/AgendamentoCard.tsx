@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import { colors, spacing, typography } from '../styles/globalStyles';
 
 type Status = 'pendente' | 'confirmado' | 'cancelado' | 'concluido';
 
@@ -13,10 +14,10 @@ type Props = {
 
 export const AgendamentoCard = ({ servico, oficina, status, onPress }: Props) => {
   const statusInfo = {
-    pendente: { label: 'Pendente', color: '#FFA500', icon: 'clock' },
-    confirmado: { label: 'Confirmado', color: '#00A100', icon: 'check-circle' },
-    cancelado: { label: 'Cancelado', color: '#D00000', icon: 'x-circle' },
-    concluido: { label: 'Concluído', color: '#007BFF', icon: 'check' },
+    pendente: { label: 'Pendente', color: colors.warning, icon: 'clock' },
+    confirmado: { label: 'Confirmado', color: colors.success, icon: 'check-circle' },
+    cancelado: { label: 'Cancelado', color: colors.error, icon: 'x-circle' },
+    concluido: { label: 'Concluído', color: colors.secondary, icon: 'check' },
   };
 
   const { label, color, icon } = statusInfo[status];
@@ -39,10 +40,10 @@ export const AgendamentoCard = ({ servico, oficina, status, onPress }: Props) =>
 export const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
-    backgroundColor: '#1e1e1e',
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 10,
+    backgroundColor: colors.surface,
+    padding: spacing.medium,
+    borderRadius: spacing.small,
+    marginBottom: spacing.small,
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '90%',
@@ -52,23 +53,23 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   servico: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
+    color: colors.textPrimary,
+    fontSize: typography.fontSizeText, // Adjusted for consistency
+    fontWeight: typography.fontWeightBold,
   },
   oficina: {
-    color: '#aaa',
-    fontSize: 13,
-    marginTop: 4,
+    color: colors.textHint, // Was #aaa, now using theme color
+    fontSize: typography.fontSizeLabel, // Adjusted for consistency
+    marginTop: spacing.small / 2,
   },
   statusBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: spacing.small / 2,
   },
   statusText: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    marginLeft: 6,
+    fontSize: typography.fontSizeLabel,
+    fontWeight: typography.fontWeightBold,
+    marginLeft: spacing.small / 2,
   },
 });

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import { colors, spacing, typography } from '../styles/globalStyles';
 
 type Props = {
   nome: string;
@@ -27,18 +28,18 @@ export const ItemCard = ({
         {multiplo ? (
           <>
             <TouchableOpacity
-              style={[styles.removeButton, styles.removeButtonMultiplo]}
+              style={[styles.actionButton, styles.removeButton, styles.removeButtonMultiplo]}
               onPress={onRemove}
             >
-              <Feather name="minus" size={16} color="#fff" />
+              <Feather name="minus" size={16} color={colors.white} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.addButton} onPress={onAdd}>
-              <Feather name="plus" size={16} color="#fff" />
+            <TouchableOpacity style={[styles.actionButton, styles.addButton]} onPress={onAdd}>
+              <Feather name="plus" size={16} color={colors.white} />
             </TouchableOpacity>
           </>
         ) : (
-          <TouchableOpacity style={styles.agendarButton} onPress={onAgendar}>
-            <Feather name="calendar" size={16} color="#fff" />
+          <TouchableOpacity style={[styles.actionButton, styles.agendarButton]} onPress={onAgendar}>
+            <Feather name="calendar" size={16} color={colors.white} />
           </TouchableOpacity>
         )}
       </View>
@@ -60,10 +61,10 @@ export const ItemCard = ({
 export const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
-    backgroundColor: '#1e1e1e',
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 3,
+    backgroundColor: colors.surface,
+    padding: spacing.medium,
+    borderRadius: spacing.small,
+    marginBottom: spacing.small / 2, // Was 3
     alignItems: 'center',
     width: '90%',
     alignSelf: 'center',
@@ -71,48 +72,47 @@ export const styles = StyleSheet.create({
   buttonBox: {
     flexDirection: 'column',
     alignItems: 'center',
-    marginRight: 12,
+    marginRight: spacing.medium, // Was 12
+  },
+  actionButton: { // Common style for all small action buttons
+    padding: spacing.small,
+    borderRadius: spacing.small / 2 + 2, // Was 6
   },
   addButton: {
-    backgroundColor: '#00A100',
-    padding: 8,
-    borderRadius: 6,
+    backgroundColor: colors.success,
   },
   removeButton: {
-    backgroundColor: '#A10000',
-    padding: 8,
-    borderRadius: 6,
+    backgroundColor: colors.error,
   },
   removeButtonMultiplo: {
-    marginBottom: 8,
+    marginBottom: spacing.small,
   },
   agendarButton: {
-    backgroundColor: '#A10000',
-    padding: 8,
-    borderRadius: 6,
+    backgroundColor: colors.primary, // Or another color like colors.secondary
   },
   infoBox: {
     flex: 1,
   },
   nome: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
+    color: colors.textPrimary,
+    fontSize: typography.fontSizeText,
+    fontWeight: typography.fontWeightBold,
   },
   descricao: {
-    color: '#aaa',
-    fontSize: 13,
-    marginTop: 4,
+    color: colors.textHint, // Was #aaa
+    fontSize: typography.fontSizeLabel,
+    marginTop: spacing.small / 2, // Was 4
   },
   quantidadeBox: {
-    backgroundColor: '#333',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 6,
-    marginLeft: 10,
+    backgroundColor: colors.inputBackground, // Was #333, using a theme color
+    paddingHorizontal: spacing.small,
+    paddingVertical: spacing.small / 2,
+    borderRadius: spacing.small / 2 + 2, // Was 6
+    marginLeft: spacing.small,
   },
   quantidadeText: {
-    color: '#fff',
-    fontWeight: 'bold',
+    color: colors.textPrimary,
+    fontWeight: typography.fontWeightBold,
+    fontSize: typography.fontSizeLabel,
   },
 });
