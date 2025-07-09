@@ -9,7 +9,7 @@ def criar_usuario(
     senha: str,
     tipo: str,
     telefone: str | None = None,
-):
+) -> dict:
     """
     Serviço de criação de usuários no sistema. Recebendo as informações de um usuário, levantando possíveis problemas
     e persistindo as informações quando possível.
@@ -21,6 +21,8 @@ def criar_usuario(
         senha (str): Senha do usuário.
         tipo (str): Tipo de usuário: CLIENTE ou MECANICO.
         telefone (str): Telefone do usuário. 
+    Returns:
+        dict: Dicionário com os dados do usuaŕio criado.
     Raises:
         EmailInvalido: O email informado não é válido.
         TipoInvalido: O tipo de usuário está inválido, insira CLIENTE Ou MECANICO.
@@ -45,6 +47,8 @@ def criar_usuario(
         usuario = Usuario(nome, email, senha, TipoUsuario(tipo), telefone)
         uow.usuarios.adicionar(usuario)
         uow.commit()
+
+        return usuario.to_dict()
 
 def alterar_usuario(
     uow: AbstractUnidadeDeTrabalho,

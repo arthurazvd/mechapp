@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StatusBar, TouchableOpacity} from "react-native";
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CustomButton } from '../../components/CustomButton';
@@ -12,6 +12,8 @@ import { globalStyles } from '../../styles/globalStyles';
 import { cadStyles } from './styles';
 import { formatarContato } from '../../utils/formatters';
 
+// API
+import { usuario } from "../../api/index";
 
 export default function Index() {
   const router = useRouter();
@@ -20,6 +22,7 @@ export default function Index() {
   const [telefone, setTelefone] = useState("");
   const [senha, setSenha] = useState("");
   const [confsenha, setConfsenha] = useState("");
+  const { tipo: tipo_recebido } = useLocalSearchParams();
 
   const handleContatoChange = (text: string) => {
     const ContatoFormatado = formatarContato(text);
@@ -28,6 +31,41 @@ export default function Index() {
 
   const insets = useSafeAreaInsets();
   
+  // Cadastro de usuário
+  const handleCadastro = async () => {
+    if (!email || !nome || !senha) {
+      alert("Digite email, nome e senha.");
+      return;
+    }
+
+    if (senha != confsenha) {
+      alert("As senhas devem ser iguais.");
+      return;
+    }
+
+    var tipo = "CLIENTE"
+    if (typeof tipo_recebido === "string") {
+      tipo = tipo_recebido;
+    }
+
+    // Resposta da requisição
+    const json = await usuario.registar_usuario({
+      nome, email, senha, tipo, telefone
+    });
+
+    // Caso aconteça algum tipo de erro
+    if (json.error) {
+      alert(json.mensagem);
+      return;
+    }
+
+    // Login efetuado com sucesso, salvando no local storage
+    localStorage.setItem("usuario_atual", JSON.stringify(json.usuario));
+
+    // Redirecionando
+    router.replace('/pecas/cadastrar');
+  }
+
   return (
     <>
       <StatusBar backgroundColor="#A10000" barStyle="light-content" /> 
@@ -86,13 +124,13 @@ export default function Index() {
               marginBottom: 20,
               }}
               title="Cadastrar"
-              onPress={() => router.push('/cadastro/oficina')}
+              onPress={handleCadastro}
           />
 
           <Text style={globalStyles.text}>Já tem uma conta?</Text>
-                  <TouchableOpacity onPress={() => router.push('/login')}>
-                    <Text style={globalStyles.link}>Fazer Login</Text>
-                  </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push('/login')}>
+            <Text style={globalStyles.link}>Fazer Login</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </>

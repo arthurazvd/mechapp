@@ -40,7 +40,7 @@ def criacao_de_usuario(
     usuario: UsuarioCreate,
     uow: UnidadeDeTrabalho = Depends(get_uow),
 ):
-    id = criar_usuario(
+    usuario = criar_usuario(
         uow=uow,
         nome=usuario.nome,
         tipo=usuario.tipo,
@@ -51,7 +51,7 @@ def criacao_de_usuario(
 
     return JSONResponse(
         status_code=201,
-        content={"mensagem":"Sucesso ao criar usuário!","id":id}
+        content={"mensagem":"Sucesso ao criar usuário!","usuario":usuario}
     )
 
 @router.post("/autenticar")
