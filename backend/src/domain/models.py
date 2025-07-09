@@ -46,6 +46,8 @@ class Peca:
     id: str = field(default_factory=lambda: str(uuid4()))
 
     def to_dict(self) -> dict:
+        if not isinstance(self.preco, float):
+            self.preco = float(self.preco)
         return {
             "id": self.id,
             "nome": self.nome,

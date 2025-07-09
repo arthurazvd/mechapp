@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Image, StatusBar } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRootNavigationState, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CustomInput } from '../../components/CustomInput';
@@ -14,22 +14,46 @@ import { globalStyles } from '../../styles/globalStyles';
 import { pecStyles } from './styles';
 import { formatarPreco } from '../../utils/formatters';
 
+// API
+import { peca } from '../../api';
+
 const CadastrarPecas = () => {
   const router = useRouter();
 
   const [nome, setNome] = useState('');
   const [descricao, setDescricao] = useState('');
-  const [quantidade, setQuantidade] = useState('');
-  const [fabricante, setFabricante] = useState('');
-  const [preco, setPreco] = useState('');
+  const [quantidade, setQuantidade] = useState(0);
+  const [preco, setPreco] = useState(0);
+  const [precoFormatado, setPrecoFormatado] = useState('');
   const [imagem, setImagem] = useState<string | null>(null);
 
   const insets = useSafeAreaInsets();
 
   const handlePrecoChange = (text: string) => {
-    const precoFormatado = formatarPreco(text);
-    setPreco(precoFormatado);
+    const { precoFormatado, precoReal } = formatarPreco(text);
+    setPrecoFormatado(precoFormatado);
+    setPreco(precoReal);
   };
+
+  const handleQuantidadeChange = (text: string) => {
+    setQuantidade(Number(text));
+  }
+
+  const handleCadastroPeca = async () => {
+    if (!nome || !descricao || !quantidade || !preco ) {
+      alert("Preencha todos os campos.");
+      return;
+    }
+
+    const data = await peca.criar_peca({ nome, descricao, quantidade, preco, imagem });
+
+    if (data.error) {
+      alert(data.mensagem);
+      return;
+    }
+
+    return router.replace('/agendamento/historico');
+  }
 
   return (
     <>
@@ -49,9 +73,10 @@ const CadastrarPecas = () => {
 
           <CustomInput
             label="Nome"
+            value={nome}
+            onChangeText={setNome}
             placeholder="Digite o nome da peça"
             placeholderTextColor="#868686"
-            onChangeText={setNome}
             contentStyle={{ width: '80%', maxWidth: 400 }}
           />
 
@@ -65,34 +90,25 @@ const CadastrarPecas = () => {
             inputStyle={{ maxWidth: 400, width: '100%' }}
           />
 
-          <CustomInput
-            label="Fabricante"
-            placeholder="Digite o fabricante"
-            placeholderTextColor="#868686"
-            value={fabricante}
-            onChangeText={setFabricante}
-            contentStyle={{ width: '80%', maxWidth: 400 }}
-          />
-
           <View style={pecStyles.precoInput}>
             <CustomInput
               label="Quantidade"
+              value={String(quantidade)}
+              onChangeText={handleQuantidadeChange}
               placeholder="0"
               placeholderTextColor="#868686"
               keyboardType="numeric"
               onlyNumbers={true}
-              onChangeText={setQuantidade}
-              value={quantidade}
               contentStyle={{ width: '100%', maxWidth: 200 }}
               style={{ width: '49%' }}
             />
             <CustomInput
               label="Preço"
+              value={precoFormatado}
+              onChangeText={handlePrecoChange}
               placeholder="R$ 0,00"
               placeholderTextColor="#868686"
               keyboardType="numeric"
-              onChangeText={handlePrecoChange}
-              value={preco}
               contentStyle={{ width: '100%', maxWidth: 200 }}
               style={{ width: '49%' }}
             />
@@ -109,7 +125,7 @@ const CadastrarPecas = () => {
             <CustomButton
               style={{ width: '39%', maxWidth: 193, height: 50 }}
               title="Cadastrar"
-              onPress={() => router.back()}
+              onPress={handleCadastroPeca}
             />
           </View>
           

@@ -17,7 +17,6 @@ const VisualizarPeca = () => {
     const [nome] = useState('Pneu Michelin');
     const [descricao] = useState('Componente essencial para a segurança e desempenho do veículo, o pneu é responsável pelo contato direto com o solo, garantindo aderência, estabilidade e conforto na condução. Recomendado verificar periodicamente seu estado e calibragem para evitar desgastes irregulares e riscos de acidentes.');
     const [quantidade] = useState('16');
-    const [fabricante] = useState('Michelin');
     const [preco] = useState('R$ 500,00');
 
   const insets = useSafeAreaInsets();
@@ -41,7 +40,6 @@ const VisualizarPeca = () => {
           </View>
 
           <InfoView label="Descrição" value={descricao} />
-          <InfoView label="Fabricante" value={fabricante} />
           <InfoView label="Quantidade" value={quantidade} />
           <InfoView label="Preço" value={preco} />
 
