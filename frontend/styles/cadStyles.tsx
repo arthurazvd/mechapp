@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-export const pecStyles = StyleSheet.create({
+export const cadStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#151515',
@@ -11,10 +11,11 @@ export const pecStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#A10000',
-    height: '7%',
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+    height: '17%',
+    borderBottomLeftRadius: 80,
+
   },
+
 
   initialBottom: {
     height: '93%',
