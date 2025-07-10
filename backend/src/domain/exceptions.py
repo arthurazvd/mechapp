@@ -50,6 +50,14 @@ class AgendamentoInvalido(DomainError):
 class AgendamentoNaoEncontrado(DomainError):
     pass
 
+# peca do agendamento
+
+class PecaDoAgendamentoInvalida(DomainError):
+    pass
+
+class PecaDoAgendamentoNaoEncontrada(DomainError):
+    pass
+
 # Avaliacao
 
 class AvaliacaoInvalida(DomainError):
