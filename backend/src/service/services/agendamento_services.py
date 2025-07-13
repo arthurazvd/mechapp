@@ -8,6 +8,7 @@ from src.domain.exceptions import (
 )
 from datetime import datetime
 from uuid import uuid4
+from sqlalchemy.orm import joinedload  # Adicione esta linha
 
 def criar_agendamento(
     uow: AbstractUnidadeDeTrabalho,
@@ -137,7 +138,7 @@ def alterar_agendamento(
                 raise ServicoNaoEncontrado("Serviço não encontrado")
             agendamento.servico = servico
 
-        uow.agendamentos.atualizar(agendamento)
+        uow.agendamentos.salvar(agendamento)
         uow.commit()
 
 def remover_agendamento(
@@ -187,17 +188,67 @@ def consultar_agendamento(
 
 def listar_agendamentos(
     uow: AbstractUnidadeDeTrabalho,
+    cliente_id: str = None,
+    servico_id: str = None,
+    status: str = None,
 ) -> list[dict]:
-    """
-    Serviço para listar todos os agendamentos no sistema.
-    
-    Args:
-        uow (AbstractUnidadeDeTrabalho): Unidade de Trabalho abstrata.
-    
-    Returns:
-        list[dict]: Lista de dicionários com as informações dos agendamentos.
-    """
+    """Lista agendamentos com filtros opcionais"""
+    print("\n=== DEBUG - INÍCIO DA FUNÇÃO listar_agendamentos ===")
+    print(f"Parâmetros recebidos - cliente_id: {cliente_id}, servico_id: {servico_id}, status: {status}")
     
     with uow:
-        agendamentos = uow.agendamentos.listar()
-        return [agendamento.to_dict() for agendamento in agendamentos]
+        try:
+            status_enum = StatusAgendamento(status) if status else None
+            print(f"Status convertido para enum: {status_enum}")
+        except ValueError as e:
+            print(f"Erro ao converter status: {e}")
+            status_enum = None
+
+        print("\nDEBUG - Antes de chamar uow.agendamentos.listar()")
+        agendamentos = uow.agendamentos.listar(
+            cliente_id=cliente_id,
+            servico_id=servico_id,
+            status=status_enum
+        )
+        print(f"DEBUG - Total de agendamentos encontrados: {len(agendamentos)}")
+        
+        for i, ag in enumerate(agendamentos, 1):
+            print(f"\nDEBUG - Agendamento {i}:")
+            print(f"ID: {ag.id}")
+            print(f"Data: {ag.data}")
+            print(f"Status: {ag.status}")
+            print(f"Cliente ID: {ag.cliente_id}")
+            print(f"Serviço ID: {ag.servico_id}")
+            
+            # Verificar se as relações foram carregadas
+            print(f"Cliente carregado: {hasattr(ag, 'cliente')}")
+            if hasattr(ag, 'cliente'):
+                print(f"Cliente nome: {ag.cliente.nome if ag.cliente else None}")
+            
+            print(f"Serviço carregado: {hasattr(ag, 'servico')}")
+            if hasattr(ag, 'servico'):
+                print(f"Serviço nome: {ag.servico.nome if ag.servico else None}")
+
+        resultado = [
+            {
+                "id": ag.id,
+                "data": ag.data.isoformat(),
+                "status": ag.status.value,
+                "cliente": {
+                    "id": ag.cliente.id,
+                    "nome": ag.cliente.nome
+                } if ag.cliente else None,
+                "servico": {
+                    "id": ag.servico.id,
+                    "nome": ag.servico.nome
+                } if ag.servico else None
+            }
+            for ag in agendamentos
+        ]
+        
+        print("\nDEBUG - Resultado final:")
+        for i, res in enumerate(resultado, 1):
+            print(f"Agendamento {i}: {res}")
+        
+        print("=== DEBUG - FIM DA FUNÇÃO listar_agendamentos ===")
+        return resultado

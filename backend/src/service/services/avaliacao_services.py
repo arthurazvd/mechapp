@@ -11,7 +11,6 @@ def criar_avaliacao(
     comentario: str | None = None,
     data: datetime = datetime.now(),
 ):
-
     """
     Serviço de criação de avaliações no sistema. Recebendo as informações de uma avaliação, levantando possíveis problemas
     e persistindo as informações quando possível.
@@ -32,9 +31,6 @@ def criar_avaliacao(
     if not nota or not cliente_id or not servico_id:
         raise AvaliacaoInvalida("Dados de avaliação inválidos")
     
-    if not AvaliacaoNaoEncontrada:
-        raise AvaliacaoNaoEncontrada("Avaliação não encontrada")
-
     with uow:
         avaliacao = Avaliacao(nota, comentario, data, cliente_id, servico_id)
         uow.avaliacoes.adicionar(avaliacao)
@@ -49,30 +45,8 @@ def alterar_avaliacao(
     novo_comentario: str | None = None,
     nova_data: datetime | None = None,
 ):
-    """
-    Serviço de alteração de informações de uma avaliação no sistema. Recebendo a avaliação identificada, modificando seus valores
-    e verificando a possibilidade de persistência do dado.
-
-    Args:
-        uow (AbstractUnidadeDeTrabalho): Unidade de Trabalho abstrata.
-        avaliacao_id (str): ID da avaliação a ser alterada.
-        nova_nota (int | None): Nova nota da avaliação.
-        novo_comentario (str | None): Novo comentário da avaliação.
-        nova_data (datetime | None): Nova data da avaliação.
-
-    Raises:
-        AvaliacaoInvalida: Os dados da avaliação são inválidos.
-        AvaliacaoNaoEncontrada: A avaliação não foi encontrada.
-    """
-
-    if not nova_nota or not cliente_id or not servico_id:
-        raise AvaliacaoInvalida("Dados de avaliação inválidos")
-    
-    if not AvaliacaoNaoEncontrada:
-        raise AvaliacaoNaoEncontrada("Avaliação não encontrada")
-
     with uow:
-        avaliacao = uow.avaliacoes.consultar_por_servico(avaliacao_id) or uow.avaliacoes.consultar_por_cliente(avaliacao_id)
+        avaliacao = uow.avaliacoes.consultar(avaliacao_id)
         if avaliacao is None:
             raise AvaliacaoNaoEncontrada("A avaliação informada não foi encontrada.")
 
@@ -86,7 +60,8 @@ def alterar_avaliacao(
         if nova_data is not None:
             avaliacao.data = nova_data
 
-        uow.avaliacoes.atualizar(avaliacao)
+        # Alterado para usar o método salvar que já existe
+        uow.avaliacoes.salvar(avaliacao)
         uow.commit()
 
 def remover_avaliacao(
@@ -104,10 +79,8 @@ def remover_avaliacao(
         AvaliacaoNaoEncontrada: A avaliação não foi encontrada.
     """
     
-    if not AvaliacaoNaoEncontrada:
-        raise AvaliacaoNaoEncontrada("Avaliação não encontrada")
     with uow:
-        avaliacao = uow.avaliacoes.consultar_por_servico(avaliacao_id) or uow.avaliacoes.consultar_por_cliente(avaliacao_id)
+        avaliacao = uow.avaliacoes.consultar(avaliacao_id)
         if avaliacao is None:
             raise AvaliacaoNaoEncontrada("A avaliação informada não foi encontrada.")
 
@@ -119,22 +92,25 @@ def consultar_avaliacao(
     avaliacao_id: str,
 ) -> dict:
     """
-    Serviço para consulta de avaliações no sistema. 
+    Serviço para consulta de avaliações no sistema.
 
     Args:
         uow (AbstractUnidadeDeTrabalho): Unidade de Trabalho abstrata.
         avaliacao_id (str): Identificador da avaliação.
 
     Returns:
-        dict: Dicionário com as informações da avaliação encontrada, ou nada caso não haja.
+        dict: Dicionário com as informações da avaliação encontrada.
     
     Raises:
         AvaliacaoNaoEncontrada: A avaliação informada não foi encontrada.
     """
-
     with uow:
-        avaliacao = uow.avaliacoes.consultar_por_servico(avaliacao_id) or uow.avaliacoes.consultar_por_cliente(avaliacao_id)
+        avaliacao = uow.avaliacoes.consultar(avaliacao_id)
         if avaliacao is None:
             raise AvaliacaoNaoEncontrada("A avaliação informada não foi encontrada.")
         
-        return avaliacao.to_dict()
+        # Garante que os campos cliente_id e servico_id estejam no dicionário
+        resultado = avaliacao.to_dict()
+        resultado['cliente_id'] = avaliacao.cliente_id
+        resultado['servico_id'] = avaliacao.servico_id
+        return resultado

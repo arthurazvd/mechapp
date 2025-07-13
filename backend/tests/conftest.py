@@ -2,6 +2,7 @@ import pytest
 from sqlalchemy import StaticPool, create_engine, event
 from sqlalchemy.orm import sessionmaker, clear_mappers
 from src.adapters.orm import start_mappers, metadata
+from .mocks import mock_criar_oficina, mock_criar_usuario, mock_criar_servico, mock_criar_avaliacao
 
 # ==================
 # FIXTURES DE SQLITE
