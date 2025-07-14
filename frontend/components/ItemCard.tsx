@@ -64,7 +64,7 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     padding: spacing.medium,
     borderRadius: spacing.small,
-    marginBottom: spacing.small / 2, // Was 3
+    marginBottom: spacing.small / 2, 
     alignItems: 'center',
     width: '90%',
     alignSelf: 'center',
@@ -72,11 +72,11 @@ export const styles = StyleSheet.create({
   buttonBox: {
     flexDirection: 'column',
     alignItems: 'center',
-    marginRight: spacing.medium, // Was 12
+    marginRight: spacing.medium, 
   },
-  actionButton: { // Common style for all small action buttons
+  actionButton: { 
     padding: spacing.small,
-    borderRadius: spacing.small / 2 + 2, // Was 6
+    borderRadius: spacing.small / 2 + 2, 
   },
   addButton: {
     backgroundColor: colors.success,
@@ -88,7 +88,7 @@ export const styles = StyleSheet.create({
     marginBottom: spacing.small,
   },
   agendarButton: {
-    backgroundColor: colors.primary, // Or another color like colors.secondary
+    backgroundColor: colors.primary, 
   },
   infoBox: {
     flex: 1,
@@ -99,15 +99,15 @@ export const styles = StyleSheet.create({
     fontWeight: typography.fontWeightBold,
   },
   descricao: {
-    color: colors.textHint, // Was #aaa
+    color: colors.textHint, 
     fontSize: typography.fontSizeLabel,
-    marginTop: spacing.small / 2, // Was 4
+    marginTop: spacing.small / 2,
   },
   quantidadeBox: {
-    backgroundColor: colors.inputBackground, // Was #333, using a theme color
+    backgroundColor: colors.inputBackground, 
     paddingHorizontal: spacing.small,
     paddingVertical: spacing.small / 2,
-    borderRadius: spacing.small / 2 + 2, // Was 6
+    borderRadius: spacing.small / 2 + 2, 
     marginLeft: spacing.small,
   },
   quantidadeText: {

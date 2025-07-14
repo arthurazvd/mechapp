@@ -14,8 +14,8 @@ interface PasswordInputProps extends TextInputProps {
   value: string;
   onChangeText: (text: string) => void;
   label?: string;
-  containerStyle?: object; // For the outermost wrapper
-  contentStyle?: object; // For the View containing TextInput and icon
+  containerStyle?: object; 
+  contentStyle?: object; 
 }
 
 export const PasswordInput: React.FC<PasswordInputProps> = ({
@@ -47,8 +47,8 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
         >
           <Feather
             name={mostrarSenha ? 'eye' : 'eye-off'}
-            size={19} // This size is quite specific, could be a theme variable if reused
-            color={colors.textLabel} // Was #888
+            size={19} 
+            color={colors.textLabel} 
           />
         </TouchableOpacity>
       </View>
@@ -58,29 +58,27 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
 
 const styles = StyleSheet.create({
   wrapper: {
-    width: '100%', // Default to full width, parent can constrain
-    // maxWidth: 400, // Let parent or containerStyle handle this
-    marginBottom: spacing.small, // Default margin, was 2
+    width: '100%', 
+    marginBottom: spacing.small, 
   },
   container: {
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: spacing.small,
-    height: 50, // Consistent with CustomInput, consider theme variable
-    backgroundColor: colors.inputBackground, // Changed from #464646 to match CustomInput
+    height: 50, 
+    backgroundColor: colors.inputBackground, 
   },
   input: {
-    flex: 1, // Use flex to take available space
+    flex: 1, 
     height: '100%',
-    // width: '87%', // Removed fixed width, using flex now
-    borderRadius: spacing.small, // Match container's border radius for seamless look if needed
+    borderRadius: spacing.small, 
     paddingHorizontal: spacing.medium,
-    backgroundColor: colors.inputBackground, // Ensure this matches container or is transparent
+    backgroundColor: colors.inputBackground, 
     color: colors.textHint,
     fontSize: typography.fontSizeText,
   },
   iconButton: {
-    paddingHorizontal: spacing.medium, // Increased padding for better touch area
+    paddingHorizontal: spacing.medium, 
     justifyContent: 'center',
     alignItems: 'center',
     height: '100%',

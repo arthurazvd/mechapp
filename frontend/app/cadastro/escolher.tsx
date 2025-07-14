@@ -1,22 +1,22 @@
-import React from 'react'; // Removed useState
-import { View, Text, StatusBar, StyleSheet } from 'react-native'; // Added StyleSheet
+import React from 'react';
+import { View, Text, StatusBar, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CustomButton } from '../../components/CustomButton';
 import { BackButton } from '../../components/BackButton';
 
-import { globalStyles, colors, spacing } from '../../styles/globalStyles'; // Import theme
-import { cadStyles } from './styles'; // cadStyles.initialTop is used
+import { globalStyles, colors, spacing } from '../../styles/globalStyles';
+import { cadStyles } from './styles';
 
-export default function EscolherTipoCadastroScreen() { // Renamed component
+export default function EscolherTipoCadastroScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
   return (
     <>
       <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
-      <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
+      <View style={[globalStyles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
         <View style={cadStyles.initialTop}>
           <BackButton color={colors.white} />
           <Text style={globalStyles.title}>Cadastro</Text>
@@ -24,14 +24,14 @@ export default function EscolherTipoCadastroScreen() { // Renamed component
         <View style={[globalStyles.initialBottom, styles.contentContainer]}>
           <Text style={[globalStyles.title2, styles.subtitle]}>O que você é?</Text>
           <CustomButton
-            title="Sou Cliente" // Slightly more engaging text
+            title="Sou Cliente"
             style={styles.choiceButton}
-            onPress={() => router.push('/cadastro')} // Navigate to client registration
+            onPress={() => router.push('/cadastro')}
           />
           <CustomButton
-            title="Sou Mecânico / Oficina" // Clarified text
+            title="Sou Mecânico / Oficina"
             style={styles.choiceButton}
-            onPress={() => router.push('/cadastro/oficina')} // Navigate to workshop registration
+            onPress={() => router.push('/cadastro/oficina')}
           />
         </View>
       </View>
@@ -42,18 +42,17 @@ export default function EscolherTipoCadastroScreen() { // Renamed component
 const styles = StyleSheet.create({
   contentContainer: {
     paddingHorizontal: spacing.large,
-    justifyContent: 'center', // Center content vertically
-    alignItems: 'center', // Center content horizontally
-    flex: 1, // Ensure it takes available space after header
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
   },
   subtitle: {
-    marginBottom: spacing.xlarge, // More space after subtitle
+    marginBottom: spacing.xlarge,
   },
   choiceButton: {
-    width: '100%', // Buttons take full width of their container
-    maxWidth: 350, // Max width for buttons
-    height: 60, // Slightly taller buttons
-    marginBottom: spacing.medium, // Space between buttons
-    // paddingVertical from CustomButton will apply if not overridden by height
+    width: '100%',
+    maxWidth: 350,
+    height: 60,
+    marginBottom: spacing.medium,
   },
 });

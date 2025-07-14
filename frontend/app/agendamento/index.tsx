@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StatusBar, Image, Text, FlatList, StyleSheet } from 'react-native'; // Added FlatList, StyleSheet
+import { View, StatusBar, Image, Text, FlatList, StyleSheet } from 'react-native'; 
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -7,17 +7,15 @@ import { BackButton } from '../../components/BackButton';
 import { BottomNavigation } from '../../components/BottomNavigation';
 import { AgendamentoCard } from '../../components/AgendamentoCard';
 
-import { globalStyles, colors, spacing, typography } from '../../styles/globalStyles'; // Import theme
+import { globalStyles, colors, spacing, typography } from '../../styles/globalStyles'; 
 
-// Mock data for current agendamentos
 const agendamentosAtuais = [
   { id: '1', servico: 'Troca de óleo Agendada', oficina: 'Oficina Premium Motors', status: 'confirmado', data: '28/07/2024 às 10:00' },
   { id: '2', servico: 'Diagnóstico de Suspensão', oficina: 'Centro Automotivo Veloz', status: 'pendente', data: '30/07/2024 às 14:00' },
-  // Add more mock agendamentos if needed
 ];
 
 
-const TelaAgendamentosLista = () => { // Renamed component
+const TelaAgendamentosLista = () => {
     const router = useRouter();
     const insets = useSafeAreaInsets();
 
@@ -61,7 +59,7 @@ const TelaAgendamentosLista = () => { // Renamed component
 const styles = StyleSheet.create({
     logoNome: {
         width: 100,
-        height: 60, // Adjusted height
+        height: 60, 
     },
     pageTitle: {
         marginTop: spacing.large,
@@ -74,8 +72,8 @@ const styles = StyleSheet.create({
     emptyListText: {
         ...globalStyles.text,
         marginTop: spacing.large,
-        fontSize: typography.fontSizeText, // Ensure typography is imported if used here
+        fontSize: typography.fontSizeText, 
     }
 });
 
-export default TelaAgendamentosLista; // Renamed export
+export default TelaAgendamentosLista; 

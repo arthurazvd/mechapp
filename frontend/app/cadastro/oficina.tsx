@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StatusBar, StyleSheet, ScrollView, TouchableOpacity } from "react-native"; // Added ScrollView, TouchableOpacity, StyleSheet
+import { View, Text, StatusBar, StyleSheet, ScrollView, TouchableOpacity } from "react-native"; 
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -7,14 +7,14 @@ import { CustomButton } from '../../components/CustomButton';
 import { CustomInput } from "../../components/CustomInput";
 import { BackButton } from '../../components/BackButton';
 
-import { globalStyles, colors, spacing } from '../../styles/globalStyles'; // Import theme
-import { cadStyles } from './styles'; // cadStyles.initialTop is used
+import { globalStyles, colors, spacing } from '../../styles/globalStyles';
+import { cadStyles } from './styles';
 import { formatarDocumento, formatarContato } from '../../utils/formatters';
 
-export default function CadastroOficinaScreen() { // Renamed component
+export default function CadastroOficinaScreen() { 
   const router = useRouter();
   const [nomeOficina, setNomeOficina] = useState("");
-  const [documento, setDocumento] = useState(""); // CNPJ or CPF
+  const [documento, setDocumento] = useState(""); 
   const [endereco, setEndereco] = useState("");
   const [telefone, setTelefone] = useState("");
 
@@ -31,9 +31,8 @@ export default function CadastroOficinaScreen() { // Renamed component
   const insets = useSafeAreaInsets();
 
   const handleCadastroOficina = () => {
-    // Add validation logic here
     console.log("Cadastrando Oficina:", { nomeOficina, documento, endereco, telefone });
-    router.push('/login'); // Or to a dashboard/success screen
+    router.push('/login'); 
   };
   
   return (
@@ -66,7 +65,7 @@ export default function CadastroOficinaScreen() { // Renamed component
               value={documento}
               onChangeText={handleDocumentoChange}
               style={styles.inputField}
-              maxLength={18} // Max length for formatted CNPJ
+              maxLength={18} 
           />
           <CustomInput
               placeholder="Rua, Número, Bairro, Cidade - UF"

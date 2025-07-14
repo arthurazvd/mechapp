@@ -1,25 +1,24 @@
 import React from 'react';
-import { View, StatusBar, Image, Text, StyleSheet } from 'react-native'; // Added StyleSheet
+import { View, StatusBar, Image, Text, StyleSheet } from 'react-native'; 
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-// import { LinearGradient } from 'expo-linear-gradient'; // Not used
 import * as Animatable from 'react-native-animatable';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { CustomButton } from '../../components/CustomButton';
 import { BackButton } from '../../components/BackButton';
 import { BottomNavigation } from '../../components/BottomNavigation';
-import { globalStyles, colors, spacing, typography } from '../../styles/globalStyles'; // Import theme
+import { globalStyles, colors, spacing, typography } from '../../styles/globalStyles'; 
 
 const TelaCliente = () => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
   const buttons = [
-    { title: 'Buscar Oficinas', icon: 'car-wrench', onPress: () => router.push('cliente/busca'), height: 100 }, // Adjusted height
-    { title: 'Agendamentos', icon: 'calendar-clock', onPress: () => router.push('/agendamento'), height: 100 }, // Corrected navigation
-    { title: 'Orçamentos', icon: 'cash-multiple', onPress: () => router.back(), height: 100 }, // Kept router.back() for now
-    { title: 'Histórico', icon: 'history', onPress: () => router.push('/agendamento/historico'), height: 100 }, // Corrected navigation
+    { title: 'Buscar Oficinas', icon: 'car-wrench', onPress: () => router.push('cliente/busca'), height: 100 }, 
+    { title: 'Agendamentos', icon: 'calendar-clock', onPress: () => router.push('/agendamento'), height: 100 }, 
+    { title: 'Orçamentos', icon: 'cash-multiple', onPress: () => router.back(), height: 100 }, 
+    { title: 'Histórico', icon: 'history', onPress: () => router.push('/agendamento/historico'), height: 100 }, 
   ] as const;
 
   return (
@@ -52,7 +51,7 @@ const TelaCliente = () => {
                 <View style={styles.buttonWrapper}>
                   <MaterialCommunityIcons
                     name={btn.icon}
-                    size={28} // Slightly increased icon size
+                    size={28} 
                     color={colors.textPrimary}
                     style={styles.buttonIcon}
                   />
@@ -61,7 +60,7 @@ const TelaCliente = () => {
                         styles.menuButton,
                         { height: btn.height || 100 }
                     ]}
-                    textStyle={styles.menuButtonText} // Added textStyle prop
+                    textStyle={styles.menuButtonText} 
                     title={btn.title}
                     onPress={btn.onPress}
                   />
@@ -80,21 +79,21 @@ const TelaCliente = () => {
 const styles = StyleSheet.create({
   logoNome: {
     width: 100,
-    height: 60, // Adjusted height for better fit in crudTop
+    height: 60, 
   },
   buttonListContainer: {
     width: '100%',
     alignItems: 'center',
-    paddingTop: spacing.large, // Add some padding at the top of the list
+    paddingTop: spacing.large, 
   },
   buttonsInnerContainer: {
     width: '100%',
     alignItems: 'center',
-    gap: spacing.medium, // Consistent gap between buttons
+    gap: spacing.medium, 
   },
   animatableButtonView: {
     width: '90%',
-    maxWidth: 500, // Max width for buttons
+    maxWidth: 500, 
   },
   buttonWrapper: {
     position: 'relative',
@@ -102,19 +101,19 @@ const styles = StyleSheet.create({
   },
   buttonIcon: {
     position: 'absolute',
-    left: spacing.large, // Adjusted left position
+    left: spacing.large, 
     zIndex: 2,
   },
   menuButton: {
-    backgroundColor: colors.surface, // Use theme color
-    paddingLeft: spacing.xlarge + spacing.medium, // Ensure text doesn't overlap icon (28 + 16 + some more)
-    borderRadius: spacing.medium, // Consistent border radius
+    backgroundColor: colors.surface, 
+    paddingLeft: spacing.xlarge + spacing.medium, 
+    borderRadius: spacing.medium, 
     justifyContent: 'center',
-    alignItems: 'flex-start', // Keep text aligned to start
+    alignItems: 'flex-start', 
   },
   menuButtonText: {
-    fontSize: typography.fontSizeText + 2, // Slightly larger text for menu buttons
-    fontWeight: typography.fontWeightBold, // Bolder text
+    fontSize: typography.fontSizeText + 2, 
+    fontWeight: typography.fontWeightBold, 
   }
 });
 

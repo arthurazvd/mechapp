@@ -3,24 +3,22 @@ import {
   View,
   Text,
   TouchableOpacity,
-  // StyleSheet, // cliStyles imported
   StatusBar,
   Modal,
   Image,
-  ScrollView, // Added ScrollView
+  ScrollView,
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useRouter, useLocalSearchParams } from 'expo-router'; // Added useLocalSearchParams
+import { useRouter, useLocalSearchParams } from 'expo-router';
 
 import { BottomNavigation } from '../../components/BottomNavigation';
 import { BackButton } from '../../components/BackButton';
 import { CustomButton } from '../../components/CustomButton';
 
-import { globalStyles, colors, spacing, typography } from '../../styles/globalStyles'; // Import theme
-import { cliStyles } from './styles'; // cliStyles has all necessary styles
+import { globalStyles, colors, spacing, typography } from '../../styles/globalStyles';
+import { cliStyles } from './styles';
 
-// Mock data for oficina details - replace with actual data fetching based on ID
 const getOficinaDetails = (id?: string | string[]) => {
   if (id === '1') {
     return {
@@ -29,10 +27,10 @@ const getOficinaDetails = (id?: string | string[]) => {
       endereco: 'Rua das Engrenagens, 123 - Vila Motor',
       telefone: '(11) 98765-4321',
       horario: 'Segunda a Sexta, das 8h às 18h. Sábados, das 9h às 13h.',
-      imagem: require('../../assets/logo-vertical.png'), // Example image
+      imagem: require('../../assets/logo-vertical.png'),
     };
   }
-  return { // Default or if ID not found
+  return {
     nome: 'Oficina Não Encontrada',
     descricao: 'Detalhes não disponíveis.',
     endereco: 'N/A',
@@ -42,12 +40,11 @@ const getOficinaDetails = (id?: string | string[]) => {
   };
 };
 
-
-const VisualizarOficinaScreen = () => { // Renamed component
+const VisualizarOficinaScreen = () => {
   const insets = useSafeAreaInsets();
   const [modalVisible, setModalVisible] = useState(false);
   const router = useRouter();
-  const { oficinaId } = useLocalSearchParams(); // Get oficinaId from route params
+  const { oficinaId } = useLocalSearchParams();
 
   const oficina = getOficinaDetails(oficinaId);
 
@@ -62,62 +59,61 @@ const VisualizarOficinaScreen = () => { // Renamed component
         ]}
       >
         <View style={{flex:1}}>
-            <View style={globalStyles.crudTop}>
+          <View style={globalStyles.crudTop}>
             <BackButton color={colors.white}/>
             <Image
-                source={require('../../assets/logo-nome.png')}
-                style={{ width: 100, height: 60 }} // Adjusted logo size
-                resizeMode="contain"
+              source={require('../../assets/logo-nome.png')}
+              style={{ width: 100, height: 60 }}
+              resizeMode="contain"
             />
+          </View>
+          <ScrollView contentContainerStyle={{ paddingBottom: spacing.large }}>
+            <View style={cliStyles.infoContainer}>
+              <View style={cliStyles.imageBox}>
+                {oficina.imagem ? (
+                  <Image source={oficina.imagem} style={{width: '100%', height: '100%'}} resizeMode="contain" />
+                ) : (
+                  <Feather name="image" size={60} color={colors.textLabel} />
+                )}
+              </View>
+              <View style={cliStyles.infoTextBox}>
+                <Text style={cliStyles.nome}>{oficina.nome}</Text>
+                <Text style={cliStyles.descricao}>{oficina.descricao}</Text>
+              </View>
             </View>
-            <ScrollView contentContainerStyle={{ paddingBottom: spacing.large }}>
-                <View style={cliStyles.infoContainer}>
-                    <View style={cliStyles.imageBox}>
-                    {oficina.imagem ? (
-                        <Image source={oficina.imagem} style={{width: '100%', height: '100%'}} resizeMode="contain" />
-                    ) : (
-                        <Feather name="image" size={60} color={colors.textLabel} />
-                    )}
-                    </View>
-                    <View style={cliStyles.infoTextBox}>
-                        <Text style={cliStyles.nome}>{oficina.nome}</Text>
-                        <Text style={cliStyles.descricao}>{oficina.descricao}</Text>
-                    </View>
-                </View>
-                <View style={[globalStyles.homeButtons, { paddingHorizontal: spacing.large }]}>
-                    <CustomButton
-                        style={{ width: '100%', height: 70, marginBottom: spacing.medium }} // Adjusted height and margin
-                        title="Ver Serviços"
-                        onPress={() => router.push({pathname: 'cliente/servico', params: { oficinaId: oficinaId }})}
-                    />
-                    <CustomButton
-                        style={{ width: '100%', height: 70, backgroundColor: colors.inputBackground }} // Different color for secondary action
-                        textStyle={{color: colors.textPrimary}}
-                        title="Mais Informações"
-                        onPress={() => setModalVisible(true)}
-                    />
-                </View>
-            </ScrollView>
+            <View style={[globalStyles.homeButtons, { paddingHorizontal: spacing.large }]}>
+              <CustomButton
+                style={{ width: '100%', height: 70, marginBottom: spacing.medium }}
+                title="Ver Serviços"
+                onPress={() => router.push({pathname: 'cliente/servico', params: { oficinaId: oficinaId }})}
+              />
+              <CustomButton
+                style={{ width: '100%', height: 70, backgroundColor: colors.inputBackground }}
+                textStyle={{color: colors.textPrimary}}
+                title="Mais Informações"
+                onPress={() => setModalVisible(true)}
+              />
+            </View>
+          </ScrollView>
         </View>
 
-        {/* Info Modal */}
         <Modal visible={modalVisible} transparent animationType="slide" onRequestClose={() => setModalVisible(false)}>
-            <TouchableOpacity style={cliStyles.modalOverlay} activeOpacity={1} onPressOut={() => setModalVisible(false)}>
+          <TouchableOpacity style={cliStyles.modalOverlay} activeOpacity={1} onPressOut={() => setModalVisible(false)}>
             <View style={cliStyles.modalContent} onStartShouldSetResponder={() => true}>
-                <Text style={cliStyles.modalTitle}>Informações da Oficina</Text>
-                <Text style={cliStyles.modalText}>
+              <Text style={cliStyles.modalTitle}>Informações da Oficina</Text>
+              <Text style={cliStyles.modalText}>
                 <Text style={{fontWeight: typography.fontWeightBold}}>Endereço:</Text> {oficina.endereco}{'\n\n'}
                 <Text style={{fontWeight: typography.fontWeightBold}}>Telefone:</Text> {oficina.telefone}{'\n\n'}
                 <Text style={{fontWeight: typography.fontWeightBold}}>Horário:</Text> {oficina.horario}
-                </Text>
-                <TouchableOpacity
+              </Text>
+              <TouchableOpacity
                 style={cliStyles.modalButton}
                 onPress={() => setModalVisible(false)}
-                >
+              >
                 <Text style={cliStyles.modalButtonText}>Fechar</Text>
-                </TouchableOpacity>
+              </TouchableOpacity>
             </View>
-            </TouchableOpacity>
+          </TouchableOpacity>
         </Modal>
         <BottomNavigation />
       </View>
@@ -125,4 +121,4 @@ const VisualizarOficinaScreen = () => { // Renamed component
   );
 };
 
-export default VisualizarOficinaScreen; // Renamed export
+export default VisualizarOficinaScreen;

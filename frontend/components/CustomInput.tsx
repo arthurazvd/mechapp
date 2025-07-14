@@ -13,8 +13,8 @@ import { globalStyles, colors, spacing, typography } from '../styles/globalStyle
 interface CustomInputProps extends TextInputProps {
   onlyNumbers?: boolean;
   inputStyle?: StyleProp<TextStyle>;
-  containerStyle?: StyleProp<ViewStyle>; // Style for the outermost View
-  contentStyle?: StyleProp<ViewStyle>; // Style for the View wrapping label and TextInput
+  containerStyle?: StyleProp<ViewStyle>; 
+  contentStyle?: StyleProp<ViewStyle>;
   label?: string;
 }
 
@@ -23,11 +23,10 @@ export const CustomInput: React.FC<CustomInputProps> = ({
   value,
   onChangeText,
   inputStyle,
-  // containerStyle, // Renamed to style in the original, let's stick to 'style' for the outer
   contentStyle,
-  style, // This will be for the outermost container
+  style, 
   label,
-  placeholderTextColor = colors.textHint, // Default placeholder color
+  placeholderTextColor = colors.textHint, 
   ...rest
 }) => {
   const handleChange = (text: string) => {
@@ -53,20 +52,18 @@ export const CustomInput: React.FC<CustomInputProps> = ({
 
 const styles = StyleSheet.create({
   outerContainer: {
-    // alignItems: 'center', // Usually handled by parent or contentStyle if needed
-    marginBottom: spacing.small, // Default margin
-    width: '100%', // Default width, can be overridden by `style` prop
+    marginBottom: spacing.small, 
+    width: '100%',
   },
   innerContainer: {
-    // maxWidth: 400, // This can be applied via contentStyle if needed
     width: '100%',
   },
   input: {
-    height: 50, // Consider making this more dynamic or part of theme
+    height: 50,
     borderRadius: spacing.small,
     paddingHorizontal: spacing.medium,
     backgroundColor: colors.inputBackground,
-    color: colors.textHint, // Default text color for input
+    color: colors.textHint, 
     width: '100%',
     fontSize: typography.fontSizeText,
   },

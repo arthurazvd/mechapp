@@ -1,18 +1,17 @@
-import React, { useState, useEffect } from 'react'; // Added useEffect
-import { View, Text, StatusBar, ScrollView, StyleSheet, Alert, Image } from 'react-native'; // Added ScrollView, StyleSheet, Alert
-import { useRouter, useLocalSearchParams } from 'expo-router'; // Added useLocalSearchParams
+import React, { useState, useEffect } from 'react'; 
+import { View, Text, StatusBar, ScrollView, StyleSheet, Alert, Image } from 'react-native'; 
+import { useRouter, useLocalSearchParams } from 'expo-router'; 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import CustomButton from '../../components/CustomButton'; // Default import
-import InfoView from '../../components/InfoView'; // Default import
+import CustomButton from '../../components/CustomButton';
+import InfoView from '../../components/InfoView'; 
 import { BackButton } from '../../components/BackButton';
 import { BottomNavigation } from '../../components/BottomNavigation';
 
-import { globalStyles, colors, spacing } from '../../styles/globalStyles'; // Import theme
+import { globalStyles, colors, spacing } from '../../styles/globalStyles'; 
 
-// Mock data fetching - replace with actual API call
 const getServicoDetails = (servicoId?: string | string[]) => {
-    if (servicoId === '1') { // Example ID
+    if (servicoId === '1') { 
         return {
             id: '1',
             nome: 'Troca de Oléo Completa',
@@ -20,10 +19,10 @@ const getServicoDetails = (servicoId?: string | string[]) => {
             categoria: 'Mecânica Geral',
             tempoEstimado: '1 hora',
             preco: 'R$ 180,00 - R$ 250,00 (varia conforme veículo)',
-            somenteOrcamento: false, // Added this field based on edit screen
+            somenteOrcamento: false, 
         };
     }
-    return { // Default for not found
+    return { 
         id: 'error',
         nome: 'Serviço Não Encontrado',
         descricao: 'Os detalhes deste serviço não puderam ser carregados.',
@@ -35,7 +34,7 @@ const getServicoDetails = (servicoId?: string | string[]) => {
 };
 
 
-const VisualizarServicoScreen = () => { // Renamed
+const VisualizarServicoScreen = () => { 
     const router = useRouter();
     const { servicoId } = useLocalSearchParams();
     const insets = useSafeAreaInsets();
@@ -45,7 +44,7 @@ const VisualizarServicoScreen = () => { // Renamed
     useEffect(() => {
         const details = getServicoDetails(servicoId);
         setServico(details);
-        if (details.id === 'error' && servicoId) { // Only show alert if an ID was given but not found
+        if (details.id === 'error' && servicoId) { 
             Alert.alert("Erro", "Serviço não encontrado.");
         }
     }, [servicoId]);
@@ -98,7 +97,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     pageTitle: {
-        marginVertical: spacing.large, // Add vertical margin to title
+        marginVertical: spacing.large, 
     },
     infoViewContainer: {
         width: '90%',
@@ -113,4 +112,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default VisualizarServicoScreen; // Renamed
+export default VisualizarServicoScreen;

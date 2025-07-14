@@ -19,24 +19,24 @@ export const InfoView = ({ label, value, containerStyle }: InfoViewProps) => {
 const styles = StyleSheet.create({
   container: {
     borderWidth: 1,
-    borderColor: colors.textLabel, // Was #CCC
+    borderColor: colors.textLabel, 
     borderRadius: spacing.small,
-    padding: spacing.medium,        // Was 10
-    marginVertical: spacing.small,  // Was 6
-    width: '90%',                   // Default width, can be overridden
-    maxWidth: 500,                  // Increased maxWidth slightly
+    padding: spacing.medium,        
+    marginVertical: spacing.small,  
+    width: '90%',                  
+    maxWidth: 500,                  
     alignSelf: 'center',
-    backgroundColor: colors.surface, // Added a subtle background
+    backgroundColor: colors.surface, 
   },
   label: {
     fontWeight: typography.fontWeightBold,
-    color: colors.textLabel,        // Was #555
-    marginBottom: spacing.small / 2, // Was 4
+    color: colors.textLabel,        
+    marginBottom: spacing.small / 2, 
     fontSize: typography.fontSizeLabel,
   },
   value: {
-    fontSize: typography.fontSizeText, // Was 16
-    color: colors.textSecondary,       // Was rgb(231, 231, 231)
+    fontSize: typography.fontSizeText, 
+    color: colors.textSecondary,      
   },
 });
 

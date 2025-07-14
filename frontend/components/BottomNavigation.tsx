@@ -8,7 +8,6 @@ interface BottomNavigationProps {
 }
 
 export const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeRoute }) => {
-  // const router = useRouter();
 
   return (
     <View style={styles.container}>
@@ -46,35 +45,35 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     paddingHorizontal: spacing.small,
     width: '100%',
-    height: '10%', // Consider if a fixed DP value might be better for consistency across screen sizes
+    height: '10%', 
     justifyContent: 'space-around',
     alignItems: 'center',
-    borderTopLeftRadius: 20, // Could be a theme variable if used elsewhere
-    borderTopRightRadius: 20, // Could be a theme variable
+    borderTopLeftRadius: 20, 
+    borderTopRightRadius: 20, 
   },
   button: {
     alignItems: 'center',
     justifyContent: 'center',
   },
   label: {
-    fontSize: typography.fontSizeLabel - 2, // Example: 12
-    color: colors.textSecondary, // Was #ccc
+    fontSize: typography.fontSizeLabel - 2, 
+    color: colors.textSecondary, 
     marginTop: spacing.small / 2,
   },
   homeButton: {
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colors.white,
-    paddingVertical: spacing.medium - 2, // 14
-    paddingHorizontal: spacing.medium + 4, // 20
-    borderRadius: 20, // Could be a theme variable
+    paddingVertical: spacing.medium - 2, 
+    paddingHorizontal: spacing.medium + 4, 
+    borderRadius: 20, 
     shadowColor: colors.black,
     shadowOpacity: 0.2,
     shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4, // These shadow props are fine as is, or could be a utility style
+    shadowRadius: 4, 
   },
   homeLabel: {
-    fontSize: typography.fontSizeLabel - 2, // Example: 12
+    fontSize: typography.fontSizeLabel - 2,
     color: colors.primary,
     marginTop: spacing.small / 2,
   },

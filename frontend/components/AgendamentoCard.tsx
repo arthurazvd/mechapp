@@ -54,12 +54,12 @@ export const styles = StyleSheet.create({
   },
   servico: {
     color: colors.textPrimary,
-    fontSize: typography.fontSizeText, // Adjusted for consistency
+    fontSize: typography.fontSizeText, 
     fontWeight: typography.fontWeightBold,
   },
   oficina: {
-    color: colors.textHint, // Was #aaa, now using theme color
-    fontSize: typography.fontSizeLabel, // Adjusted for consistency
+    color: colors.textHint,
+    fontSize: typography.fontSizeLabel, 
     marginTop: spacing.small / 2,
   },
   statusBox: {

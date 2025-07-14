@@ -15,14 +15,13 @@ import { globalStyles, colors, spacing } from '../../styles/globalStyles';
 import { servStyles } from './styles';
 import { formatarPreco } from '../../utils/formatters';
 
-// Mock data fetching - replace with actual API call
 const getServicoDetails = (servicoId?: string | string[]) => {
-    if (servicoId === '1') { // Example ID
+    if (servicoId === '1') { 
         return {
             nome: 'Troca de Oléo Completa',
             descricao: 'Substituição do óleo do motor por um novo (Mobil Super 5W-30 Sintético), garantindo a lubrificação adequada das peças internas e o bom desempenho do veículo. Inclui verificação e troca do filtro de óleo (Tecfil). Recomendado a cada 10.000km ou 6 meses.',
             categoria: 'mecanica_geral',
-            tempoEstimado: '1', // Horas
+            tempoEstimado: '1', 
             precoMin: 'R$ 180,00',
             precoMax: 'R$ 250,00',
             somenteOrcamento: false,
@@ -263,13 +262,13 @@ const styles = StyleSheet.create({
         flex: 1,
         height: 50,
     },
-    deleteButton: { // Changed from cancelButton
-        backgroundColor: colors.error, // Use error color for delete
+    deleteButton: { 
+        backgroundColor: colors.error, 
         marginRight: spacing.small,
     },
-    deleteButtonText: { // For delete button text
-        color: colors.white, // Ensure text is visible
+    deleteButtonText: { 
+        color: colors.white, 
     }
 });
 
-export default EditarServicoScreen; // Renamed
+export default EditarServicoScreen; 

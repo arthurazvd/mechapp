@@ -2,7 +2,7 @@ import React from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { colors, spacing } from '../styles/globalStyles'; // Importar colors e spacing
+import { colors, spacing } from '../styles/globalStyles';
 
 interface BackButtonProps {
   color?: string;
@@ -21,10 +21,10 @@ export const BackButton: React.FC<BackButtonProps> = ({ color = colors.white, si
 
 const styles = StyleSheet.create({
   button: {
-    padding: spacing.small, // Usar spacing
+    padding: spacing.small,
     position: 'absolute',
-    top: spacing.small, // Usar spacing (ou medium se preferir mais espaço)
-    left: spacing.small, // Usar spacing
+    top: spacing.small, 
+    left: spacing.small,
     zIndex: 10,
   },
 });

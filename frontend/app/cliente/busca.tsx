@@ -5,20 +5,19 @@ import {
   TextInput,
   TouchableOpacity,
   FlatList,
-  // StyleSheet, // cliStyles is imported, no need for another StyleSheet here unless for local styles
   StatusBar,
   Modal,
   Image,
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router'; // Import useRouter
+import { useRouter } from 'expo-router'; 
 
 import { BottomNavigation } from '../../components/BottomNavigation';
 import { BackButton } from '../../components/BackButton';
 
-import { globalStyles, colors, spacing } from '../../styles/globalStyles'; // Import theme
-import { cliStyles } from './styles'; // cliStyles contains all necessary styles
+import { globalStyles, colors, spacing } from '../../styles/globalStyles'; 
+import { cliStyles } from './styles'; 
 
 const oficinasMock = [
   {
@@ -26,38 +25,37 @@ const oficinasMock = [
     nome: 'Oficina Premium Motors',
     servicos: 'Troca de óleo, revisão completa, freios',
     avaliacao: 4.8,
-    imagem: require('../../assets/logo-vertical.png'), // Example: Using an asset
+    imagem: require('../../assets/logo-vertical.png'), 
   },
   {
     id: '2',
     nome: 'Centro Automotivo Veloz',
     servicos: 'Alinhamento, balanceamento, suspensão',
     avaliacao: 4.2,
-    imagem: null, // No image example
+    imagem: null, 
   },
   {
     id: '3',
     nome: 'Mecânica Confiança & Cia',
     servicos: 'Pintura, funilaria, motor',
-    avaliacao: null, // No rating example
+    avaliacao: null, 
     imagem: null,
   },
 ];
 
-const BuscarOficinaScreen = () => { // Renamed component
+const BuscarOficinaScreen = () => { 
   const insets = useSafeAreaInsets();
-  const router = useRouter(); // Initialize router
+  const router = useRouter(); 
   const [busca, setBusca] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [filtroLocal, setFiltroLocal] = useState('');
 
   const oficinasFiltradas = oficinasMock.filter((oficina) =>
     oficina.nome.toLowerCase().includes(busca.toLowerCase()) &&
-    (filtroLocal ? oficina.nome.toLowerCase().includes(filtroLocal.toLowerCase()) : true) // Simple local filter example
+    (filtroLocal ? oficina.nome.toLowerCase().includes(filtroLocal.toLowerCase()) : true) 
   );
 
   const handleApplyFilter = () => {
-    // Here you would typically refetch data with the filter or apply more complex client-side filtering
     setModalVisible(false);
   };
 
@@ -76,7 +74,7 @@ const BuscarOficinaScreen = () => { // Renamed component
             <BackButton color={colors.white}/>
             <Image
                 source={require('../../assets/logo-nome.png')}
-                style={{ width: 100, height: 60 }} // Adjusted logo size
+                style={{ width: 100, height: 60 }} 
                 resizeMode="contain"
             />
             </View>
@@ -84,7 +82,7 @@ const BuscarOficinaScreen = () => { // Renamed component
             <View style={cliStyles.searchContainer}>
             <TextInput
                 placeholder="Buscar oficina por nome..."
-                placeholderTextColor={colors.textHint} // Was #aaa
+                placeholderTextColor={colors.textHint} 
                 value={busca}
                 onChangeText={setBusca}
                 style={cliStyles.searchInput}
@@ -104,7 +102,7 @@ const BuscarOficinaScreen = () => { // Renamed component
             renderItem={({ item }) => (
                 <TouchableOpacity
                 style={cliStyles.card}
-                onPress={() => router.push({ pathname: 'cliente/oficina', params: { oficinaId: item.id }})} // Navigate to oficina details
+                onPress={() => router.push({ pathname: 'cliente/oficina', params: { oficinaId: item.id }})} 
                 >
                 {item.imagem ? (
                     <Image source={item.imagem} style={cliStyles.cardImage} resizeMode="contain" />
@@ -165,4 +163,4 @@ const BuscarOficinaScreen = () => { // Renamed component
   );
 };
 
-export default BuscarOficinaScreen; // Renamed export
+export default BuscarOficinaScreen;

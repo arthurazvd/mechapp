@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'; // Added useEffect
-import { View, Text, Image, StatusBar, ScrollView, StyleSheet, Alert } from 'react-native'; // Added ScrollView, StyleSheet, Alert
-import { useRouter, useLocalSearchParams } from 'expo-router'; // Added useLocalSearchParams
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, StatusBar, ScrollView, StyleSheet, Alert } from 'react-native';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CustomInput } from '../../components/CustomInput';
@@ -10,29 +10,27 @@ import { ImagePickerInput } from '../../components/ImagePickerInput';
 import { BackButton } from '../../components/BackButton';
 import { BottomNavigation } from '../../components/BottomNavigation';
 
-import { globalStyles, colors, spacing } from '../../styles/globalStyles'; // Import theme
-import { pecStyles } from './styles'; // pecStyles for crudButtons and precoInput
+import { globalStyles, colors, spacing } from '../../styles/globalStyles';
+import { pecStyles } from './styles';
 import { formatarPreco } from '../../utils/formatters';
 
-// Mock data fetching function - replace with actual API call
 const getPecaDetails = (pecaId?: string | string[]) => {
-    if (pecaId === '1') { // Example ID
+    if (pecaId === '1') {
         return {
             nome: 'Pneu Aro 15 Michelin Primacy 4',
             descricao: 'Componente essencial para a segurança e desempenho do veículo, o pneu Michelin Primacy 4 oferece excelente aderência em piso molhado e seco, além de durabilidade e conforto na condução. Ideal para carros de passeio.',
             quantidade: '16',
             fabricante: 'Michelin',
-            preco: 'R$ 450,00', // Formatted as it would be from formatter
-            imagem: require('../../assets/pneu.jpg'), // Example local image
+            preco: 'R$ 450,00',
+            imagem: require('../../assets/pneu.jpg'),
         };
     }
-    return null; // Or throw error if peca not found
+    return null;
 };
 
-
-const EditarPecaScreen = () => { // Renamed component
+const EditarPecaScreen = () => {
     const router = useRouter();
-    const { pecaId } = useLocalSearchParams(); // Get ID from route
+    const { pecaId } = useLocalSearchParams();
     const insets = useSafeAreaInsets();
 
     const [nome, setNome] = useState('');
@@ -40,8 +38,8 @@ const EditarPecaScreen = () => { // Renamed component
     const [quantidade, setQuantidade] = useState('');
     const [fabricante, setFabricante] = useState('');
     const [preco, setPreco] = useState('');
-    const [imagem, setImagem] = useState<string | null>(null); // For new image selection
-    const [imagemOriginal, setImagemOriginal] = useState<any>(null); // To display current image
+    const [imagem, setImagem] = useState<string | null>(null);
+    const [imagemOriginal, setImagemOriginal] = useState<any>(null);
 
     useEffect(() => {
         const peca = getPecaDetails(pecaId);
@@ -50,14 +48,12 @@ const EditarPecaScreen = () => { // Renamed component
             setDescricao(peca.descricao);
             setQuantidade(peca.quantidade);
             setFabricante(peca.fabricante);
-            setPreco(peca.preco); // Already formatted
+            setPreco(peca.preco);
             setImagemOriginal(peca.imagem);
         } else {
-            // Handle peca not found, e.g., show alert and navigate back
             Alert.alert("Erro", "Peça não encontrada.", [{ text: "OK", onPress: () => router.back() }]);
         }
     }, [pecaId]);
-
 
     const handlePrecoChange = (text: string) => {
       const precoFormatado = formatarPreco(text);
@@ -83,12 +79,11 @@ const EditarPecaScreen = () => { // Renamed component
                 { text: "Deletar", style: "destructive", onPress: () => {
                     console.log("Deletando Peça:", pecaId);
                     Alert.alert("Sucesso", "Peça deletada!");
-                    router.replace('/pecas/visualizar'); // Go back to list or another appropriate screen
+                    router.replace('/pecas/visualizar');
                 }}
             ]
         );
     };
-
 
   return (
     <>
@@ -143,7 +138,7 @@ const EditarPecaScreen = () => { // Renamed component
                             />
                         </View>
                         <ImagePickerInput
-                            imagem={imagem || imagemOriginal} // Show new image if selected, else original
+                            imagem={imagem || imagemOriginal}
                             setImagem={setImagem}
                             containerStyle={styles.inputField}
                             buttonStyle={styles.imagePickerButton}
@@ -215,9 +210,9 @@ const styles = StyleSheet.create({
         backgroundColor: colors.error,
         marginRight: spacing.small,
     },
-    deleteButtonText: { // Not strictly needed if CustomButton default is white and error bg is dark
+    deleteButtonText: {
         color: colors.white,
     }
 });
 
-export default EditarPecaScreen; // Renamed
+export default EditarPecaScreen;

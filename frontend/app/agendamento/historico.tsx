@@ -1,5 +1,5 @@
-import React from 'react'; // Removed useState as it's not used
-import { View, StatusBar, Image, Text, FlatList, StyleSheet } from 'react-native'; // Added FlatList and StyleSheet
+import React from 'react'; 
+import { View, StatusBar, Image, Text, FlatList, StyleSheet } from 'react-native'; 
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -7,9 +7,8 @@ import { BackButton } from '../../components/BackButton';
 import { BottomNavigation } from '../../components/BottomNavigation';
 import { AgendamentoCard } from '../../components/AgendamentoCard';
 
-import { globalStyles, colors, spacing } from '../../styles/globalStyles'; // Import theme
+import { globalStyles, colors, spacing } from '../../styles/globalStyles';
 
-// Mock data for demonstration
 const agendamentosHistorico = [
   { id: '1', servico: 'Troca de óleo e filtro', oficina: 'Oficina Premium Motors', status: 'concluido', data: '15/07/2024' },
   { id: '2', servico: 'Alinhamento e Balanceamento', oficina: 'Centro Automotivo Veloz', status: 'concluido', data: '02/06/2024' },
@@ -17,7 +16,7 @@ const agendamentosHistorico = [
   { id: '4', servico: 'Troca de Pastilhas de Freio', oficina: 'Freios & Cia', status: 'cancelado', data: '20/03/2024' },
 ];
 
-const TelaHistoricoAgendamentos = () => { // Renamed component
+const TelaHistoricoAgendamentos = () => { 
     const router = useRouter();
     const insets = useSafeAreaInsets();
 
@@ -42,7 +41,7 @@ const TelaHistoricoAgendamentos = () => { // Renamed component
                 renderItem={({ item }) => (
                     <AgendamentoCard
                     servico={item.servico}
-                    oficina={`${item.oficina} - ${item.data}`} // Adding date to subtitle
+                    oficina={`${item.oficina} - ${item.data}`} 
                     status={item.status as "pendente" | "confirmado" | "cancelado" | "concluido"}
                     onPress={() => router.push({ pathname: 'agendamento/detalhes', params: { agendamentoId: item.id }})}
                     />
@@ -60,16 +59,16 @@ const TelaHistoricoAgendamentos = () => { // Renamed component
 const styles = StyleSheet.create({
     logoNome: {
         width: 100,
-        height: 60, // Adjusted height
+        height: 60, 
     },
     pageTitle: {
         marginTop: spacing.large,
         marginBottom: spacing.medium,
     },
     listContentContainer: {
-        paddingHorizontal: spacing.medium, // Add horizontal padding to the list
-        paddingBottom: spacing.large, // Ensure space at the bottom
+        paddingHorizontal: spacing.medium, 
+        paddingBottom: spacing.large, 
     }
 });
 
-export default TelaHistoricoAgendamentos; // Renamed export
+export default TelaHistoricoAgendamentos; 

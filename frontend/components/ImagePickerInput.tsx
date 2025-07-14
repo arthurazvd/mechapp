@@ -50,30 +50,27 @@ export const ImagePickerInput = ({
 
 const styles = StyleSheet.create({
   container: {
-    // alignItems: 'center', // Let parent handle alignment or apply via containerStyle
     marginTop: spacing.medium,
-    width: '100%', // Default to full width
+    width: '100%', 
   },
   button: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: colors.inputBackground,
     borderRadius: spacing.small,
-    padding: spacing.medium, // Adjusted padding
-    // width: '80%', // Control width via containerStyle or parent
-    height: 60, // Keep or make dynamic
-    // maxWidth: 400, // Control via containerStyle or parent
+    padding: spacing.medium, 
+    height: 60,
     justifyContent: 'space-between',
   },
   text: {
-    color: colors.textLabel, // Was #555
+    color: colors.textLabel, 
     fontSize: typography.fontSizeText,
   },
   preview: {
-    width: 30, // Consider making these themeable if sizes vary
+    width: 30, 
     height: 30,
     marginLeft: spacing.small,
-    borderRadius: spacing.small / 2, // Smaller radius for small image
+    borderRadius: spacing.small / 2, 
   },
 });
 

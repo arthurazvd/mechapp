@@ -11,30 +11,43 @@ import { BackButton } from '../../components/BackButton';
 
 import { globalStyles, colors, spacing } from "../../styles/globalStyles";
 
-// Controller
-//import { usuarioController } from "../../controllers/usuario_controller";
+// API
+import { usuario } from "../../api";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const router = useRouter();
-  
   const insets = useSafeAreaInsets();
-  
-  const handleLogin = () => {
+
+  const handleLogin = async () => {
     if (!email || !senha) {
       Alert.alert("Erro", "Preencha todos os campos!");
       return;
     }
 
-    Alert.alert("Login", "Login realizado com sucesso!");
-    // router.push('/agendamento/historico'); // Keep navigation logic
+    try {
+      const json = await usuario.autenticar_usuario(email, senha);
+
+      if (json.error) {
+        Alert.alert("Erro", json.mensagem || "Erro ao realizar login.");
+        return;
+      }
+
+      // Salvando dados do usuário (em async storage no futuro, aqui tá simplificado)
+      localStorage.setItem("usuario_atual", JSON.stringify(json));
+
+      Alert.alert("Sucesso", "Login realizado com sucesso!");
+      router.replace('/agendamento/historico');
+    } catch (err) {
+      Alert.alert("Erro", "Não foi possível conectar ao servidor.");
+    }
   };
 
   return (
     <>
       <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
-      <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
+      <View style={[globalStyles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
         <View style={globalStyles.initialTop}>
           <BackButton color={colors.white} />
           <Image
@@ -48,19 +61,17 @@ const LoginScreen = () => {
           <Text style={globalStyles.title}>Login</Text>
           <CustomInput
             placeholder="E-mail"
-            // placeholderTextColor prop is now handled by CustomInput default
             label="E-mail"
             value={email}
             onChangeText={setEmail}
-            style={styles.inputField} // Using style for outer container for width control
+            style={styles.inputField}
           />
           <PasswordInput
             placeholder="Senha"
             label="Senha"
-            // placeholderTextColor prop is now handled by PasswordInput default
             value={senha}
             onChangeText={setSenha}
-            containerStyle={styles.inputField} // Using containerStyle for PasswordInput's wrapper
+            containerStyle={styles.inputField}
           />
 
           <TouchableOpacity onPress={() => Alert.alert("Esqueci minha senha", "Funcionalidade a ser implementada.")}>
@@ -70,8 +81,7 @@ const LoginScreen = () => {
           <CustomButton
             style={styles.loginButton}
             title="Entrar"
-            onPress={() => router.push('/cliente')} // Original navigation
-            // onPress={handleLogin} // If you want to use the handleLogin logic
+            onPress={handleLogin}
           />
 
           <Text style={globalStyles.text}>Não tem uma conta?</Text>
@@ -90,22 +100,22 @@ const styles = StyleSheet.create({
     height: 190,
   },
   formContainer: {
-    paddingHorizontal: spacing.large, // Add some horizontal padding
+    paddingHorizontal: spacing.large,
   },
   inputField: {
-    width: '100%', // Inputs take full width of their container
-    maxWidth: 400, // Max width for larger screens
-    alignSelf: 'center', // Center the input field itself if its parent is wider
+    width: '100%',
+    maxWidth: 400,
+    alignSelf: 'center',
   },
   forgotPassword: {
     marginVertical: spacing.medium,
   },
   loginButton: {
-    width: '100%', // Button takes full width of its container
+    width: '100%',
     maxWidth: 400,
-    height: 50, // Keep fixed height or use padding from CustomButton
+    height: 50,
     marginTop: spacing.medium,
-    marginBottom: spacing.large, // Increased bottom margin
+    marginBottom: spacing.large,
     alignSelf: 'center',
   },
 });

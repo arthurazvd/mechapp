@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StatusBar, ScrollView, StyleSheet, Alert } from 'react-native'; // Added ScrollView, StyleSheet, Alert
+import { View, Text, Image, StatusBar, ScrollView, StyleSheet, Alert } from 'react-native'; 
 import { useRouter } from 'expo-router';
 import { Picker } from '@react-native-picker/picker';
 import { Checkbox } from 'expo-checkbox';
@@ -11,19 +11,19 @@ import { CustomButton } from '../../components/CustomButton';
 import { BackButton } from '../../components/BackButton';
 import { BottomNavigation } from '../../components/BottomNavigation';
 
-import { globalStyles, colors, spacing } from '../../styles/globalStyles'; // Import theme
-import { servStyles } from './styles'; // servStyles for specific layouts
+import { globalStyles, colors, spacing } from '../../styles/globalStyles'; 
+import { servStyles } from './styles'; 
 import { formatarPreco } from '../../utils/formatters';
 
 
-const CadastrarServicoScreen = () => { // Renamed component
+const CadastrarServicoScreen = () => {
     const router = useRouter();
     const insets = useSafeAreaInsets();
 
     const [nome, setNome] = useState('');
     const [descricao, setDescricao] = useState('');
-    const [categoria, setCategoria] = useState(''); // Store category value
-    const [tempoEstimado, setTempoEstimado] = useState(''); // Em horas ou minutos? Definir
+    const [categoria, setCategoria] = useState(''); 
+    const [tempoEstimado, setTempoEstimado] = useState(''); 
     const [precoMin, setPrecoMin] = useState('');
     const [precoMax, setPrecoMax] = useState('');
     const [somenteOrcamento, setSomenteOrcamento] = useState(false);
@@ -92,9 +92,9 @@ const CadastrarServicoScreen = () => { // Renamed component
                             <Picker
                                 selectedValue={categoria}
                                 onValueChange={(itemValue) => setCategoria(itemValue)}
-                                style={[servStyles.picker, styles.pickerComponent]} // Applied theme color for text
+                                style={[servStyles.picker, styles.pickerComponent]} 
                                 dropdownIconColor={colors.textHint}
-                                mode="dropdown" // Explicitly set mode for consistency
+                                mode="dropdown" 
                             >
                                 <Picker.Item label="Selecione uma categoria..." value="" style={styles.pickerItem}/>
                                 <Picker.Item label="Mecânica Geral" value="mecanica_geral" style={styles.pickerItem}/>
@@ -109,7 +109,6 @@ const CadastrarServicoScreen = () => { // Renamed component
                             label="Tempo Estimado (em horas)"
                             placeholder="Ex: 1.5 (para 1h30min)"
                             keyboardType='numeric'
-                            // onlyNumbers={true} // Assuming CustomInput handles this
                             value={tempoEstimado}
                             onChangeText={setTempoEstimado}
                             style={styles.inputField}
@@ -136,10 +135,10 @@ const CadastrarServicoScreen = () => { // Renamed component
                         </View>
                         <View style={[servStyles.checkboxContainer, styles.inputField, styles.checkboxWrapper]}>
                                 <Checkbox
-                                    color={somenteOrcamento ? colors.success : colors.inputBackground} // Theme color for checkbox
+                                    color={somenteOrcamento ? colors.success : colors.inputBackground} 
                                     value={somenteOrcamento}
                                     onValueChange={setSomenteOrcamento}
-                                    style={servStyles.checkbox} // Keep original checkbox style if specific
+                                    style={servStyles.checkbox} 
                                 />
                                 <Text style={[globalStyles.label, styles.checkboxLabel]}>Preço somente sob orçamento</Text>
                         </View>
@@ -190,25 +189,25 @@ const styles = StyleSheet.create({
     inputInRow: {
         flex: 1,
     },
-    pickerComponent: { // Style for the Picker itself
+    pickerComponent: {
         backgroundColor: colors.inputBackground,
-        color: colors.textPrimary, // Text color for selected item
-        height: 50, // Match CustomInput height
-        borderRadius: spacing.small, // Match CustomInput border radius
+        color: colors.textPrimary, 
+        height: 50, 
+        borderRadius: spacing.small, 
     },
-    pickerItem: { // Style for Picker.Item (might have limited effect on Android dropdown)
-        backgroundColor: colors.surface, // Background for dropdown items
-        color: colors.textPrimary, // Text color for dropdown items
+    pickerItem: { 
+        backgroundColor: colors.surface, 
+        color: colors.textPrimary,
     },
-    checkboxWrapper: { // Override for servStyles.checkboxContainer
-        backgroundColor: 'transparent', // Make background transparent as label is outside
+    checkboxWrapper: {
+        backgroundColor: 'transparent', 
         justifyContent: 'flex-start',
-        paddingHorizontal: 0, // Reset padding
-        marginTop: spacing.small, // Adjust spacing
+        paddingHorizontal: 0, 
+        marginTop: spacing.small, 
     },
     checkboxLabel: {
         marginLeft: spacing.small,
-        color: colors.textLabel, // Consistent label color
+        color: colors.textLabel, 
     },
     actionButtonsContainer: {
         width: '90%',
@@ -229,4 +228,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default CadastrarServicoScreen; // Renamed
+export default CadastrarServicoScreen; 

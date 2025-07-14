@@ -32,7 +32,7 @@ export const ExpandingTextArea: React.FC<ExpandingTextAreaProps> = ({
   containerStyle,
   contentStyle,
   inputStyle,
-  minHeight = 100, // Default min height
+  minHeight = 100,
   ...rest
 }) => {
   const [height, setHeight] = useState(minHeight);
@@ -69,13 +69,11 @@ export const ExpandingTextArea: React.FC<ExpandingTextAreaProps> = ({
 
 const styles = StyleSheet.create({
   outerContainer: {
-    // alignItems: 'center', // Let parent or contentStyle handle this
     marginBottom: spacing.medium,
-    width: '100%', // Default to full width, can be overridden
+    width: '100%', 
   },
   innerContainer: {
     width: '100%',
-    // maxWidth: 400, // Apply via contentStyle if needed
   },
   textArea: {
     backgroundColor: colors.inputBackground,
@@ -83,6 +81,6 @@ const styles = StyleSheet.create({
     padding: spacing.medium,
     color: colors.textHint,
     fontSize: typography.fontSizeText,
-    textAlignVertical: 'top', // Already there, just confirming
+    textAlignVertical: 'top', 
   },
 });

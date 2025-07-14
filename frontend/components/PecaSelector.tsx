@@ -26,7 +26,7 @@ export const PecaSelector = ({
     <View style={[styles.container, containerStyle]}>
       <TextInput
         placeholder="Buscar peça..."
-        placeholderTextColor={colors.textHint} // Was #aaa
+        placeholderTextColor={colors.textHint} 
         value={nome}
         onChangeText={onChangeNome}
         style={styles.input}
@@ -50,15 +50,15 @@ export const PecaSelector = ({
 const styles = StyleSheet.create({
   container: {
     marginBottom: spacing.medium,
-    width: '90%', // Keep as is or allow override via containerStyle
+    width: '90%', 
     alignSelf: 'center',
   },
   input: {
     backgroundColor: colors.inputBackground,
-    color: colors.textPrimary, // Was #fff
+    color: colors.textPrimary, 
     borderRadius: spacing.small,
     paddingHorizontal: spacing.medium,
-    height: 45, // Keep or make themeable
+    height: 45, 
     marginBottom: spacing.small,
     fontSize: typography.fontSizeText,
   },
@@ -67,27 +67,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.small,
   },
-  controlButton: { // Base for + and - buttons
-    padding: spacing.small + 2, // 10
-    borderRadius: spacing.small / 2 + 2, // 6
+  controlButton: { 
+    padding: spacing.small + 2,
+    borderRadius: spacing.small / 2 + 2, 
   },
   addButton:{
-    backgroundColor: colors.primary, // Using primary for add, can be success too
+    backgroundColor: colors.primary,
   },
   removeButton:{
-    backgroundColor: colors.primary, // Using primary for remove
+    backgroundColor: colors.primary, 
   },
   quantidade: {
     color: colors.textPrimary,
-    fontSize: typography.fontSizeText, // Was 16
+    fontSize: typography.fontSizeText, 
     marginHorizontal: spacing.small / 2,
     fontWeight: typography.fontWeightBold,
   },
   adicionarButton: {
     backgroundColor: colors.success,
-    paddingVertical: spacing.small + 2, // 10
+    paddingVertical: spacing.small + 2, 
     paddingHorizontal: spacing.medium,
-    borderRadius: spacing.small / 2 + 2, // 6
+    borderRadius: spacing.small / 2 + 2, 
     marginLeft: 'auto',
   },
   adicionarButtonText: {
