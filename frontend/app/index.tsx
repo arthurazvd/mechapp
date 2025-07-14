@@ -24,12 +24,12 @@ export default function Index() {
           <Text style={globalStyles.title}>Seja bem-vindo</Text>
           <CustomButton
             title="Entrar"
-            style={{ height: 50, width: "80%", maxWidth: 400, marginBottom: 5 }}
+            style={{ height: 50, width: "90%", maxWidth: 400, marginBottom: 5 }}
             onPress={() => router.push('/login')}
           />
           <CustomButton
             title="Cadastre-se"
-            style={{ height: 50, width: "80%", maxWidth: 400, marginBottom: 5 }}
+            style={{ height: 50, width: "90%", maxWidth: 400, marginBottom: 5 }}
             onPress={() => router.push('/cadastro/escolher')}
           />
         </View>

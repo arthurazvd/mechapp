@@ -9,7 +9,7 @@ import { PasswordInput } from "../../components/PasswordInput";
 import { BackButton } from '../../components/BackButton';
 
 import { globalStyles } from '../../styles/globalStyles';
-import { cadStyles } from './styles';
+import { cadStyles } from '../../styles/cadStyles';
 import { formatarContato } from '../../utils/formatters';
 
 // API

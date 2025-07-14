@@ -17,7 +17,7 @@ import { BottomNavigation } from '../../components/BottomNavigation';
 import { BackButton } from '../../components/BackButton';
 
 import { globalStyles } from '../../styles/globalStyles';
-import { cliStyles } from './styles';
+import { cliStyles } from '../../styles/cliStyles';
 
 const oficinasMock = [
   {

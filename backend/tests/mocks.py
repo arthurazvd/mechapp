@@ -1,6 +1,12 @@
+# mocks.py
 import pytest
+import uuid # Importar uuid explicitamente
+from uuid import uuid4
+from datetime import datetime
 from sqlalchemy import text
-from src.domain.models import *
+from src.domain.models import * # Assumindo que PecaDoAgendamento, Agendamento, Peca, Usuario, Servico, Oficina estão aqui
+from sqlalchemy.orm import Session # Importar Session explicitamente
+
 
 # =========================
 # MOCK DE USUÁRIO
@@ -27,35 +33,25 @@ def usuario_base():
     yield _usuario_base
 
 @pytest.fixture
-def mock_criar_usuario(session):
+def mock_criar_usuario(session: Session):
     def _criar_usuario(
         id: str = None,
-        nome: str ="Usuário",
-        email: str ="usuario@teste.com.br",
-        senha: str ="1234",
+        nome: str = "Usuário",
+        email: str = None,
+        senha: str = "1234",
         tipo: TipoUsuario = TipoUsuario.CLIENTE,
         telefone: str = "(99) 98765-4321"
     ):
         id = id or str(uuid4())
 
-        session.execute(
-            text(
-                """
-                INSERT INTO usuarios (id, nome, email, senha, tipo, telefone) VALUES
-                (:id, :nome, :email, :senha, :tipo, :telefone)
-                """
-            ),
-            params={
-                "id":id,
-                "nome":nome,
-                "email":email,
-                "senha":hash(senha),
-                "tipo":str(tipo),
-                "telefone":telefone,
-            }
-        )
+        if email is None:
+            email = f"{nome.lower().replace(' ', '')}_{uuid4().hex[:8]}@test.com"
 
-        return Usuario(
+        usuario_existente = session.query(Usuario).filter_by(email=email).first()
+        if usuario_existente:
+            return usuario_existente
+
+        usuario = Usuario(
             id=id,
             nome=nome,
             email=email,
@@ -63,8 +59,13 @@ def mock_criar_usuario(session):
             tipo=tipo,
             telefone=telefone,
         )
-    yield _criar_usuario
 
+        session.add(usuario)
+        session.commit()
+        session.refresh(usuario) 
+
+        return usuario
+    yield _criar_usuario
 # =========================
 # MOCK DE PEÇA
 # =========================
@@ -101,24 +102,7 @@ def mock_criar_peca(session):
     ):
         id = id or str(uuid4())
         
-        session.execute(
-            text(
-                """
-                INSERT INTO pecas (id, nome, descricao, quantidade, preco, imagem) VALUES
-                (:id, :nome, :descricao, :quantidade, :preco, :imagem)
-                """
-            ),
-            params={
-                "id": id,
-                "nome": nome,
-                "descricao": descricao,
-                "quantidade": quantidade,
-                "preco": preco,
-                "imagem": imagem
-            }
-        )
-
-        return Peca(
+        peca = Peca(
             id=id,
             nome=nome,
             descricao=descricao,
@@ -126,6 +110,11 @@ def mock_criar_peca(session):
             preco=preco,
             imagem=imagem,
         )
+        session.add(peca)
+        session.commit()
+        session.refresh(peca) 
+
+        return peca
     yield _criar_peca
 
 # =========================
@@ -139,16 +128,20 @@ def oficina_base(usuario_base):
         nome="Oficina Teste",
         cnpj="00000000000100",
         endereco="Rua Teste, 123",
-        proprietario=None
+        proprietario=None,
     ):
         return Oficina(
             id=id or str(uuid4()),
             nome=nome,
             cnpj=cnpj,
             endereco=endereco,
-            proprietario=proprietario or usuario_base(tipo=TipoUsuario.MECANICO, email="mecanico@email.com")
+            proprietario=proprietario or usuario_base(
+                tipo=TipoUsuario.MECANICO,
+                email=f"mecanico_{uuid4().hex[:8]}@email.com"
+            )
         )
-    yield _oficina_base
+    return _oficina_base
+
 
 @pytest.fixture
 def mock_criar_oficina(session, mock_criar_usuario):
@@ -156,46 +149,45 @@ def mock_criar_oficina(session, mock_criar_usuario):
         id: str = None,
         nome: str = "Oficina Teste",
         cnpj: str = "00000000000100",
-        endereco: str= "Rua Teste, 123",
+        endereco: str = "Rua Teste, 123",
         proprietario: Usuario = None,
-        persistir_proprietario: bool = False,
     ):
         id = id or str(uuid4())
 
-        # Persistindo proprietário
-        if proprietario and persistir_proprietario:
-            mock_criar_usuario(**proprietario.to_dict())
+        oficina_existente = session.query(Oficina).filter_by(id=id).first()
+        if oficina_existente:
+            return oficina_existente
 
-        # Criando novo proprietário
         if proprietario is None:
-            proprietario = mock_criar_usuario(nome="Mecanico", email="mecanico@email.com", tipo=TipoUsuario.MECANICO)
+            proprietario = mock_criar_usuario(
+                nome="Mecânico",
+                email=f"mecanico_{uuid4().hex[:8]}@email.com",
+                tipo=TipoUsuario.MECANICO
+            )
+        
+        # Garante que o proprietário esteja persistido e na sessão.
+        # Se 'proprietario' veio de mock_criar_usuario, já está.
+        # Caso contrário, adiciona e faz refresh.
+        if proprietario and not session.query(Usuario).filter_by(id=proprietario.id).first():
+            session.add(proprietario)
+            session.commit()
+            session.refresh(proprietario)
 
-        session.execute(
-            text(
-                """
-                INSERT INTO oficinas 
-                (id, nome, cnpj, endereco, usuario_id) 
-                VALUES
-                (:id, :nome, :cnpj, :endereco, :usuario_id)
-                """
-            ),
-            params={
-                "id": id,
-                "nome": nome,
-                "cnpj": cnpj,
-                "endereco": endereco,
-                "usuario_id": proprietario.id,
-            }
-        )
 
-        return Oficina(
+        oficina = Oficina(
             id=id,
             nome=nome,
             cnpj=cnpj,
             endereco=endereco,
-            proprietario=proprietario
+            proprietario=proprietario,
         )
-    yield _criar_oficina
+
+        session.add(oficina)
+        session.commit()
+        session.refresh(oficina) 
+        return oficina
+    return _criar_oficina
+
 
 # =========================
 # MOCK DE SERVIÇO
@@ -233,40 +225,21 @@ def mock_criar_servico(session, mock_criar_oficina):
         preco_min: float = 10.99,
         preco_max: float = 15.99,
         oficina: Oficina = None,
-        persistir_oficina: bool = False,
-        persistir_proprietario: bool = False,
     ):
         id = id or str(uuid4())
 
-        # Persistindo oficina
-        if oficina and persistir_oficina:
-            mock_criar_oficina(**oficina, persistir_proprietario=persistir_proprietario)
+        servico_existente = session.query(Servico).filter_by(id=id).first()
+        if servico_existente:
+            return servico_existente
 
-        # Criando nova oficina
         if oficina is None:
-            oficina = mock_criar_oficina()
-
-        session.execute(
-            text(
-                """
-                INSERT INTO servicos
-                (id, nome, descricao, tempo, preco_min, preco_max, oficina_id)
-                VALUES
-                (:id, :nome, :descricao, :tempo, :preco_min, :preco_max, :oficina_id)
-                """
-            ), 
-            params={
-                "id": id,
-                "nome": nome,
-                "descricao": descricao,
-                "tempo": tempo,
-                "preco_min": preco_min,
-                "preco_max": preco_max,
-                "oficina_id": oficina.id,
-            }
-        )
-
-        return Servico(
+            oficina = mock_criar_oficina() 
+        elif not session.query(Oficina).filter_by(id=oficina.id).first():
+            session.add(oficina)
+            session.commit()
+            session.refresh(oficina)
+            
+        servico = Servico(
             id=id,
             nome=nome,
             descricao=descricao,
@@ -275,8 +248,13 @@ def mock_criar_servico(session, mock_criar_oficina):
             preco_max=preco_max,
             oficina=oficina,
         )
-    yield _criar_servico
 
+        session.add(servico)
+        session.commit()
+        session.refresh(servico) 
+        return servico
+    yield _criar_servico
+    
 # =========================
 # MOCKS AGENDAMENTO
 # =========================
@@ -300,40 +278,41 @@ def mock_criar_pecas_do_agendamento(session, mock_criar_peca):
     def _criar_pecas_do_agendamento(
         id: str = None,
         quantidade: int = 1,
-        peca: Peca = None,
-        agendamento: Agendamento = None,
+        peca: Peca = None, # Espera-se um objeto Peca aqui
+        agendamento: Agendamento = None, # Espera-se um objeto Agendamento aqui
         persistir_peca: bool = False,
     ):
         id = id or str(uuid4())
 
-        if peca and persistir_peca:
-            mock_criar_peca(**peca)
-
+        # Garante que 'peca' seja um objeto Peca persistido antes de usá-lo.
         if peca is None:
             peca = mock_criar_peca()
-        
-        session.execute(
-            text(
-                """
-                INSERT INTO pecas_do_agendamento
-                (id, agendamento_id, peca_id, quantidade)
-                VALUES
-                (:id, :agendamento_id, :peca_id, :quantidade)
-                """
-            ),
-            params={
-                "id":id,
-                "agendamento_id":agendamento.id if isinstance(agendamento, Agendamento) else None,
-                "peca_id":peca.id,
-                "quantidade":quantidade,
-            }
-        )
+        elif persistir_peca and not session.query(Peca).filter_by(id=peca.id).first():
+            # Se a 'peca' é um dicionário, crie-a. Se é um objeto Peca não persistido, persista-o.
+            if isinstance(peca, dict):
+                peca = mock_criar_peca(**peca)
+            else: # Assumindo que 'peca' é uma instância de Peca
+                session.add(peca)
+                session.commit()
+                session.refresh(peca)
 
-        return PecaDoAgendamento(
+        # Cria a peça do agendamento sem passar agendamento no construtor
+        peca_do_agendamento = PecaDoAgendamento(
             id=id,
-            peca=peca,
             quantidade=quantidade,
+            peca=peca
         )
+        
+        # Se um agendamento foi fornecido, estabelece a relação
+        if agendamento:
+            peca_do_agendamento.agendamento = agendamento
+            peca_do_agendamento.agendamento_id = agendamento.id
+
+        session.add(peca_do_agendamento)
+        session.commit()
+        session.refresh(peca_do_agendamento)
+        
+        return peca_do_agendamento
     yield _criar_pecas_do_agendamento
 
 @pytest.fixture
@@ -366,6 +345,7 @@ def mock_criar_agendamento(
     mock_criar_pecas_do_agendamento,
     mock_criar_servico,
     mock_criar_usuario,
+    mock_criar_peca # Adicionado para garantir a criação de peças se necessário
 ):
     def _criar_agendamento(
         id: str = None,
@@ -373,67 +353,82 @@ def mock_criar_agendamento(
         status: StatusAgendamento = StatusAgendamento.PENDENTE,
         cliente: Usuario = None,
         servico: Servico = None,
-        pecas_do_agendamento: list[PecaDoAgendamento] = [],
-        persistir_servico: bool = False,
-        persistir_oficina: bool = False,
-        persistir_proprietario: bool = False,
-        persistir_cliente: bool = False,
-        persistir_pecas_do_agendamento: bool = False,
+        pecas_do_agendamento: list[PecaDoAgendamento] = None, # Alterado para None para ser mais explícito
     ):
         id = id or str(uuid4())
 
-        # Persistir serviço
-        if servico and persistir_servico:
-            mock_criar_servico(**servico, persistir_oficina=persistir_oficina, persistir_proprietario=persistir_proprietario)
-
-        # Criar novo serviço
         if servico is None:
             servico = mock_criar_servico()
+        elif not session.query(Servico).filter_by(id=servico.id).first():
+            # Se o serviço foi passado mas não está na sessão, adiciona/persiste
+            session.add(servico)
+            session.commit()
+            session.refresh(servico)
 
-        # Persistir usuário
-        if cliente and persistir_cliente:
-            mock_criar_usuario(**cliente)
-
-        # Criar novo usuário
         if cliente is None:
             cliente = mock_criar_usuario()
-
-        session.execute(
-            text(
-                """
-                INSERT INTO agendamentos
-                (id, data, status, cliente_id, servico_id)
-                VALUES
-                (:id, :data, :status, :cliente_id, :servico_id)
-                """
-            ),
-            params={
-                "id":id,
-                "data":data.isoformat(),
-                "status":status,
-                "cliente_id":cliente.id,
-                "servico_id":servico.id,
-            }
-        )
+        elif not session.query(Usuario).filter_by(id=cliente.id).first():
+            session.add(cliente)
+            session.commit()
+            session.refresh(cliente)
 
         agendamento = Agendamento(
             id=id,
             data=data,
             status=status,
-            cliente=cliente,
-            servico=servico,
-            pecas_do_agendamento=pecas_do_agendamento
+            cliente=cliente, 
+            servico=servico, 
+            pecas_do_agendamento=[] # Inicializa vazio e preenche depois
         )
+        session.add(agendamento)
+        session.commit()
+        session.refresh(agendamento) 
 
-        # Persistir peça do agendamento
-        if len(pecas_do_agendamento) > 0 and persistir_pecas_do_agendamento:
-            for peca in pecas_do_agendamento:
-                mock_criar_pecas_do_agendamento(**peca, agendamento_id=id)
+        # Processa peças do agendamento
+        if pecas_do_agendamento:
+            lista_pecas_agendamento_criadas = []
+            for item_peca_agendamento in pecas_do_agendamento:
+                peca_obj_para_mock = None
+                # Se o item já é uma instância de PecaDoAgendamento, usa-o diretamente (não deveria precisar recriar)
+                if isinstance(item_peca_agendamento, PecaDoAgendamento):
+                    # Se PecaDoAgendamento já tem um agendamento_id, é melhor que seja o ID do agendamento atual
+                    if item_peca_agendamento.agendamento_id != agendamento.id:
+                        item_peca_agendamento.agendamento = agendamento # Reatribui a relação
+                    lista_pecas_agendamento_criadas.append(item_peca_agendamento)
+                else: # Assume que é um dicionário ou similar para criar PecaDoAgendamento
+                    # Garante que a peça (Peca) associada esteja persistida
+                    peca_info = item_peca_agendamento.get('peca')
+                    if peca_info:
+                        if isinstance(peca_info, Peca):
+                            peca_obj_para_mock = peca_info
+                            if not session.query(Peca).filter_by(id=peca_obj_para_mock.id).first():
+                                session.add(peca_obj_para_mock)
+                                session.commit()
+                                session.refresh(peca_obj_para_mock)
+                        elif isinstance(peca_info, dict):
+                            # Se a peça é um dicionário, cria uma nova peça.
+                            peca_obj_para_mock = mock_criar_peca(**peca_info)
+                    else:
+                        # Se nenhuma peça foi fornecida para o PecaDoAgendamento, cria uma padrão
+                        peca_obj_para_mock = mock_criar_peca()
 
-        # Criar nova peça do agendamento
-        if len(pecas_do_agendamento) == 0:
-            pecas_do_agendamento = [mock_criar_pecas_do_agendamento(agendamento=agendamento)]
-            agendamento.pecas_do_agendamento = pecas_do_agendamento
+                    # Cria a PecaDoAgendamento, passando o objeto Peca
+                    peca_agendamento_criada = mock_criar_pecas_do_agendamento(
+                        agendamento=agendamento, # Passa o objeto Agendamento
+                        peca=peca_obj_para_mock, # Passa o objeto Peca
+                        quantidade=item_peca_agendamento.get('quantidade', 1)
+                    )
+                    lista_pecas_agendamento_criadas.append(peca_agendamento_criada)
+            
+            agendamento.pecas_do_agendamento = lista_pecas_agendamento_criadas
+            session.commit() # Commit para persistir as peças do agendamento relacionadas
+            session.refresh(agendamento) # Refresh novamente para carregar a coleção de peças
+
+        # Se nenhuma peça do agendamento foi fornecida e a lista ainda está vazia, cria uma padrão.
+        if not agendamento.pecas_do_agendamento: # Verifica se a lista ainda está vazia após processamento
+            agendamento.pecas_do_agendamento = [mock_criar_pecas_do_agendamento(agendamento=agendamento)]
+            session.commit() 
+            session.refresh(agendamento)
 
         return agendamento
     yield _criar_agendamento
@@ -463,57 +458,33 @@ def avaliacao_base(usuario_base, servico_base):
     yield _avaliacao_base
 
 @pytest.fixture
-def mock_criar_avaliacao(session, mock_criar_usuario, mock_criar_servico):
+def mock_criar_avaliacao(session: Session, mock_criar_usuario, mock_criar_servico):
     def _criar_avaliacao(
         id: str = None,
         nota: NotaAvaliacao = NotaAvaliacao.BOM,
         comentario: str = "Serviço muito bom, recomendo!",
-        data: datetime = datetime.now(),
+        data: datetime = None,
         cliente: Usuario = None,
         servico: Servico = None,
-        persistir_cliente: bool = False,
-        persistir_servico: bool = False,
-        persistir_oficina: bool = False,
-        persistir_proprietario: bool = False,
     ):
         id = id or str(uuid4())
+        data = data or datetime.now()
 
-        # Persistir cliente
-        if cliente and persistir_cliente:
-            mock_criar_usuario(**cliente.to_dict())
-
-        # Criar novo cliente
         if cliente is None:
             cliente = mock_criar_usuario()
+        elif not session.query(Usuario).filter_by(id=cliente.id).first():
+            session.add(cliente)
+            session.commit()
+            session.refresh(cliente)
 
-        # Persistir serviço
-        if servico and persistir_servico:
-            mock_criar_servico(**servico.to_dict(), persistir_oficina=persistir_oficina, persistir_proprietario=persistir_proprietario)
-
-        # Criar novo serviço
         if servico is None:
             servico = mock_criar_servico()
+        elif not session.query(Servico).filter_by(id=servico.id).first():
+            session.add(servico)
+            session.commit()
+            session.refresh(servico)
 
-        session.execute(
-            text(
-                """
-                INSERT INTO avaliacoes
-                (id, nota, comentario, data, cliente_id, servico_id)
-                VALUES
-                (:id, :nota, :comentario, :data, :cliente_id, :servico_id)
-                """
-            ),
-            params={
-                "id": id,
-                "nota": int(nota),
-                "comentario": comentario,
-                "data": data,
-                "cliente_id": cliente.id,
-                "servico_id": servico.id,
-            }
-        )
-
-        return Avaliacao(
+        avaliacao = Avaliacao(
             id=id,
             nota=nota,
             comentario=comentario,
@@ -521,4 +492,9 @@ def mock_criar_avaliacao(session, mock_criar_usuario, mock_criar_servico):
             cliente=cliente,
             servico=servico,
         )
+
+        session.add(avaliacao)
+        session.commit()
+        session.refresh(avaliacao) 
+        return avaliacao
     yield _criar_avaliacao

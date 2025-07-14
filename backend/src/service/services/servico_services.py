@@ -1,10 +1,11 @@
 from src.service.unit_of_work import AbstractUnidadeDeTrabalho
 from src.domain.models import Servico
-from src.domain.exceptions import ServicoInvalido, ServicoNaoEncontrado
+from src.domain.exceptions import ServicoInvalido, ServicoNaoEncontrado, OficinaNaoEncontrada
 
 def criar_servico(
     uow: AbstractUnidadeDeTrabalho,
     nome: str,
+    tempo: int,
     descricao: str,
     preco_min: float,
     preco_max: float,
@@ -17,29 +18,42 @@ def criar_servico(
     Args:
         uow (AbstractUnidadeDeTrabalho): Unidade de Trabalho abstrata.
         nome (str): Nome do serviço.
+        tempo (int): Tempo do serviço.
         descricao (str): Descrição do serviço.
-        preco (float): Preço do serviço.
+        preco_min (float): Preço mínimo do serviço.
+        preco_max (float): Preço máximo do serviço.
+        oficina_id (str): ID da oficina.
 
     Raises:
         ServicoInvalido: O serviço informado é inválido.
+        OficinaNaoEncontrada: A oficina informada não foi encontrada.
     """
 
     if not nome or not descricao or preco_min < 0 or preco_max < 0:
         raise ServicoInvalido("Nome, descrição e preços não podem ser vazios ou negativos.")
 
     with uow:
-        # Adiciona serviço
-        servico = Servico(nome, descricao, preco_min, preco_max, oficina_id)
+        # Buscar a oficina pelo ID
+        oficina = uow.oficinas.consultar(oficina_id)
+        if not oficina:
+            raise OficinaNaoEncontrada("A oficina informada não foi encontrada.")
+
+        # Criar serviço com o objeto oficina
+        servico = Servico(nome, descricao, tempo, preco_min, preco_max, oficina)
         uow.servicos.adicionar(servico)
         uow.commit()
+        
+        return servico.id
 
 def alterar_servico(
     uow: AbstractUnidadeDeTrabalho,
     servico_id: str,
     novo_nome: str | None = None,
+    novo_tempo: int | None = None,
     nova_descricao: str | None = None,
     novo_preco_min: float | None = None,
     novo_preco_max: float | None = None,
+    nova_oficina_id: str | None = None
 ):
     """
     Serviço de alteração de informações de um serviço no sistema. Recebendo o serviço identificado, modificando seus valores 
@@ -49,12 +63,15 @@ def alterar_servico(
         uow (AbstractUnidadeDeTrabalho): Unidade de Trabalho abstrata.
         servico_id (str): ID do serviço a ser alterado.
         novo_nome (str | None): Novo nome do serviço.
+        novo_tempo (int | None): Novo tempo do serviço.
         nova_descricao (str | None): Nova descrição do serviço.
         novo_preco_min (float | None): Novo preço mínimo do serviço.
-        novo_preco_max (float | None): Novo preço máximo do serviço.
+        novo_preco_max (float | None): Novo preço máximo do serviço
+        nova_oficina_id (str | None): Nova oficina do serviço.
     
     Raises:
         ServicoNaoEncontrado: O serviço informado não foi encontrado.
+        OficinaNaoEncontrada: A oficina informada não foi encontrada.
     """
     
     with uow:
@@ -66,14 +83,21 @@ def alterar_servico(
         # Atualiza os campos informados
         if novo_nome is not None:
             servico.nome = novo_nome
+        if novo_tempo is not None:
+            servico.tempo = novo_tempo
         if nova_descricao is not None:
             servico.descricao = nova_descricao
         if novo_preco_min is not None:
             servico.preco_min = novo_preco_min
         if novo_preco_max is not None:
             servico.preco_max = novo_preco_max
+        if nova_oficina_id is not None:
+            nova_oficina = uow.oficinas.consultar(nova_oficina_id)
+            if not nova_oficina:
+                raise OficinaNaoEncontrada("A oficina informada não foi encontrada.")
+            servico.oficina = nova_oficina
 
-        uow.servicos.atualizar(servico)
+        uow.servicos.salvar(servico)  # Mudou de atualizar para salvar
         uow.commit()
 
 def remover_servico(
@@ -112,7 +136,7 @@ def consultar_servico(
         servico_id (str): ID do serviço a ser consultado.
 
     Returns:
-        Servico: O serviço consultado.
+        dict: O serviço consultado em formato de dicionário.
 
     Raises:
         ServicoNaoEncontrado: O serviço informado não foi encontrado.

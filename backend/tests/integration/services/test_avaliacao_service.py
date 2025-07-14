@@ -1,6 +1,7 @@
-from src.service.unit_of_work import AbstractUnidadeDeTrabalho
-from src.service.services.avaliacao_services import (
-    criar_avaliacao,
+import pytest
+from datetime import datetime, timedelta
+from src.service.unit_of_work import UnidadeDeTrabalho
+from src.service import (
     alterar_avaliacao,
     remover_avaliacao,
     consultar_avaliacao,
@@ -8,132 +9,105 @@ from src.service.services.avaliacao_services import (
 from src.domain.exceptions import (
     AvaliacaoInvalida,
     AvaliacaoNaoEncontrada,
+    UsuarioNaoEncontrado,
+    ServicoNaoEncontrado,
 )
-from tests.mocks import avaliacao_base, mock_criar_avaliacao
-import pytest
+from src.domain.models import TipoUsuario
+from tests.mocks import (
+    mock_criar_avaliacao,
+    mock_criar_usuario,
+    mock_criar_servico,
+)
 
-def test_criar_avaliacao_service(session_maker, avaliacao_base):
-    uow = AbstractUnidadeDeTrabalho(session_maker)
-    
-    # Avaliação base para teste
-    avaliacao = avaliacao_base()
-    
-    # Criando avaliação com sucesso
-    criar_avaliacao(
-        uow=uow,
-        nota=avaliacao.nota,
-        cliente_id=avaliacao.cliente_id,
-        servico_id=avaliacao.servico_id,
-        comentario=avaliacao.comentario,
-        data=avaliacao.data,
-    )
 
-    # Verificando se avaliação foi criada
-    with uow:
-        avaliacao_encontrada = uow.avaliacoes.consultar_por_id(avaliacao.id)
-        assert avaliacao_encontrada is not None
-        assert avaliacao_encontrada.nota == avaliacao.nota
+def test_alterar_avaliacao_service(
+    session_maker,
+    mock_criar_avaliacao,
+    mock_criar_usuario,
+    mock_criar_servico,
+):
+    uow = UnidadeDeTrabalho(session_maker)
 
-    # AvaliacaoInvalida: Dados de avaliação invalidos.
-    with pytest.raises(AvaliacaoInvalida):
-        criar_avaliacao(
-            uow=uow,
-            nota=None,
-            cliente_id=None,
-            servico_id=None,
-            comentario=None,
-            data=None,
-        )
+    avaliacao_existente = mock_criar_avaliacao()
 
-    with pytest.raises(AvaliacaoNaoEncontrada):
-        criar_avaliacao(
-            uow=uow,
-            nota=avaliacao.nota,
-            cliente_id=avaliacao.cliente_id,
-            servico_id=avaliacao.servico_id,
-            comentario="comentario invalido",
-            data="2023-01-01T00:00:00Z",  # Data inválida
-        )
-
-def test_alterar_avaliacao_service(session_maker, avaliacao_base):
-    uow = AbstractUnidadeDeTrabalho(session_maker)
-    
-    # Avaliação base para teste
-    avaliacao = avaliacao_base()
-    
-    # Alterando avaliação com sucesso
     alterar_avaliacao(
         uow=uow,
-        avaliacao_id=avaliacao.id,
-        cliente_id=avaliacao.cliente_id,
-        servico_id=avaliacao.servico_id,
-        nova_nota=5,
-        novo_comentario="Novo comentario",
-        nova_data=avaliacao.data,
+        avaliacao_id=avaliacao_existente.id,
+        cliente_id=avaliacao_existente.cliente.id,
+        servico_id=avaliacao_existente.servico.id,
+        nova_nota=4,
+        novo_comentario="Serviço bom, mas pode melhorar.",
+        nova_data=datetime.now() + timedelta(days=1),
     )
 
-    # Verificando se avaliação foi alterada
     with uow:
-        avaliacao_alterada = uow.avaliacoes.consultar_por_id(avaliacao.id)
-        assert avaliacao_alterada is not None
-        assert avaliacao_alterada.nota == 5
-        assert avaliacao_alterada.comentario == "Novo comentario"
+        avaliacao_alterada = uow.avaliacoes.consultar(avaliacao_existente.id)
+        assert avaliacao_alterada.nota == 4
+        assert avaliacao_alterada.comentario == "Serviço bom, mas pode melhorar."
 
-    # AvaliacaoNaoEncontrada: A avaliação não foi encontrada.
     with pytest.raises(AvaliacaoNaoEncontrada):
         alterar_avaliacao(
-            uow=uow,
-            avaliacao_id="id-inexistente",
-            cliente_id=avaliacao.cliente_id,
-            servico_id=avaliacao.servico_id,
-            nova_nota=None,
-            novo_comentario=None,
-            nova_data=None,
+            uow=uow, 
+            avaliacao_id="id-inexistente", 
+            cliente_id=avaliacao_existente.cliente.id,
+            servico_id=avaliacao_existente.servico.id,
+            nova_nota=3
         )
 
-def test_remover_avaliacao_service(session_maker, mock_criar_avaliacao):
-    uow = AbstractUnidadeDeTrabalho(session_maker)
+    with pytest.raises(AvaliacaoInvalida):
+        alterar_avaliacao(
+            uow=uow, 
+            avaliacao_id=avaliacao_existente.id,
+            cliente_id="cliente-nao-existe",
+            servico_id=avaliacao_existente.servico.id,
+            nova_nota=3
+        )
 
-    # Avaliação base para teste
-    avaliacao = mock_criar_avaliacao()
+    with pytest.raises(AvaliacaoInvalida):
+        alterar_avaliacao(
+            uow=uow, 
+            avaliacao_id=avaliacao_existente.id,
+            cliente_id=avaliacao_existente.cliente.id,
+            servico_id="servico-nao-existe",
+            nova_nota=3
+        )
 
-    # Removendo avaliação com sucesso
-    remover_avaliacao(
-        uow=uow,
-        avaliacao_id=avaliacao.id,
-    )
 
-    # Verificando se avaliação foi removida
+def test_remover_avaliacao_service(
+    session_maker,
+    mock_criar_avaliacao,
+):
+    uow = UnidadeDeTrabalho(session_maker)
+
+    avaliacao_para_remover = mock_criar_avaliacao()
+
+    remover_avaliacao(uow=uow, avaliacao_id=avaliacao_para_remover.id)
+
     with uow:
-        avaliacao_encontrada = uow.avaliacoes.consultar_por_id(avaliacao.id)
-        assert avaliacao_encontrada is None
+        assert uow.avaliacoes.consultar(avaliacao_para_remover.id) is None
 
-    # AvaliacaoNaoEncontrada: A avaliação não foi encontrada.
     with pytest.raises(AvaliacaoNaoEncontrada):
-        remover_avaliacao(
-            uow=uow,
-            avaliacao_id="id-inexistente",
-        )
+        remover_avaliacao(uow=uow, avaliacao_id="id-inexistente")
 
-def test_consultar_avaliacao_service(session_maker, mock_criar_avaliacao):
-    uow = AbstractUnidadeDeTrabalho(session_maker)
 
-    # Avaliação base para teste
-    avaliacao = mock_criar_avaliacao()
+def test_consultar_avaliacao_service(
+    session_maker,
+    mock_criar_avaliacao,
+):
+    uow = UnidadeDeTrabalho(session_maker)
 
-    # Consultar avaliação existente
-    avaliacao_encontrada = consultar_avaliacao(
-        uow=uow,
-        avaliacao_id=avaliacao.id,
-    )
+    avaliacao_existente = mock_criar_avaliacao()
 
-    assert avaliacao_encontrada.get("nota") == avaliacao.nota
-    assert avaliacao_encontrada.get("comentario") == avaliacao.comentario
-    assert avaliacao_encontrada.get("data") == avaliacao.data.isoformat()
+    resultado = consultar_avaliacao(uow=uow, avaliacao_id=avaliacao_existente.id)
 
-    # Consultar avaliação não-existente
+    assert resultado is not None
+    assert resultado["id"] == avaliacao_existente.id
+    assert resultado["nota"] == avaliacao_existente.nota
+    assert resultado["comentario"] == avaliacao_existente.comentario
+    assert "cliente_id" in resultado  # Verifica se a chave existe
+    assert "servico_id" in resultado  # Verifica se a chave existe
+    assert resultado["cliente_id"] == avaliacao_existente.cliente.id
+    assert resultado["servico_id"] == avaliacao_existente.servico.id
+
     with pytest.raises(AvaliacaoNaoEncontrada):
-        consultar_avaliacao(
-            uow=uow,
-            avaliacao_id="id-inexistente",
-        )
+        consultar_avaliacao(uow=uow, avaliacao_id="id-nao-existe")

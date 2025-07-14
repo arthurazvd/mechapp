@@ -8,7 +8,7 @@ import { CustomInput } from "../../components/CustomInput";
 import { BackButton } from '../../components/BackButton';
 
 import { globalStyles } from '../../styles/globalStyles';
-import { cadStyles } from './styles';
+import { cadStyles } from '../../styles/cadStyles';
 import { formatarDocumento, formatarContato } from '../../utils/formatters';
 
 export default function Index() {

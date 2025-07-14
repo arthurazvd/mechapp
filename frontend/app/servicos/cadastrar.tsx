@@ -12,7 +12,7 @@ import { BackButton } from '../../components/BackButton';
 import { BottomNavigation } from '../../components/BottomNavigation';
 
 import { globalStyles } from '../../styles/globalStyles';
-import { servStyles } from './styles';
+import { servStyles } from '../../styles/servStyles';
 import { formatarPreco } from '../../utils/formatters';
 
 

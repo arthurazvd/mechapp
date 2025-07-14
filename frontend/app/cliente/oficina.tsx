@@ -17,7 +17,7 @@ import { BackButton } from '../../components/BackButton';
 import { CustomButton } from '../../components/CustomButton';
 
 import { globalStyles } from '../../styles/globalStyles';
-import { cliStyles } from './styles';
+import { cliStyles } from '../../styles/cliStyles';
 
 const VisualizarOficina = () => {
   const insets = useSafeAreaInsets();

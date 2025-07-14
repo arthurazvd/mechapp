@@ -1,5 +1,6 @@
+# agendamento_repository.py
 from src.adapters.repository import AbstractSQLAlchemyRepository
-from src.domain.models import Agendamento, PecaDoAgendamento
+from src.domain.models import Agendamento, PecaDoAgendamento, StatusAgendamento
 from abc import abstractmethod
 from datetime import datetime
 
@@ -44,6 +45,15 @@ class AbstractAgendamentoRepository():
     @abstractmethod
     def consultar_por_dia(self, data: tuple[datetime]) -> list[Agendamento]:
         raise NotImplementedError
+    
+    @abstractmethod
+    def listar(
+        self, 
+        cliente_id: str = None, 
+        servico_id: str = None, 
+        status: StatusAgendamento = None
+    ) -> list[Agendamento]:
+        raise NotImplementedError
 
 class PecasDoAgendamentoRepository(AbstractPecasDoAgendamentoRepository, AbstractSQLAlchemyRepository):
     def adicionar(self, peca_do_agendamento: PecaDoAgendamento):
@@ -79,3 +89,32 @@ class AgendamentoRepository(AbstractAgendamentoRepository, AbstractSQLAlchemyRep
             Agendamento.data >= data[0],
             Agendamento.data <= data[1],
         ).all()
+    
+    def listar(
+        self, 
+        cliente_id: str = None, 
+        servico_id: str = None, 
+        status: StatusAgendamento = None
+    ) -> list[Agendamento]:
+        print("\nDEBUG - INÍCIO DO REPOSITÓRIO listar()")
+        print(f"Filtros - cliente_id: {cliente_id}, servico_id: {servico_id}, status: {status}")
+        
+        query = self.session.query(Agendamento)
+        
+        if cliente_id:
+            print("Aplicando filtro por cliente_id")
+            query = query.filter(Agendamento.cliente_id == cliente_id)
+        if servico_id:
+            print("Aplicando filtro por servico_id")
+            query = query.filter(Agendamento.servico_id == servico_id)
+        if status:
+            print("Aplicando filtro por status")
+            query = query.filter(Agendamento.status == status)
+        
+        # Debug da query SQL gerada
+        print(f"SQL gerado: {str(query)}")
+        
+        result = query.all()
+        print(f"DEBUG - Total de resultados encontrados: {len(result)}")
+        print("DEBUG - FIM DO REPOSITÓRIO listar()")
+        return result
