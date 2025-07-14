@@ -1,4 +1,23 @@
-
 # Virtual environments
 .venv/
 venv/
+
+# Pycache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Pytest
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Teste de erro
+error.txt

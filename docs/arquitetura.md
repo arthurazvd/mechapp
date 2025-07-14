@@ -19,7 +19,7 @@ Foi escolhido o banco de dados **PostgreSQL**, devido sua versalidade no armazen
 
 erDiagram
     usuario {
-        INT id PK
+        UUID id PK
         VARCHAR(100) nome
         VARCHAR(100) email
         VARCHAR(255) senha
@@ -28,16 +28,16 @@ erDiagram
     }
 
     oficina {
-        INT id PK
-        INT usuario_id FK
+        UUID id PK
+        UUID usuario_id FK
         VARCHAR(100) nome
         VARCHAR(18) cnpj
         TEXT endereco
     }
 
     servico {
-        INT id PK
-        INT oficina_id FK
+        UUID id PK
+        UUID oficina_id FK
         VARCHAR(100) nome
         TEXT descricao
         INT tempo
@@ -46,7 +46,7 @@ erDiagram
     }
 
     peca {
-        INT id PK
+        UUID id PK
         VARCHAR(100) nome
         TEXT descricao
         INT quantidade
@@ -55,25 +55,25 @@ erDiagram
     }
 
     agendamento {
-        INT id PK
-        INT client_id FK
-        INT servico_id FK
+        UUID id PK
+        UUID client_id FK
+        UUID servico_id FK
         DATE data
         ENUM status
     }
 
     avaliacao {
-        INT id PK
-        INT client_id FK
-        INT oficina_id FK
+        UUID id PK
+        UUID client_id FK
+        UUID oficina_id FK
         INT nota
         TEXT comentario
         DATE data
     }
 
     pecas_do_agendamento {
-        INT agendamneto_id PK
-        INT peca_id FK
+        UUID agendamneto_id PK
+        UUID peca_id FK
         INT quantidade
     }
 

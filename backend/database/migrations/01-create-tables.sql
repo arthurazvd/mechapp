@@ -6,7 +6,7 @@ CREATE TYPE status_agendamento AS ENUM(
 
 -- Criando usuário
 CREATE TABLE IF NOT EXISTS usuarios (
-    id SERIAL PRIMARY KEY,
+    id VARCHAR(36) PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     senha VARCHAR(255) NOT NULL,
@@ -18,8 +18,8 @@ CREATE TABLE IF NOT EXISTS usuarios (
 
 -- Criando oficina
 CREATE TABLE IF NOT EXISTS oficinas (
-    id SERIAL PRIMARY KEY,
-    usuario_id INT,
+    id VARCHAR(36) PRIMARY KEY,
+    usuario_id VARCHAR(36),
     nome VARCHAR(100) NOT NULL,
     cnpj VARCHAR(14) NOT NULL,
     endereco TEXT,
@@ -30,20 +30,20 @@ CREATE TABLE IF NOT EXISTS oficinas (
 
 -- Criando peça
 CREATE TABLE IF NOT EXISTS pecas (
-    id SERIAL PRIMARY KEY,
+    id VARCHAR(36) PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     descricao TEXT,
     quantidade INT NOT NULL,
     preco DECIMAL(10, 2) NOT NULL,
-    imagem BYTEA,
+    imagem BLOB,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Criando serviço
 CREATE TABLE IF NOT EXISTS servicos (
-    id SERIAL PRIMARY KEY,
-    oficina_id INT NOT NULL,
+    id VARCHAR(36) PRIMARY KEY,
+    oficina_id VARCHAR(36) NOT NULL,
     nome VARCHAR(100) NOT NULL,
     descricao TEXT,
     tempo INT NOT NULL,
@@ -56,9 +56,9 @@ CREATE TABLE IF NOT EXISTS servicos (
 
 -- Criando agendamento
 CREATE TABLE IF NOT EXISTS agendamentos (
-    id SERIAL PRIMARY KEY,
-    cliente_id INT,
-    servico_id INT NOT NULL,
+    id VARCHAR(36) PRIMARY KEY,
+    cliente_id VARCHAR(36),
+    servico_id VARCHAR(36) NOT NULL,
     data TIMESTAMP NOT NULL,
     status status_agendamento NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -69,9 +69,9 @@ CREATE TABLE IF NOT EXISTS agendamentos (
 
 -- Criando avaliação
 CREATE TABLE IF NOT EXISTS avaliacoes (
-    id SERIAL PRIMARY KEY,
-    cliente_id INT NOT NULL,
-    servico_id INT NOT NULL,
+    id VARCHAR(36) PRIMARY KEY,
+    cliente_id VARCHAR(36) NOT NULL,
+    servico_id VARCHAR(36) NOT NULL,
     nota INT NOT NULL,
     comentario TEXT,  
     data TIMESTAMP NOT NULL,
@@ -83,10 +83,10 @@ CREATE TABLE IF NOT EXISTS avaliacoes (
 
 -- Criando peças do agendamento
 CREATE TABLE IF NOT EXISTS pecas_do_agendamento(
-    agendamento_id INT, 
-    peca_id INT NOT NULL,
+    id VARCHAR(36) PRIMARY KEY,
+    agendamento_id VARCHAR(36), 
+    peca_id VARCHAR(36) NOT NULL,
     quantidade INT NOT NULL,
-    PRIMARY KEY (agendamento_id, peca_id),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(agendamento_id) REFERENCES agendamentos(id) ON DELETE SET NULL,
