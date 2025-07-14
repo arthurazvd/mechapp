@@ -1,7 +1,7 @@
 version: "3.0"
 
 services:
-  mech-database:
+  database:
     image: postgres:16-alpine
     container_name: mechapp-postgres
     environment:
@@ -13,6 +13,7 @@ services:
     volumes:
       - ./backend/database/migrations:/docker-entrypoint-initdb.d
       - ./backend/database/seeds:/seeds
+      - postgres_data:/var/lib/postgresql/data
     # Comando para rodar o initial_data.sql como primeiro seeder
     command: >
       sh -c "
@@ -21,3 +22,32 @@ services:
         psql -U $$POSTGRES_USER -d $$POSTGRES_DB -f /seeds/initial_data.sql
         wait
       "
+  api:
+    build:
+      context: ./backend
+    container_name: mechapp-api
+    depends_on:
+      - database
+    environment:
+      DATABASE_URL: postgresql://admin:admin@database:5432/mechapp
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    command: uvicorn src.entrypoints.fastapi:app --host 0.0.0.0 --port 8000 --reload
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: mechapp-front
+    depends_on:
+      - api
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./frontend:/app
+      - ./app:/node_modules
+    command: npx expo start
+
+volumes:
+  postgres_data:

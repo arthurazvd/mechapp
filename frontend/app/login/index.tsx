@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { View, Text, Alert, StatusBar, Image, TouchableOpacity} from "react-native";
-import { useRouter } from 'expo-router';
+import React, { useState, useEffect } from "react";
+import { View, Text, Alert, StatusBar, Image, TouchableOpacity } from "react-native";
+import { useNavigationContainerRef, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Componentes
@@ -11,23 +11,36 @@ import { BackButton } from '../../components/BackButton';
 
 import { globalStyles } from "../../styles/globalStyles";
 
-// Controller
-//import { usuarioController } from "../../controllers/usuario_controller";
+// API
+import { usuario } from "../../api/index";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const router = useRouter();
-  
   const insets = useSafeAreaInsets();
-  
-  const handleLogin = () => {
+
+  // Realizando autenticação
+  const handleLogin = async () => {
     if (!email || !senha) {
-      Alert.alert("Erro", "Preencha todos os campos!");
+      alert("Digite um e-mail e senha");
       return;
     }
 
-    Alert.alert("Login", "Login realizado com sucesso!");
+    // Resposta da requisição
+    const json = await usuario.autenticar_usuario(email, senha);
+
+    // Caso aconteça algum tipo de erro
+    if (json.error) {
+      alert(json.mensagem);
+      return;
+    }
+
+    // Login efetuado com sucesso, salvando no local storage
+    localStorage.setItem("usuario_atual", JSON.stringify(json));
+
+    // Redirecionando
+    return router.replace('/agendamento/historico');
   };
 
   return (
@@ -72,7 +85,7 @@ const LoginScreen = () => {
               marginBottom: 20,
             }}
             title="Entrar"
-            onPress={() => router.push('/cliente')}
+            onPress={handleLogin}
           />
 
           <Text style={globalStyles.text}>Não tem uma conta?</Text>

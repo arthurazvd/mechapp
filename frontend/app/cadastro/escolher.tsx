@@ -11,8 +11,12 @@ import { cadStyles } from '../../styles/cadStyles';
 
 export default function Index() {
   const router = useRouter();
-
   const insets = useSafeAreaInsets();
+
+  enum TipoUsuarioEnum {
+    CLIENTE = 'CLIENTE',
+    MECANICO = 'MECANICO',
+  }
 
   return (
     <>
@@ -27,12 +31,22 @@ export default function Index() {
           <CustomButton
             title="Cliente"
             style={{ height: 50, width: "90%", maxWidth: 400, marginBottom: 5 }}
-            onPress={() => router.push('/cadastro')}
+            onPress={() => router.push({
+              pathname: '/cadastro', 
+              params: { 
+                tipo: TipoUsuarioEnum.CLIENTE as string,
+              },
+            })}
           />
           <CustomButton
             title="Mecânico"
             style={{ height: 50, width: "90%", maxWidth: 400, marginBottom: 5 }}
-            onPress={() => router.push('/cadastro')}
+            onPress={() => router.push({
+              pathname: '/cadastro', 
+              params: { 
+                tipo: TipoUsuarioEnum.MECANICO as string,
+              },
+            })}
           />
         </View>
       </View>

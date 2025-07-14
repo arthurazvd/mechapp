@@ -3,11 +3,11 @@ TRUNCATE TABLE pecas_do_agendamento, avaliacoes, agendamentos, servicos, oficina
 
 -- Inserção de usuários (5 no total: 3 clientes e 2 mecânicos)
 INSERT INTO usuarios (id, nome, email, senha, tipo, telefone) VALUES
-('usuario-001', 'João Silva', 'joao.mecanico@email.com', '$2a$10$xJwL5v5Jz5U6ZQ5Jz5U6Z.Q5Jz5U6ZQ5Jz5U6ZQ5Jz5U6ZQ5Jz5U6Z', 'mecanico', '(11) 99999-1111'),
-('usuario-002', 'Maria Souza', 'maria.mecanica@email.com', '$2a$10$xJwL5v5Jz5U6ZQ5Jz5U6Z.Q5Jz5U6ZQ5Jz5U6ZQ5Jz5U6ZQ5Jz5U6Z', 'mecanico', '(11) 99999-2222'),
-('usuario-003','Carlos Oliveira', 'carlos.cliente@email.com', '$2a$10$xJwL5v5Jz5U6ZQ5Jz5U6Z.Q5Jz5U6ZQ5Jz5U6ZQ5Jz5U6ZQ5Jz5U6Z', 'cliente', '(11) 99999-3333'),
-('usuario-004','Ana Santos', 'ana.cliente@email.com', '$2a$10$xJwL5v5Jz5U6ZQ5Jz5U6Z.Q5Jz5U6ZQ5Jz5U6ZQ5Jz5U6ZQ5Jz5U6Z', 'cliente', '(11) 99999-4444'),
-('usuario-005','Pedro Costa', 'pedro.cliente@email.com', '$2a$10$xJwL5v5Jz5U6ZQ5Jz5U6Z.Q5Jz5U6ZQ5Jz5U6ZQ5Jz5U6ZQ5Jz5U6Z', 'cliente', '(11) 99999-5555');
+('usuario-001', 'João Silva', 'joao.mecanico@email.com', '$2a$10$xJwL5v5Jz5U6ZQ5Jz5U6Z.Q5Jz5U6ZQ5Jz5U6ZQ5Jz5U6ZQ5Jz5U6Z', 'MECANICO', '(11) 99999-1111'),
+('usuario-002', 'Maria Souza', 'maria.mecanica@email.com', '$2a$10$xJwL5v5Jz5U6ZQ5Jz5U6Z.Q5Jz5U6ZQ5Jz5U6ZQ5Jz5U6ZQ5Jz5U6Z', 'MECANICO', '(11) 99999-2222'),
+('usuario-003','Carlos Oliveira', 'carlos.cliente@email.com', '$2a$10$xJwL5v5Jz5U6ZQ5Jz5U6Z.Q5Jz5U6ZQ5Jz5U6ZQ5Jz5U6ZQ5Jz5U6Z', 'CLIENTE', '(11) 99999-3333'),
+('usuario-004','Ana Santos', 'ana.cliente@email.com', '$2a$10$xJwL5v5Jz5U6ZQ5Jz5U6Z.Q5Jz5U6ZQ5Jz5U6ZQ5Jz5U6ZQ5Jz5U6Z', 'CLIENTE', '(11) 99999-4444'),
+('usuario-005','Pedro Costa', 'pedro.cliente@email.com', '$2a$10$xJwL5v5Jz5U6ZQ5Jz5U6Z.Q5Jz5U6ZQ5Jz5U6ZQ5Jz5U6ZQ5Jz5U6Z', 'CLIENTE', '(11) 99999-5555');
 
 -- Inserção de oficinas (3 no total, sendo 2 do mesmo mecânico)
 INSERT INTO oficinas (id, usuario_id, nome, cnpj, endereco) VALUES
@@ -39,15 +39,15 @@ INSERT INTO servicos (id, oficina_id, nome, descricao, tempo, preco_min, preco_m
 
 -- Inserção de agendamentos (1 por cliente em cada oficina = 3 clientes x 3 oficinas = 9 agendamentos)
 INSERT INTO agendamentos (id, cliente_id, servico_id, data, status) VALUES
-('agendamento-001', 'usuario-003', 'servico-001', CURRENT_TIMESTAMP + INTERVAL '1 day', 'confirmado'),  -- Oficina 1
-('agendamento-002', 'usuario-003', 'servico-003', CURRENT_TIMESTAMP + INTERVAL '2 days', 'pendente'),   -- Oficina 2
-('agendamento-003', 'usuario-003', 'servico-005', CURRENT_TIMESTAMP + INTERVAL '3 days', 'concluido'),  -- Oficina 3
-('agendamento-004', 'usuario-004', 'servico-001', CURRENT_TIMESTAMP + INTERVAL '1 day', 'confirmado'),  -- Oficina 1
-('agendamento-005', 'usuario-004', 'servico-004', CURRENT_TIMESTAMP + INTERVAL '2 days', 'pendente'),   -- Oficina 2
-('agendamento-006', 'usuario-004', 'servico-005', CURRENT_TIMESTAMP + INTERVAL '3 days', 'concluido'),  -- Oficina 3
-('agendamento-007', 'usuario-005', 'servico-002', CURRENT_TIMESTAMP + INTERVAL '1 day', 'confirmado'),  -- Oficina 1
-('agendamento-008', 'usuario-005', 'servico-003', CURRENT_TIMESTAMP + INTERVAL '2 days', 'pendente'),   -- Oficina 2
-('agendamento-009', 'usuario-005', 'servico-006', CURRENT_TIMESTAMP + INTERVAL '3 days', 'concluido');  -- Oficina 3
+('agendamento-001', 'usuario-003', 'servico-001', CURRENT_TIMESTAMP + INTERVAL '1 day', 'CONFIRMADO'),  -- Oficina 1
+('agendamento-002', 'usuario-003', 'servico-003', CURRENT_TIMESTAMP + INTERVAL '2 days', 'PENDENTE'),   -- Oficina 2
+('agendamento-003', 'usuario-003', 'servico-005', CURRENT_TIMESTAMP + INTERVAL '3 days', 'CONCLUIDO'),  -- Oficina 3
+('agendamento-004', 'usuario-004', 'servico-001', CURRENT_TIMESTAMP + INTERVAL '1 day', 'CONFIRMADO'),  -- Oficina 1
+('agendamento-005', 'usuario-004', 'servico-004', CURRENT_TIMESTAMP + INTERVAL '2 days', 'PENDENTE'),   -- Oficina 2
+('agendamento-006', 'usuario-004', 'servico-005', CURRENT_TIMESTAMP + INTERVAL '3 days', 'CONCLUIDO'),  -- Oficina 3
+('agendamento-007', 'usuario-005', 'servico-002', CURRENT_TIMESTAMP + INTERVAL '1 day', 'CONFIRMADO'),  -- Oficina 1
+('agendamento-008', 'usuario-005', 'servico-003', CURRENT_TIMESTAMP + INTERVAL '2 days', 'PENDENTE'),   -- Oficina 2
+('agendamento-009', 'usuario-005', 'servico-006', CURRENT_TIMESTAMP + INTERVAL '3 days', 'CONCLUIDO');  -- Oficina 3
 
 -- Inserção de avaliações (1 por agendamento concluído)
 INSERT INTO avaliacoes (id, cliente_id, servico_id, nota, comentario, data) VALUES
