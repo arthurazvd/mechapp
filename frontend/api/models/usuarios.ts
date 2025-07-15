@@ -8,12 +8,21 @@ interface UsuarioCreate {
   telefone?: string;
 }
 
+export interface Usuario {
+  id: string;
+  nome: string;
+  email: string;
+  senha: string;
+  tipo: string;
+  telefone?: string;
+}
+
 // Função de cadastro
 export const registar_usuario = async (usuario: UsuarioCreate) => {
   const response = await fetch(`${BASE_URL}/usuario/registrar`, {
     method: "POST",
     headers: {
-        "Content-Type": "application/json",
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(usuario),
   });
@@ -27,7 +36,7 @@ export const autenticar_usuario = async (email: string, senha: string) => {
   const response = await fetch(`${BASE_URL}/usuario/autenticar`, {
     method: "POST",
     headers: {
-        "Content-Type": "application/json",
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({ email, senha }),
   });
@@ -37,9 +46,9 @@ export const autenticar_usuario = async (email: string, senha: string) => {
 
 // Função de verificação de usuário já autenticado
 export const verificar_autenticacao = () => {
-    const usuario_encontrado = localStorage.getItem("usuario_atual")
-    if (usuario_encontrado === null) {
-        return false;
-    }
-    return true;
-}
+  const usuario_encontrado = localStorage.getItem("usuario_atual");
+  if (usuario_encontrado === null) {
+    return false;
+  }
+  return true;
+};

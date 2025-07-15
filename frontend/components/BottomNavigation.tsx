@@ -1,15 +1,16 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Feather, FontAwesome5, MaterialIcons } from '@expo/vector-icons';
+import React from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { Feather, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 
 interface BottomNavigationProps {
-  // Você pode passar a rota ativa se quiser destacar o botão atual
   activeRoute?: string;
 }
 
-export const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeRoute }) => {
-  // Aqui você pode usar useRouter() e configurar as rotas depois
-  // const router = useRouter();
+export const BottomNavigation: React.FC<BottomNavigationProps> = ({
+  activeRoute,
+}) => {
+  const router = useRouter();
 
   return (
     <View style={styles.container}>
@@ -18,7 +19,10 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeRoute 
         <Text style={styles.label}>Busca</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => router.replace("oficina/listar")}
+      >
         <MaterialIcons name="build" size={22} color="#fff" />
         <Text style={styles.label}>Oficinas</Text>
       </TouchableOpacity>
@@ -43,40 +47,40 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeRoute 
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    backgroundColor: '#A10000',
+    flexDirection: "row",
+    backgroundColor: "#A10000",
     paddingHorizontal: 10,
-    width: '100%',
-    height: '10%',
-    justifyContent: 'space-around',
-    alignItems: 'center',
+    width: "100%",
+    height: "10%",
+    justifyContent: "space-around",
+    alignItems: "center",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
   button: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   label: {
     fontSize: 12,
-    color: '#ccc',
+    color: "#ccc",
     marginTop: 4,
   },
   homeButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff',
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#fff",
     paddingVertical: 14,
     paddingHorizontal: 20,
     borderRadius: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.2,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
   },
   homeLabel: {
     fontSize: 12,
-    color: '#A10000',
+    color: "#A10000",
     marginTop: 4,
   },
 });

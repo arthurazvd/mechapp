@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Alert, StatusBar, Image, TouchableOpacity } from "react-native";
-import { useNavigationContainerRef, useRouter } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import {
+  View,
+  Text,
+  Alert,
+  StatusBar,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+import { useNavigationContainerRef, useRouter } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // Componentes
 import { CustomButton } from "../../components/CustomButton";
 import { CustomInput } from "../../components/CustomInput";
 import { PasswordInput } from "../../components/PasswordInput";
-import { BackButton } from '../../components/BackButton';
+import { BackButton } from "../../components/BackButton";
 
 import { globalStyles } from "../../styles/globalStyles";
 
@@ -40,13 +47,18 @@ const LoginScreen = () => {
     localStorage.setItem("usuario_atual", JSON.stringify(json));
 
     // Redirecionando
-    return router.replace('/agendamento/historico');
+    return router.replace("/agendamento/historico");
   };
 
   return (
     <>
       <StatusBar backgroundColor="#A10000" barStyle="light-content" />
-      <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
+      <View
+        style={[
+          globalStyles.container,
+          { paddingTop: insets.top, paddingBottom: insets.bottom },
+        ]}
+      >
         <View style={globalStyles.initialTop}>
           <BackButton />
           <Image
@@ -89,7 +101,7 @@ const LoginScreen = () => {
           />
 
           <Text style={globalStyles.text}>Não tem uma conta?</Text>
-          <TouchableOpacity onPress={() => router.push('/cadastro/escolher')}>
+          <TouchableOpacity onPress={() => router.push("/cadastro/escolher")}>
             <Text style={globalStyles.link}>Cadastre-se</Text>
           </TouchableOpacity>
         </View>
