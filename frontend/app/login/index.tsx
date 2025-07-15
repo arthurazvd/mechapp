@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { View, Text, Alert, StatusBar, Image, TouchableOpacity, StyleSheet } from "react-native";
-import { useRouter } from 'expo-router';
+import React, { useState, useEffect } from "react";
+import { StyleSheet, View, Text, Alert, StatusBar, Image, TouchableOpacity } from "react-native";
+import { useNavigationContainerRef, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Componentes
@@ -12,7 +12,7 @@ import { BackButton } from '../../components/BackButton';
 import { globalStyles, colors, spacing } from "../../styles/globalStyles";
 
 // API
-import { usuario } from "../../api";
+import { usuario } from "../../api/index";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -20,9 +20,19 @@ const LoginScreen = () => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
+  // Realizando autenticação
   const handleLogin = async () => {
     if (!email || !senha) {
-      Alert.alert("Erro", "Preencha todos os campos!");
+      alert("Digite um e-mail e senha");
+      return;
+    }
+
+    // Resposta da requisição
+    const json = await usuario.autenticar_usuario(email, senha);
+
+    // Caso aconteça algum tipo de erro
+    if (json.error) {
+      alert(json.mensagem);
       return;
     }
 
@@ -95,29 +105,29 @@ const LoginScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  logo: {
-    width: 170,
-    height: 190,
-  },
-  formContainer: {
-    paddingHorizontal: spacing.large,
-  },
-  inputField: {
-    width: '100%',
-    maxWidth: 400,
-    alignSelf: 'center',
-  },
-  forgotPassword: {
-    marginVertical: spacing.medium,
-  },
-  loginButton: {
-    width: '100%',
-    maxWidth: 400,
-    height: 50,
-    marginTop: spacing.medium,
-    marginBottom: spacing.large,
-    alignSelf: 'center',
-  },
+    logo: {
+        width: 170,
+        height: 190,
+    },
+    formContainer: {
+        paddingHorizontal: spacing.large,
+    },
+    inputField: {
+        width: '100%',
+        maxWidth: 400,
+        alignSelf: 'center',
+    },
+    forgotPassword: {
+        marginVertical: spacing.medium,
+    },
+    loginButton: {
+        width: '100%',
+        maxWidth: 400,
+        height: 50,
+        marginTop: spacing.medium,
+        marginBottom: spacing.large,
+        alignSelf: 'center',
+    }
 });
 
 export default LoginScreen;

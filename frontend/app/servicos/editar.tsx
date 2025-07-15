@@ -11,8 +11,8 @@ import { CustomButton } from '../../components/CustomButton';
 import { BackButton } from '../../components/BackButton';
 import { BottomNavigation } from '../../components/BottomNavigation';
 
-import { globalStyles, colors, spacing } from '../../styles/globalStyles';
-import { servStyles } from './styles';
+import { globalStyles } from '../../styles/globalStyles';
+import { servStyles } from '../../styles/servStyles';
 import { formatarPreco } from '../../utils/formatters';
 
 const getServicoDetails = (servicoId?: string | string[]) => {

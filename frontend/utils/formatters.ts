@@ -1,10 +1,10 @@
 export function formatarPreco(valor: string) {
   let numeroLimpo = valor.replace(/\D/g, '');
   let numero = Number(numeroLimpo) / 100;
-  return numero.toLocaleString('pt-BR', {
+  return { precoFormatado: numero.toLocaleString('pt-BR', {
     style: 'currency',
     currency: 'BRL',
-  });
+  }), precoReal: numero };
 }
 export function formatarDocumento(valor: string) {
   const doc = valor.replace(/\D/g, '').slice(0, 14); // CPF: 11 dígitos, CNPJ: 14

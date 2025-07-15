@@ -10,7 +10,7 @@ import { BackButton } from '../../components/BackButton';
 import { BottomNavigation } from '../../components/BottomNavigation';
 
 import { globalStyles, colors, spacing } from '../../styles/globalStyles'; 
-import { pecStyles } from './styles'; 
+import { pecStyles } from '../../styles/pecStyles'; 
 
 const getPecaDetails = (pecaId?: string | string[]) => {
     if (pecaId === '1') { 

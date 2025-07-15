@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, StatusBar, TouchableOpacity, StyleSheet, ScrollView, Alert } from "react-native";
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { StyleSheet, View, Text, StatusBar, TouchableOpacity, ScrollView} from "react-native";
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CustomButton } from '../../components/CustomButton';
@@ -8,63 +8,64 @@ import { CustomInput } from "../../components/CustomInput";
 import { PasswordInput } from "../../components/PasswordInput";
 import { BackButton } from '../../components/BackButton';
 
-import { globalStyles, colors, spacing } from '../../styles/globalStyles';
-import { cadStyles } from './styles';
+import { globalStyles, colors, spacing  } from '../../styles/globalStyles';
+import { cadStyles } from '../../styles/cadStyles';
 import { formatarContato } from '../../utils/formatters';
 
 // API
-import { usuario } from "../../api";
+import { usuario } from "../../api/index";
 
 export default function CadastroScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { tipo: tipo_recebido } = useLocalSearchParams(); // Pega tipo (cliente/mecânico)
 
   const [email, setEmail] = useState("");
   const [nome, setNome] = useState("");
   const [telefone, setTelefone] = useState("");
   const [senha, setSenha] = useState("");
   const [confsenha, setConfsenha] = useState("");
+  const { tipo: tipo_recebido } = useLocalSearchParams();
 
   const handleContatoChange = (text: string) => {
     const ContatoFormatado = formatarContato(text);
     setTelefone(ContatoFormatado);
   };
 
+  
+  // Cadastro de usuário
   const handleCadastro = async () => {
-    if (!nome || !email || !senha) {
-      Alert.alert("Erro", "Preencha nome, e-mail e senha.");
+    if (!email || !nome || !senha) {
+      alert("Digite email, nome e senha.");
       return;
     }
 
-    if (senha !== confsenha) {
-      Alert.alert("Erro", "As senhas devem ser iguais.");
+    if (senha != confsenha) {
+      alert("As senhas devem ser iguais.");
       return;
     }
 
-    const tipo = typeof tipo_recebido === "string" ? tipo_recebido : "CLIENTE";
-
-    try {
-      const json = await usuario.registar_usuario({
-        nome, email, senha, tipo, telefone
-      });
-
-      if (json.error) {
-        Alert.alert("Erro", json.mensagem || "Erro ao cadastrar.");
-        return;
-      }
-
-      // Salva o usuário logado (localStorage -> AsyncStorage no futuro)
-      localStorage.setItem("usuario_atual", JSON.stringify(json.usuario));
-
-      Alert.alert("Sucesso", "Cadastro realizado com sucesso!");
-
-      // Redireciona (aqui mantive para /pecas/cadastrar, mas você pode mudar conforme o fluxo)
-      router.replace('/pecas/cadastrar');
-    } catch (err) {
-      Alert.alert("Erro", "Não foi possível conectar ao servidor.");
+    var tipo = "CLIENTE"
+    if (typeof tipo_recebido === "string") {
+      tipo = tipo_recebido;
     }
-  };
+
+    // Resposta da requisição
+    const json = await usuario.registar_usuario({
+      nome, email, senha, tipo, telefone
+    });
+
+    // Caso aconteça algum tipo de erro
+    if (json.error) {
+      alert(json.mensagem);
+      return;
+    }
+
+    // Login efetuado com sucesso, salvando no local storage
+    localStorage.setItem("usuario_atual", JSON.stringify(json.usuario));
+
+    // Redirecionando
+    router.replace('/pecas/cadastrar');
+  }
 
   return (
     <>
@@ -128,17 +129,21 @@ export default function CadastroScreen() {
           />
 
           <CustomButton
-            style={styles.actionButton}
-            title="Cadastrar"
-            onPress={handleCadastro}
+              style={{
+              width: "90%",
+              maxWidth: 400,
+              height: 50,
+              marginTop: 20,
+              marginBottom: 20,
+              }}
+              title="Cadastrar"
+              onPress={handleCadastro}
           />
 
-          <View style={styles.loginRedirectContainer}>
-            <Text style={globalStyles.text}>Já tem uma conta?</Text>
-            <TouchableOpacity onPress={() => router.push('/login')}>
-              <Text style={globalStyles.link}>Fazer Login</Text>
-            </TouchableOpacity>
-          </View>
+          <Text style={globalStyles.text}>Já tem uma conta?</Text>
+          <TouchableOpacity onPress={() => router.push('/login')}>
+            <Text style={globalStyles.link}>Fazer Login</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </>

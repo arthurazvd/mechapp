@@ -17,7 +17,7 @@ import { BackButton } from '../../components/BackButton';
 import { CustomButton } from '../../components/CustomButton';
 
 import { globalStyles, colors, spacing, typography } from '../../styles/globalStyles';
-import { cliStyles } from './styles';
+import { cliStyles } from '../../styles/cliStyles';
 
 const getOficinaDetails = (id?: string | string[]) => {
   if (id === '1') {

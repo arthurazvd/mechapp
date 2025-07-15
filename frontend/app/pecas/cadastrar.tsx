@@ -1,58 +1,92 @@
-import React, { useState } from 'react';
-import { View, Text, Image, StatusBar, ScrollView, StyleSheet, Alert } from 'react-native';
-import { useRouter } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import React, { useState } from "react";
+import { View, Text, Image, StatusBar, StyleSheet, ScrollView, Alert } from "react-native";
+import { useRootNavigationState, useRouter } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { CustomInput } from '../../components/CustomInput';
-import { ExpandingTextArea } from '../../components/ExpandingTextArea';
-import { CustomButton } from '../../components/CustomButton';
-import { ImagePickerInput } from '../../components/ImagePickerInput';
-import { BackButton } from '../../components/BackButton';
-import { BottomNavigation } from '../../components/BottomNavigation';
+import { CustomInput } from "../../components/CustomInput";
+import { ExpandingTextArea } from "../../components/ExpandingTextArea";
+import { CustomButton } from "../../components/CustomButton";
+import { ImagePickerInput } from "../../components/ImagePickerInput";
+import { BackButton } from "../../components/BackButton";
+import { BottomNavigation } from "../../components/BottomNavigation";
 
-import { globalStyles, colors, spacing } from '../../styles/globalStyles';
-import { pecStyles } from './styles';
-import { formatarPreco } from '../../utils/formatters';
+import { globalStyles, colors, spacing } from "../../styles/globalStyles";
+import { pecStyles } from "../../styles/pecStyles";
+import { formatarPreco } from "../../utils/formatters";
+
+// API
+import { peca } from "../../api";
 
 const CadastrarPecaScreen = () => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
-  const [nome, setNome] = useState('');
-  const [descricao, setDescricao] = useState('');
-  const [quantidade, setQuantidade] = useState('');
-  const [fabricante, setFabricante] = useState('');
-  const [preco, setPreco] = useState('');
+  const [nome, setNome] = useState("");
+  const [descricao, setDescricao] = useState("");
+  const [quantidade, setQuantidade] = useState(0);
+  const [preco, setPreco] = useState(0);
+  const [precoFormatado, setPrecoFormatado] = useState("");
   const [imagem, setImagem] = useState<string | null>(null);
 
   const handlePrecoChange = (text: string) => {
-    const precoFormatado = formatarPreco(text);
-    setPreco(precoFormatado);
+    const { precoFormatado, precoReal } = formatarPreco(text);
+    setPrecoFormatado(precoFormatado);
+    setPreco(precoReal);
+  };
+
+  const handleQuantidadeChange = (text: string) => {
+    setQuantidade(Number(text));
+  };
+
+  const handleCadastroPeca = async () => {
+    if (!nome || !descricao || !quantidade || !preco) {
+      alert("Preencha todos os campos.");
+      return;
+    }
+
+    const data = await peca.criar_peca({
+      nome,
+      descricao,
+      quantidade,
+      preco,
+      imagem,
+    });
+
+    if (data.error) {
+      alert(data.mensagem);
+      return;
+    }
+
+    return router.replace("/agendamento/historico");
   };
 
   const handleCadastrarPeca = () => {
-    if (!nome || !descricao || !quantidade || !fabricante || !preco) {
+    if (!nome || !descricao || !quantidade || !preco) {
       Alert.alert("Erro", "Todos os campos são obrigatórios, exceto a imagem.");
       return;
     }
-    console.log("Cadastrando Peça:", { nome, descricao, quantidade, fabricante, preco, imagem });
+    console.log("Cadastrando Peça:", { nome, descricao, quantidade, preco, imagem });
     Alert.alert("Sucesso", "Peça cadastrada!");
     router.back();
   };
 
   return (
     <>
-      <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
-      <View style={[globalStyles.container, { paddingTop: insets.top, paddingBottom: insets.bottom, justifyContent: 'space-between' }]}>
-        <View style={{ flex: 1 }}>
-          <View style={globalStyles.crudTop}>
-            <BackButton color={colors.white} />
-            <Image
-              source={require('../../assets/logo-nome.png')}
-              style={styles.logoNome}
-              resizeMode="contain"
-            />
-          </View>
+      <StatusBar backgroundColor="#A10000" barStyle="light-content" />
+      <View
+        style={[
+          globalStyles.container,
+          { paddingTop: insets.top, paddingBottom: insets.bottom },
+        ]}
+      >
+        <View style={globalStyles.crudTop}>
+          <BackButton />
+          <Image
+            source={require("../../assets/logo-nome.png")}
+            style={{ width: 100, height: 190 }}
+            resizeMode="contain"
+          />
+        </View>
 
           <ScrollView
             style={globalStyles.crudBottom}
@@ -61,75 +95,72 @@ const CadastrarPecaScreen = () => {
           >
             <Text style={[globalStyles.title, styles.pageTitle]}>Cadastrar Nova Peça</Text>
 
-            <View style={styles.formContainer}>
+            <CustomInput
+              label="Nome"
+              value={nome}
+              onChangeText={setNome}
+              placeholder="Digite o nome da peça"
+              placeholderTextColor="#868686"
+              contentStyle={{ width: "80%", maxWidth: 400 }}
+            />
+
+            <ExpandingTextArea
+              label="Descrição"
+              value={descricao}
+              onChangeText={setDescricao}
+              placeholder="Digite a descrição da peça..."
+              placeholderTextColor="#868686"
+              containerStyle={{ alignItems: "center" }}
+              inputStyle={{ maxWidth: 400, width: "100%" }}
+            />
+
+            <View style={pecStyles.precoInput}>
               <CustomInput
-                label="Nome da Peça"
-                placeholder="Ex: Filtro de Ar Motor"
-                value={nome}
-                onChangeText={setNome}
-                style={styles.inputField}
+                label="Quantidade"
+                value={String(quantidade)}
+                onChangeText={handleQuantidadeChange}
+                placeholder="0"
+                placeholderTextColor="#868686"
+                keyboardType="numeric"
+                onlyNumbers={true}
+                contentStyle={{ width: "100%", maxWidth: 200 }}
+                style={{ width: "49%" }}
               />
-
-              <ExpandingTextArea
-                label="Descrição Detalhada"
-                value={descricao}
-                onChangeText={setDescricao}
-                placeholder="Inclua detalhes como aplicação, material, etc."
-                containerStyle={styles.inputField}
-                minHeight={80}
-              />
-
               <CustomInput
-                label="Fabricante / Marca"
-                placeholder="Ex: Bosch, Fram, etc."
-                value={fabricante}
-                onChangeText={setFabricante}
-                style={styles.inputField}
-              />
-
-              <View style={[pecStyles.precoInput, styles.inputRowContainer]}>
-                <CustomInput
-                  label="Quantidade"
-                  placeholder="0"
-                  keyboardType="numeric"
-                  onChangeText={setQuantidade}
-                  value={quantidade}
-                  style={styles.inputInRow}
-                />
-                <CustomInput
-                  label="Preço Unitário"
-                  placeholder="R$ 0,00"
-                  keyboardType="numeric"
-                  onChangeText={handlePrecoChange}
-                  value={preco}
-                  style={styles.inputInRow}
-                />
-              </View>
-
-              <ImagePickerInput
-                imagem={imagem}
-                setImagem={setImagem}
-                containerStyle={styles.inputField}
-                buttonStyle={styles.imagePickerButton}
+                label="Preço"
+                value={precoFormatado}
+                onChangeText={handlePrecoChange}
+                placeholder="R$ 0,00"
+                placeholderTextColor="#868686"
+                keyboardType="numeric"
+                contentStyle={{ width: "100%", maxWidth: 200 }}
+                style={{ width: "49%" }}
               />
             </View>
-            <View style={[pecStyles.crudButtons, styles.actionButtonsContainer]}>
+
+            <ImagePickerInput imagem={imagem} setImagem={setImagem} />
+
+            <View style={pecStyles.crudButtons}>
               <CustomButton
-                style={[styles.actionButton, styles.cancelButton]}
-                textStyle={styles.cancelButtonText}
+                style={{
+                  width: "39%",
+                  maxWidth: 193,
+                  height: 50,
+                  backgroundColor: "#868686",
+                }}
                 title="Cancelar"
                 onPress={() => router.back()}
               />
               <CustomButton
-                style={styles.actionButton}
-                title="Cadastrar Peça"
-                onPress={handleCadastrarPeca}
+                style={{ width: "39%", maxWidth: 193, height: 50 }}
+                title="Cadastrar"
+                onPress={handleCadastroPeca}
               />
             </View>
           </ScrollView>
         </View>
         <BottomNavigation />
-      </View>
+
     </>
   );
 };

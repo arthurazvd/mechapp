@@ -10,8 +10,8 @@ import { ImagePickerInput } from '../../components/ImagePickerInput';
 import { BackButton } from '../../components/BackButton';
 import { BottomNavigation } from '../../components/BottomNavigation';
 
-import { globalStyles, colors, spacing } from '../../styles/globalStyles';
-import { pecStyles } from './styles';
+import { globalStyles } from '../../styles/globalStyles';
+import { pecStyles } from '../../styles/pecStyles';
 import { formatarPreco } from '../../utils/formatters';
 
 const getPecaDetails = (pecaId?: string | string[]) => {
@@ -33,186 +33,143 @@ const EditarPecaScreen = () => {
     const { pecaId } = useLocalSearchParams();
     const insets = useSafeAreaInsets();
 
-    const [nome, setNome] = useState('');
-    const [descricao, setDescricao] = useState('');
-    const [quantidade, setQuantidade] = useState('');
-    const [fabricante, setFabricante] = useState('');
-    const [preco, setPreco] = useState('');
+    // Estados
+    const [nome, setNome] = useState('Pneu');
+    const [descricao, setDescricao] = useState('Componente essencial para a segurança e desempenho do veículo...');
+    const [quantidade, setQuantidade] = useState('16');
+    const [fabricante, setFabricante] = useState('Michelin');
+    const [precoFormatado, setPrecoFormatado] = useState('R$ 500,00');
+    const [precoReal, setPrecoReal] = useState(500);
     const [imagem, setImagem] = useState<string | null>(null);
     const [imagemOriginal, setImagemOriginal] = useState<any>(null);
 
-    useEffect(() => {
-        const peca = getPecaDetails(pecaId);
-        if (peca) {
-            setNome(peca.nome);
-            setDescricao(peca.descricao);
-            setQuantidade(peca.quantidade);
-            setFabricante(peca.fabricante);
-            setPreco(peca.preco);
-            setImagemOriginal(peca.imagem);
-        } else {
-            Alert.alert("Erro", "Peça não encontrada.", [{ text: "OK", onPress: () => router.back() }]);
-        }
-    }, [pecaId]);
-
+    // Busca dados da peça
+useEffect(() => {
+    const peca = getPecaDetails(pecaId);
+    if (peca) {
+        setNome(peca.nome);
+        setDescricao(peca.descricao);
+        setQuantidade(peca.quantidade);
+        setFabricante(peca.fabricante);
+        
+        // Se a API retornar apenas 'preco', converta para os dois formatos
+        const { precoFormatado, precoReal } = formatarPreco(peca.preco);
+        setPrecoFormatado(precoFormatado);
+        setPrecoReal(precoReal);
+        
+        setImagemOriginal(peca.imagem);
+    } else {
+        Alert.alert("Erro", "Peça não encontrada.", [
+            { text: "OK", onPress: () => router.back() }
+        ]);
+    }
+}, [pecaId]);
+    // Formatação do preço
     const handlePrecoChange = (text: string) => {
-      const precoFormatado = formatarPreco(text);
-      setPreco(precoFormatado);
+        const { precoFormatado, precoReal } = formatarPreco(text);
+        setPrecoFormatado(precoFormatado);
+        setPrecoReal(precoReal);
     };
 
-    const handleSalvarPeca = () => {
-        if (!nome || !descricao || !quantidade || !fabricante || !preco) {
-          Alert.alert("Erro", "Todos os campos são obrigatórios.");
-          return;
+    // Salvar alterações
+    const handleSalvar = () => {
+        if (!nome || !descricao || !quantidade || !fabricante) {
+            Alert.alert("Atenção", "Preencha todos os campos obrigatórios");
+            return;
         }
-        console.log("Salvando Peça:", { pecaId, nome, descricao, quantidade, fabricante, preco, novaImagem: imagem });
-        Alert.alert("Sucesso", "Peça atualizada!");
+
+        console.log("Dados salvos:", {
+            nome,
+            descricao,
+            quantidade: Number(quantidade),
+            fabricante,
+            preco: precoReal,
+            imagemUrl: imagem || imagemOriginal
+        });
+
         router.back();
     };
 
-    const handleDeletarPeca = () => {
-        Alert.alert(
-            "Confirmar Exclusão",
-            `Tem certeza que deseja deletar a peça "${nome}"? Esta ação não pode ser desfeita.`,
-            [
-                { text: "Cancelar", style: "cancel" },
-                { text: "Deletar", style: "destructive", onPress: () => {
-                    console.log("Deletando Peça:", pecaId);
-                    Alert.alert("Sucesso", "Peça deletada!");
-                    router.replace('/pecas/visualizar');
-                }}
-            ]
-        );
-    };
+    return (
+      <>
+          <StatusBar backgroundColor="#A10000" barStyle="light-content" />
+          <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
+              <View style={globalStyles.crudTop}>
+                  <BackButton />
+                  <Image 
+                      source={require('../../assets/logo-nome.png')} 
+                      style={{ width: 100, height: 190 }}
+                      resizeMode="contain"
+                  />
+              </View>
+                  
+              <View style={globalStyles.crudBottom}>
+                  <Text style={globalStyles.title}>Editar Peça</Text>
+                  <CustomInput
+                      label="Nome"
+                      value={nome}
+                      placeholder="Digite o nome da peça"
+                      onChangeText={setNome}
+                      contentStyle={{ width: '80%', maxWidth: 400 }}
+                  />
+                  <ExpandingTextArea
+                      label="Descrição"
+                      value={descricao}
+                      onChangeText={setDescricao}
+                      placeholder="Digite a descrição da peça..."
+                      containerStyle={{ alignItems: 'center' }}
+                      inputStyle={{ maxWidth: 400, width: '100%' }}
+                  />
 
-  return (
-    <>
-        <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
-        <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom, justifyContent: 'space-between'}]}>
-            <View style={{flex:1}}>
-                <View style={globalStyles.crudTop}>
-                <BackButton color={colors.white}/>
-                <Image source={require('../../assets/logo-nome.png')} style={styles.logoNome} resizeMode="contain"/>
-                </View>
+                  <CustomInput
+                      label="Fabricante"
+                      placeholder="Digite o fabricante"
+                      value={fabricante}
+                      onChangeText={setFabricante}
+                      contentStyle={{ width: '80%', maxWidth: 400 }}
+                  />
+                  <View style={pecStyles.precoInput}>
+                      <CustomInput
+                          label="Quantidade"
+                          placeholder="0"
+                          keyboardType='numeric'
+                          onlyNumbers={true}
+                          onChangeText={setQuantidade}
+                          value={quantidade}
+                          contentStyle={{width: '100%', maxWidth: 200 }}
+                          style={{ width: '49%' }}
+                      />
+                      <CustomInput
+                          label="Preço"
+                          placeholder="R$ 0,00"
+                          keyboardType='numeric'
+                          onChangeText={handlePrecoChange}
+                          value={precoFormatado}
+                          contentStyle={{ width: '100%', maxWidth: 200 }}
+                          style={{ width: '49%' }}
+                      />
+                  </View>
+                  <ImagePickerInput imagem={imagem} setImagem={setImagem} />
 
-                <ScrollView
-                    style={globalStyles.crudBottom}
-                    contentContainerStyle={styles.scrollContentContainer}
-                    keyboardShouldPersistTaps="handled"
-                >
-                    <Text style={[globalStyles.title, styles.pageTitle]}>Editar Peça</Text>
-                    <View style={styles.formContainer}>
-                        <CustomInput
-                            label="Nome da Peça"
-                            value={nome}
-                            onChangeText={setNome}
-                            style={styles.inputField}
-                        />
-                        <ExpandingTextArea
-                            label="Descrição Detalhada"
-                            value={descricao}
-                            onChangeText={setDescricao}
-                            containerStyle={styles.inputField}
-                            minHeight={80}
-                        />
-                        <CustomInput
-                            label="Fabricante / Marca"
-                            value={fabricante}
-                            onChangeText={setFabricante}
-                            style={styles.inputField}
-                        />
-                        <View style={[pecStyles.precoInput, styles.inputRowContainer]}>
-                            <CustomInput
-                                label="Quantidade"
-                                keyboardType='numeric'
-                                onChangeText={setQuantidade}
-                                value={quantidade}
-                                style={styles.inputInRow}
-                            />
-                            <CustomInput
-                                label="Preço Unitário"
-                                keyboardType='numeric'
-                                onChangeText={handlePrecoChange}
-                                value={preco}
-                                style={styles.inputInRow}
-                            />
-                        </View>
-                        <ImagePickerInput
-                            imagem={imagem || imagemOriginal}
-                            setImagem={setImagem}
-                            containerStyle={styles.inputField}
-                            buttonStyle={styles.imagePickerButton}
-                        />
-                    </View>
-
-                    <View style={[pecStyles.crudButtons, styles.actionButtonsContainer]}>
-                        <CustomButton
-                            style={[styles.actionButton, styles.deleteButton]}
-                            textStyle={styles.deleteButtonText}
-                            title="Deletar"
-                            onPress={handleDeletarPeca} />
-                        <CustomButton
-                            style={styles.actionButton}
-                            title="Salvar"
-                            onPress={handleSalvarPeca} />
-                    </View>
-                </ScrollView>
-            </View>
-            <BottomNavigation />
-        </View>
-    </>
-  );
+                  <View style={pecStyles.crudButtons}>
+                      <CustomButton 
+                          style={{width: '25%', maxWidth: 127, height: 50, backgroundColor: '#868686'}} 
+                          title="Cancelar" 
+                          onPress={() => router.back()} />                
+                      <CustomButton 
+                          style={{width: '25%', maxWidth: 127, height: 50, backgroundColor: '#868686'}} 
+                          title="Deletar" 
+                          onPress={() => router.back()} />
+                      <CustomButton 
+                          style={{width: '25%', maxWidth: 127, height: 50}} 
+                          title="Salvar" 
+                          onPress={handleSalvar} />
+                  </View>
+              </View>
+              <BottomNavigation />
+          </View>
+      </>
+    );
 };
-
-const styles = StyleSheet.create({
-    logoNome: {
-        width: 100,
-        height: 60,
-    },
-    scrollContentContainer: {
-        paddingBottom: spacing.large,
-        alignItems: 'center',
-    },
-    pageTitle: {
-        marginBottom: spacing.large,
-    },
-    formContainer: {
-        width: '90%',
-        maxWidth: 500,
-    },
-    inputField: {
-        marginBottom: spacing.medium,
-    },
-    inputRowContainer: {
-        width: '100%',
-        maxWidth: '100%',
-        paddingHorizontal: 0,
-    },
-    inputInRow: {
-        flex: 1,
-    },
-    imagePickerButton: {
-        backgroundColor: colors.inputBackground,
-        height: undefined,
-        paddingVertical: spacing.large,
-    },
-    actionButtonsContainer: {
-        width: '90%',
-        maxWidth: 500,
-        marginTop: spacing.large,
-        paddingHorizontal: 0,
-    },
-    actionButton: {
-        flex: 1,
-        height: 50,
-    },
-    deleteButton: {
-        backgroundColor: colors.error,
-        marginRight: spacing.small,
-    },
-    deleteButtonText: {
-        color: colors.white,
-    }
-});
 
 export default EditarPecaScreen;

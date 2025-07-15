@@ -16,8 +16,8 @@ import { useRouter } from 'expo-router';
 import { BottomNavigation } from '../../components/BottomNavigation';
 import { BackButton } from '../../components/BackButton';
 
-import { globalStyles, colors, spacing } from '../../styles/globalStyles'; 
-import { cliStyles } from './styles'; 
+import { globalStyles, colors, spacing } from '../../styles/globalStyles';
+import { cliStyles } from '../../styles/cliStyles';
 
 const oficinasMock = [
   {

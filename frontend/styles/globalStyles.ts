@@ -2,21 +2,21 @@ import { StyleSheet } from 'react-native';
 
 export const colors = {
   primary: '#A10000',
-  secondary: '#007BFF', // Example, adjust as needed
+  secondary: '#007BFF',
   background: '#151515',
   surface: '#1e1e1e',
   inputBackground: '#242424',
   textPrimary: '#FFFFFF',
   textSecondary: '#E0E0E0',
-  textHint: '#868686', // Used for placeholders and secondary info
+  textHint: '#868686',
   textLabel: '#888888',
-  error: '#D00000', // Consistent with AgendamentoCard cancelado
-  success: '#00A100', // Consistent with AgendamentoCard confirmado
-  warning: '#FFA500', // Consistent with AgendamentoCard pendente
-  black_transparent: '#000000aa', // For modal overlay
+  error: '#D00000', 
+  success: '#00A100',
+  warning: '#FFA500', 
+  black_transparent: '#000000aa', 
   white: '#FFFFFF',
   black: '#000000',
-  gold: '#FFD700', // Used in cliStyles for rating
+  gold: '#FFD700', 
 };
 
 export const spacing = {
@@ -60,7 +60,7 @@ export const globalStyles = StyleSheet.create({
   text: {
     fontSize: typography.fontSizeText,
     textAlign: 'center',
-    color: colors.textHint, // Changed from #868686
+    color: colors.textHint, 
   },
 
   initialTop: {
@@ -68,7 +68,7 @@ export const globalStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: colors.primary,
-    height: 100, // This might need to be dynamic or a fixed large value
+    height: 100, 
     borderBottomLeftRadius: 80,
   },
 
@@ -76,50 +76,49 @@ export const globalStyles = StyleSheet.create({
     flex: 1.5,
     justifyContent: 'center',
     alignItems: 'center',
-    rowGap: spacing.small, // Changed from 10
+    rowGap: spacing.small, 
   },
 
   crudTop: {
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: colors.primary,
-    height: '7%', // Consider using a fixed DP value or flex for more predictability
+    height: '7%', 
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
   },
 
   crudBottom: {
-    height: '83%', // Consider implications of percentage heights
+    height: '83%',
   },
 
   label: {
     fontSize: typography.fontSizeLabel,
-    marginBottom: spacing.small / 2, // Changed from 6
-    color: colors.textLabel, // Changed from #888
+    marginBottom: spacing.small / 2,
+    color: colors.textLabel, 
     textAlign: 'left',
   },
 
   title2: {
     fontSize: typography.fontSizeTitle2,
     textAlign: 'center',
-    marginBottom: spacing.medium, // Changed from 20
-    color: colors.textLabel, // Changed from #888
+    marginBottom: spacing.medium, 
+    color: colors.textLabel, 
   },
 
   homeButtons: {
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    rowGap: spacing.small, // Changed from 10
+    rowGap: spacing.small, 
   },
 
   telaServicos: {
     width: '100%',
-    paddingTop: spacing.large, // Changed from 30
+    paddingTop: spacing.large, 
     height: '83%',
   },
 
-  // Modal Styles
   modalOverlay: {
     flex: 1,
     backgroundColor: colors.black_transparent,
@@ -129,9 +128,9 @@ export const globalStyles = StyleSheet.create({
 
   modalContent: {
     position: 'relative',
-    backgroundColor: colors.surface, // Changed from #1e1e1e
-    padding: spacing.large,         // Changed from 25
-    borderRadius: spacing.medium,   // Changed from 16
+    backgroundColor: colors.surface, 
+    padding: spacing.large,         
+    borderRadius: spacing.medium,  
     width: '80%',
     alignItems: 'center',
     elevation: 10,
@@ -142,29 +141,29 @@ export const globalStyles = StyleSheet.create({
   },
 
   modalTitle: {
-    color: colors.textPrimary, // Changed from #fff
-    fontSize: spacing.medium,    // Changed from 16
+    color: colors.textPrimary,
+    fontSize: spacing.medium,    
     fontWeight: typography.fontWeightBold,
-    marginBottom: spacing.medium, // Changed from 20
+    marginBottom: spacing.medium, 
     textAlign: 'center',
   },
 
   modalButton: {
-    backgroundColor: colors.primary, // Changed from #A10000
-    paddingVertical: spacing.small + spacing.small / 2, // Changed from 12
-    paddingHorizontal: spacing.large, // Changed from 24
-    borderRadius: spacing.small,      // Changed from 8
-    marginTop: spacing.medium,        // Changed from 20
+    backgroundColor: colors.primary, 
+    paddingVertical: spacing.small + spacing.small / 2, 
+    paddingHorizontal: spacing.large, 
+    borderRadius: spacing.small,      
+    marginTop: spacing.medium,       
     alignItems: 'center',
   },
 
   modalButtonText: {
-    color: colors.textPrimary, // Changed from #fff
+    color: colors.textPrimary, 
     fontWeight: typography.fontWeightBold,
-    fontSize: typography.fontSizeText, // Changed from 15
+    fontSize: typography.fontSizeText,
   },
 
-  closeButton: { // For modals
+  closeButton: { 
     position: 'absolute',
     top: spacing.small,
     right: spacing.small,
@@ -172,9 +171,9 @@ export const globalStyles = StyleSheet.create({
     zIndex: 1,
   },
 
-  closeButtonText: { // For modals
-    fontSize: 18, // This can be a typography constant if used elsewhere
+  closeButtonText: { 
+    fontSize: 18,
     fontWeight: typography.fontWeightBold,
-    color: colors.error, // Changed from #ff0000 to a theme color
+    color: colors.error, 
   },
 });

@@ -6,12 +6,17 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { CustomButton } from '../../components/CustomButton';
 import { BackButton } from '../../components/BackButton';
 
-import { globalStyles, colors, spacing } from '../../styles/globalStyles';
-import { cadStyles } from './styles';
+import { globalStyles } from '../../styles/globalStyles';
+import { cadStyles } from '../../styles/cadStyles';
 
 export default function EscolherTipoCadastroScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+
+  enum TipoUsuarioEnum {
+    CLIENTE = 'CLIENTE',
+    MECANICO = 'MECANICO',
+  }
 
   return (
     <>
@@ -24,14 +29,24 @@ export default function EscolherTipoCadastroScreen() {
         <View style={[globalStyles.initialBottom, styles.contentContainer]}>
           <Text style={[globalStyles.title2, styles.subtitle]}>O que você é?</Text>
           <CustomButton
-            title="Sou Cliente"
-            style={styles.choiceButton}
-            onPress={() => router.push('/cadastro')}
+            title="Cliente"
+            style={{ height: 50, width: "90%", maxWidth: 400, marginBottom: 5 }}
+            onPress={() => router.push({
+              pathname: '/cadastro', 
+              params: { 
+                tipo: TipoUsuarioEnum.CLIENTE as string,
+              },
+            })}
           />
           <CustomButton
-            title="Sou Mecânico / Oficina"
-            style={styles.choiceButton}
-            onPress={() => router.push('/cadastro/oficina')}
+            title="Mecânico"
+            style={{ height: 50, width: "90%", maxWidth: 400, marginBottom: 5 }}
+            onPress={() => router.push({
+              pathname: '/cadastro', 
+              params: { 
+                tipo: TipoUsuarioEnum.MECANICO as string,
+              },
+            })}
           />
         </View>
       </View>
