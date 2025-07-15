@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { CustomButton } from '../../components/CustomButton';
 import { BackButton } from '../../components/BackButton';
 
-import { globalStyles } from '../../styles/globalStyles';
+import { globalStyles,colors,spacing } from '../../styles/globalStyles';
 import { cadStyles } from '../../styles/cadStyles';
 
 export default function EscolherTipoCadastroScreen() {

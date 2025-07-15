@@ -12,7 +12,7 @@ import { BackButton } from '../../components/BackButton';
 import { BottomNavigation } from '../../components/BottomNavigation';
 
 import { globalStyles, colors, spacing } from '../../styles/globalStyles'; 
-import { servStyles } from './styles'; 
+import { servStyles } from '../../styles/servStyles'; 
 import { formatarPreco } from '../../utils/formatters';
 
 
@@ -30,13 +30,13 @@ const CadastrarServicoScreen = () => {
 
 
     const handlePrecoMinChange = (text: string) => {
-      const precoFormatado = formatarPreco(text);
-      setPrecoMin(precoFormatado);
+    const { precoFormatado } = formatarPreco(text);
+    setPrecoMin(precoFormatado);
     };
 
     const handlePrecoMaxChange = (text: string) => {
-      const precoFormatado = formatarPreco(text);
-      setPrecoMax(precoFormatado);
+    const { precoFormatado } = formatarPreco(text);
+    setPrecoMax(precoFormatado);
     };
 
     const handleCadastrar = () => {

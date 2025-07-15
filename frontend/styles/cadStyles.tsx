@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { colors, spacing, typography } from '../../styles/globalStyles';
+import { colors, spacing, typography } from './globalStyles';
 
 export const cadStyles = StyleSheet.create({
   initialTop: { 

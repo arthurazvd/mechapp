@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { colors, globalStyles, spacing, typography } from '../../styles/globalStyles';
+import { colors, globalStyles, spacing, typography } from './globalStyles';
 
 export const cliStyles = StyleSheet.create({
   searchContainer: {
@@ -175,4 +175,29 @@ export const cliStyles = StyleSheet.create({
   infoTextBox: {
     flex: 1,
   },
+    cardDetails: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 8,
+  },
+  
+  detailText: {
+    fontSize: 14,
+    color: '#555',
+  },
+  
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  
+  emptyText: {
+    marginTop: 16,
+    fontSize: 16,
+    color: '#888',
+    textAlign: 'center',
+  },
 });
+

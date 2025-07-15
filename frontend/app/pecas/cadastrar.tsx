@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { View, Text, Image, StatusBar, StyleSheet, ScrollView, Alert } from "react-native";
-import { useRootNavigationState, useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
+import * as FileSystem from "expo-file-system";
 
 import { CustomInput } from "../../components/CustomInput";
 import { ExpandingTextArea } from "../../components/ExpandingTextArea";
@@ -38,47 +39,49 @@ const CadastrarPecaScreen = () => {
     setQuantidade(Number(text));
   };
 
-  const handleCadastroPeca = async () => {
-    if (!nome || !descricao || !quantidade || !preco) {
-      alert("Preencha todos os campos.");
-      return;
-    }
-
-    const data = await peca.criar_peca({
-      nome,
-      descricao,
-      quantidade,
-      preco,
-      imagem,
+  const pegarImagemComoBytes = async (uri: string | null): Promise<string | null> => {
+    if (!uri) return null;
+    const base64 = await FileSystem.readAsStringAsync(uri, {
+      encoding: FileSystem.EncodingType.Base64,
     });
-
-    if (data.error) {
-      alert(data.mensagem);
-      return;
-    }
-
-    return router.replace("/agendamento/historico");
+    return base64;
   };
 
-  const handleCadastrarPeca = () => {
+  const handleCadastroPeca = async () => {
     if (!nome || !descricao || !quantidade || !preco) {
       Alert.alert("Erro", "Todos os campos são obrigatórios, exceto a imagem.");
       return;
     }
-    console.log("Cadastrando Peça:", { nome, descricao, quantidade, preco, imagem });
-    Alert.alert("Sucesso", "Peça cadastrada!");
-    router.back();
+
+    try {
+      const imagemBytes = await pegarImagemComoBytes(imagem);
+
+      const data = await peca.criar_peca({
+        nome,
+        descricao,
+        quantidade,
+        preco,
+        imagem: imagemBytes,
+      });
+
+      if (data.error) {
+        Alert.alert("Erro", data.mensagem || "Erro ao cadastrar peça.");
+        return;
+      }
+
+      Alert.alert("Sucesso", "Peça cadastrada com sucesso!");
+      router.replace("/agendamento/historico");
+
+    } catch (error) {
+      console.error("Erro ao cadastrar peça:", error);
+      Alert.alert("Erro", "Erro inesperado ao cadastrar a peça.");
+    }
   };
 
   return (
     <>
       <StatusBar backgroundColor="#A10000" barStyle="light-content" />
-      <View
-        style={[
-          globalStyles.container,
-          { paddingTop: insets.top, paddingBottom: insets.bottom },
-        ]}
-      >
+      <View style={[globalStyles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
         <View style={globalStyles.crudTop}>
           <BackButton />
           <Image
@@ -88,132 +91,85 @@ const CadastrarPecaScreen = () => {
           />
         </View>
 
-          <ScrollView
-            style={globalStyles.crudBottom}
-            contentContainerStyle={styles.scrollContentContainer}
-            keyboardShouldPersistTaps="handled"
-          >
-            <Text style={[globalStyles.title, styles.pageTitle]}>Cadastrar Nova Peça</Text>
+        <ScrollView
+          style={globalStyles.crudBottom}
+          contentContainerStyle={styles.scrollContentContainer}
+          keyboardShouldPersistTaps="handled"
+        >
+          <Text style={[globalStyles.title, styles.pageTitle]}>Cadastrar Nova Peça</Text>
 
+          <CustomInput
+            label="Nome"
+            value={nome}
+            onChangeText={setNome}
+            placeholder="Digite o nome da peça"
+            placeholderTextColor="#868686"
+            contentStyle={{ width: "80%", maxWidth: 400 }}
+          />
+
+          <ExpandingTextArea
+            label="Descrição"
+            value={descricao}
+            onChangeText={setDescricao}
+            placeholder="Digite a descrição da peça..."
+            placeholderTextColor="#868686"
+            containerStyle={{ alignItems: "center" }}
+            inputStyle={{ maxWidth: 400, width: "100%" }}
+          />
+
+          <View style={pecStyles.precoInput}>
             <CustomInput
-              label="Nome"
-              value={nome}
-              onChangeText={setNome}
-              placeholder="Digite o nome da peça"
+              label="Quantidade"
+              value={String(quantidade)}
+              onChangeText={handleQuantidadeChange}
+              placeholder="0"
               placeholderTextColor="#868686"
-              contentStyle={{ width: "80%", maxWidth: 400 }}
+              keyboardType="numeric"
+              onlyNumbers={true}
+              contentStyle={{ width: "100%", maxWidth: 200 }}
+              style={{ width: "49%" }}
             />
-
-            <ExpandingTextArea
-              label="Descrição"
-              value={descricao}
-              onChangeText={setDescricao}
-              placeholder="Digite a descrição da peça..."
+            <CustomInput
+              label="Preço"
+              value={precoFormatado}
+              onChangeText={handlePrecoChange}
+              placeholder="R$ 0,00"
               placeholderTextColor="#868686"
-              containerStyle={{ alignItems: "center" }}
-              inputStyle={{ maxWidth: 400, width: "100%" }}
+              keyboardType="numeric"
+              contentStyle={{ width: "100%", maxWidth: 200 }}
+              style={{ width: "49%" }}
             />
+          </View>
 
-            <View style={pecStyles.precoInput}>
-              <CustomInput
-                label="Quantidade"
-                value={String(quantidade)}
-                onChangeText={handleQuantidadeChange}
-                placeholder="0"
-                placeholderTextColor="#868686"
-                keyboardType="numeric"
-                onlyNumbers={true}
-                contentStyle={{ width: "100%", maxWidth: 200 }}
-                style={{ width: "49%" }}
-              />
-              <CustomInput
-                label="Preço"
-                value={precoFormatado}
-                onChangeText={handlePrecoChange}
-                placeholder="R$ 0,00"
-                placeholderTextColor="#868686"
-                keyboardType="numeric"
-                contentStyle={{ width: "100%", maxWidth: 200 }}
-                style={{ width: "49%" }}
-              />
-            </View>
+          <ImagePickerInput imagem={imagem} setImagem={setImagem} />
 
-            <ImagePickerInput imagem={imagem} setImagem={setImagem} />
-
-            <View style={pecStyles.crudButtons}>
-              <CustomButton
-                style={{
-                  width: "39%",
-                  maxWidth: 193,
-                  height: 50,
-                  backgroundColor: "#868686",
-                }}
-                title="Cancelar"
-                onPress={() => router.back()}
-              />
-              <CustomButton
-                style={{ width: "39%", maxWidth: 193, height: 50 }}
-                title="Cadastrar"
-                onPress={handleCadastroPeca}
-              />
-            </View>
-          </ScrollView>
-        </View>
-        <BottomNavigation />
-
+          <View style={pecStyles.crudButtons}>
+            <CustomButton
+              style={{ width: "39%", maxWidth: 193, height: 50, backgroundColor: "#868686" }}
+              title="Cancelar"
+              onPress={() => router.back()}
+            />
+            <CustomButton
+              style={{ width: "39%", maxWidth: 193, height: 50 }}
+              title="Cadastrar"
+              onPress={handleCadastroPeca}
+            />
+          </View>
+        </ScrollView>
+      </View>
+      <BottomNavigation />
     </>
   );
 };
 
 const styles = StyleSheet.create({
-  logoNome: {
-    width: 100,
-    height: 60,
-  },
   scrollContentContainer: {
     paddingBottom: spacing.large,
-    alignItems: 'center',
+    alignItems: "center",
   },
   pageTitle: {
     marginBottom: spacing.large,
   },
-  formContainer: {
-    width: '90%',
-    maxWidth: 500,
-  },
-  inputField: {
-    marginBottom: spacing.medium,
-  },
-  inputRowContainer: {
-    width: '100%',
-    maxWidth: '100%',
-    paddingHorizontal: 0,
-  },
-  inputInRow: {
-    flex: 1,
-  },
-  imagePickerButton: {
-    backgroundColor: colors.inputBackground,
-    height: undefined,
-    paddingVertical: spacing.large,
-  },
-  actionButtonsContainer: {
-    width: '90%',
-    maxWidth: 500,
-    marginTop: spacing.large,
-    paddingHorizontal: 0,
-  },
-  actionButton: {
-    flex: 1,
-    height: 50,
-  },
-  cancelButton: {
-    backgroundColor: colors.surface,
-    marginRight: spacing.small,
-  },
-  cancelButtonText: {
-    color: colors.textSecondary,
-  }
 });
 
 export default CadastrarPecaScreen;

@@ -16,8 +16,8 @@ const TelaMecanico = () => {
   const insets = useSafeAreaInsets();
 
   const buttons = [
-    { title: 'Serviços', icon: 'tools', onPress: () => router.push('mecanico/servicos'), height: 130 },
-    { title: 'Peças', icon: 'cog-box', onPress: () => router.push('mecanico/pecas'), height: 130 },
+    { title: 'Serviços', icon: 'tools', onPress: () => router.push('mecanico/servico'), height: 130 },
+    { title: 'Peças', icon: 'cog-box', onPress: () => router.push('mecanico/peca'), height: 130 },
     { title: 'Agendamentos', icon: 'calendar-check', onPress: () => router.push('agendamento'), height: 130 },
     { title: 'Histórico', icon: 'history', onPress: () => router.push('agendamento/historico'), height: 130 },
   ] as const;
