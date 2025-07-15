@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,41 +7,41 @@ import {
   FlatList,
   StatusBar,
   Image,
-} from 'react-native';
-import { Feather } from '@expo/vector-icons';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+} from "react-native";
+import { Feather } from "@expo/vector-icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { BottomNavigation } from '../../components/BottomNavigation';
-import { BackButton } from '../../components/BackButton';
-import { globalStyles } from '../../styles/globalStyles';
-import { cliStyles } from '../../styles/cliStyles';
-import { useRouter } from 'expo-router';
+import { BottomNavigation } from "../../components/BottomNavigation";
+import { BackButton } from "../../components/BackButton";
+import { globalStyles } from "../../styles/globalStyles";
+import { cliStyles } from "../../styles/cliStyles";
+import { useRouter } from "expo-router";
 
-const pecasMock = [
-  {
-    id: '1',
-    nome: 'Filtro de óleo',
-    descricao: 'Compatível com motores 1.0 a 2.0.',
-  },
-  {
-    id: '2',
-    nome: 'Pastilha de freio',
-    descricao: 'Conjunto dianteiro para veículos compactos.',
-  },
-  {
-    id: '3',
-    nome: 'Correia dentada',
-    descricao: 'Recomendado trocar a cada 60.000km.',
-  },
-];
+// API
+import { peca } from "../../api";
 
 const ListaPecas = () => {
   const insets = useSafeAreaInsets();
   const router = useRouter();
 
-  const [busca, setBusca] = useState('');
+  const [pecas, setPecas] = useState([
+    {
+      id: "",
+      nome: "",
+      descricao: "",
+    },
+  ]);
+  const [busca, setBusca] = useState("");
 
-  const pecasFiltradas = pecasMock.filter((peca) =>
+  useEffect(() => {
+    const fetchPecas = async () => {
+      const data = await peca.listar_pecas();
+      setPecas(data);
+    };
+    fetchPecas();
+  }, []);
+
+  const pecasFiltradas = pecas.filter((peca) =>
     peca.nome.toLowerCase().includes(busca.toLowerCase())
   );
 
@@ -58,7 +58,7 @@ const ListaPecas = () => {
         <View style={globalStyles.crudTop}>
           <BackButton />
           <Image
-            source={require('../../assets/logo-nome.png')}
+            source={require("../../assets/logo-nome.png")}
             style={{ width: 100, height: 190 }}
             resizeMode="contain"
           />
@@ -74,7 +74,7 @@ const ListaPecas = () => {
           />
           <TouchableOpacity
             style={cliStyles.filterButton}
-            onPress={() => router.push('pecas/cadastrar')} 
+            onPress={() => router.push("pecas/cadastrar")}
           >
             <Feather name="plus" size={20} color="#fff" />
           </TouchableOpacity>
@@ -87,7 +87,7 @@ const ListaPecas = () => {
           renderItem={({ item }) => (
             <TouchableOpacity
               style={cliStyles.card}
-              onPress={() => router.push('pecas/visualizar')} 
+              onPress={() => router.push(`pecas/${item.id}`)}
             >
               <View style={cliStyles.placeholderImage}>
                 <Feather name="package" size={24} color="#888" />
@@ -95,7 +95,7 @@ const ListaPecas = () => {
 
               <TouchableOpacity
                 style={cliStyles.cardInfo}
-                onPress={() => router.push('pecas/visualizar')} 
+                onPress={() => router.push(`pecas/${item.id}`)}
               >
                 <Text style={cliStyles.cardTitle}>{item.nome}</Text>
                 <Text style={cliStyles.cardSubtitle}>{item.descricao}</Text>

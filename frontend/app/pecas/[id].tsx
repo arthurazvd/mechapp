@@ -9,7 +9,7 @@ import { BackButton } from "../../components/BackButton";
 import { BottomNavigation } from "../../components/BottomNavigation";
 
 import { globalStyles } from "../../styles/globalStyles";
-import { pecStyles } from "./styles";
+import { pecStyles } from "../../styles/pecStyles";
 
 // API
 import { peca } from "../../api";
@@ -86,7 +86,7 @@ const VisualizarPeca = () => {
           <CustomButton
             style={{ width: "80%", maxWidth: 400, height: 50, marginTop: 20 }}
             title="Editar"
-            onPress={() => router.push("/pecas/editar")}
+            onPress={() => router.push(`/pecas/editar/${id}`)}
           />
         </View>
         <BottomNavigation />

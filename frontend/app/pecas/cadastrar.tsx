@@ -53,8 +53,8 @@ const CadastrarPecas = () => {
       imagem,
     });
 
+    alert(data.mensagem);
     if (data.error) {
-      alert(data.mensagem);
       return;
     }
 
