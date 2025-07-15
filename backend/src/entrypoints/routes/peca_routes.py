@@ -27,7 +27,7 @@ class PecaUpdate(BaseModel):
 
 router = APIRouter(
     prefix="/peca",
-    tags=["Usuarios"],
+    tags=["Peças"],
 )
 
 @router.post("/criar")
@@ -80,17 +80,17 @@ def recuperando_peca(
 @router.patch("/{peca_id}")
 def atualizando_peca(
     peca_id: str,
-    novo_usuario: PecaUpdate,
+    nova_peca: PecaUpdate,
     uow: UnidadeDeTrabalho = Depends(get_uow),
 ):
     alterar_peca(
         uow=uow,
         peca_id=peca_id,
-        novo_nome=novo_usuario.nome,
-        nova_descricao=novo_usuario.descricao,
-        nova_quantidade=novo_usuario.quantidade,
-        novo_preco=novo_usuario.preco,
-        nova_imagem=novo_usuario.imagem,
+        novo_nome=nova_peca.nome,
+        nova_descricao=nova_peca.descricao,
+        nova_quantidade=nova_peca.quantidade,
+        novo_preco=nova_peca.preco,
+        nova_imagem=nova_peca.imagem,
     )
 
     return JSONResponse(
