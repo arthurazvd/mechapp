@@ -42,7 +42,7 @@ const TelaAgendamentosLista = () => {
                     servico={item.servico}
                     oficina={`${item.oficina} - ${item.data}`}
                     status={item.status as "pendente" | "confirmado" | "cancelado" | "concluido"}
-                    onPress={() => router.push({ pathname: 'agendamento/detalhes', params: { agendamentoId: item.id }})}
+                    onPress={() => router.push({ pathname: 'agendamento/confirmar', params: { agendamentoId: item.id }})}
                     />
                 )}
                 contentContainerStyle={styles.listContentContainer}

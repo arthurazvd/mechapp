@@ -17,7 +17,7 @@ const TelaMecanico = () => {
   const buttons = [
     { title: 'Serviços', icon: 'tools', onPress: () => router.push('mecanico/servico'), height: 100 },
     { title: 'Peças', icon: 'cog-box', onPress: () => router.push('mecanico/peca'), height: 100 },
-    { title: 'Agendamentos', icon: 'calendar-check', onPress: () => router.push('agendamento'), height: 100 },
+    { title: 'Agendamentos', icon: 'calendar-check', onPress: () => router.push('agendamento/mecanico'), height: 100 },
     { title: 'Histórico', icon: 'history', onPress: () => router.push('agendamento/historico'), height: 100 },
   ] as const;
 

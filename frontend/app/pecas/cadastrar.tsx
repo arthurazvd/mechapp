@@ -80,85 +80,92 @@ const CadastrarPecaScreen = () => {
 
   return (
     <>
-      <StatusBar backgroundColor="#A10000" barStyle="light-content" />
-      <View style={[globalStyles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
-        <View style={globalStyles.crudTop}>
-          <BackButton />
-          <Image
-            source={require("../../assets/logo-nome.png")}
-            style={{ width: 100, height: 190 }}
-            resizeMode="contain"
+  <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
+  <View style={[globalStyles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
+    <View style={globalStyles.crudTop}>
+      <BackButton color={colors.white} />
+      <Image
+        source={require("../../assets/logo-nome.png")}
+        style={styles.logoNome}
+        resizeMode="contain"
+      />
+    </View>
+
+    <ScrollView
+      style={globalStyles.crudBottom}
+      contentContainerStyle={styles.scrollContentContainer}
+      keyboardShouldPersistTaps="handled"
+    >
+      <Text style={[globalStyles.title, styles.pageTitle]}>Cadastrar Nova Peça</Text>
+
+      <View style={styles.formContainer}>
+        <CustomInput
+          label="Nome da Peça"
+          value={nome}
+          onChangeText={setNome}
+          placeholder="Ex: Filtro de óleo"
+          placeholderTextColor="#868686"
+          contentStyle={{ width: "100%" }}
+          style={styles.inputField}
+        />
+
+        <ExpandingTextArea
+          label="Descrição"
+          value={descricao}
+          onChangeText={setDescricao}
+          placeholder="Detalhe o uso, marca, ou tipo da peça..."
+          placeholderTextColor="#868686"
+          containerStyle={styles.inputField}
+          inputStyle={{ width: "100%" }}
+          minHeight={80}
+        />
+
+        <View style={[pecStyles.precoInput, styles.row]}>
+          <CustomInput
+            label="Quantidade"
+            value={String(quantidade)}
+            onChangeText={handleQuantidadeChange}
+            placeholder="0"
+            placeholderTextColor="#868686"
+            keyboardType="numeric"
+            onlyNumbers={true}
+            contentStyle={{ width: "100%" }}
+            style={[styles.inputField, styles.inputHalf]}
+          />
+
+          <CustomInput
+            label="Preço"
+            value={precoFormatado}
+            onChangeText={handlePrecoChange}
+            placeholder="R$ 0,00"
+            placeholderTextColor="#868686"
+            keyboardType="numeric"
+            contentStyle={{ width: "100%" }}
+            style={[styles.inputField, styles.inputHalf]}
           />
         </View>
 
-        <ScrollView
-          style={globalStyles.crudBottom}
-          contentContainerStyle={styles.scrollContentContainer}
-          keyboardShouldPersistTaps="handled"
-        >
-          <Text style={[globalStyles.title, styles.pageTitle]}>Cadastrar Nova Peça</Text>
+        <ImagePickerInput imagem={imagem} setImagem={setImagem} />
 
-          <CustomInput
-            label="Nome"
-            value={nome}
-            onChangeText={setNome}
-            placeholder="Digite o nome da peça"
-            placeholderTextColor="#868686"
-            contentStyle={{ width: "80%", maxWidth: 400 }}
+        <View style={[pecStyles.crudButtons, styles.buttonsRow]}>
+          <CustomButton
+            style={[styles.actionButton, styles.cancelButton]}
+            textStyle={styles.cancelButtonText}
+            title="Cancelar"
+            onPress={() => router.back()}
           />
-
-          <ExpandingTextArea
-            label="Descrição"
-            value={descricao}
-            onChangeText={setDescricao}
-            placeholder="Digite a descrição da peça..."
-            placeholderTextColor="#868686"
-            containerStyle={{ alignItems: "center" }}
-            inputStyle={{ maxWidth: 400, width: "100%" }}
+          <CustomButton
+            style={styles.actionButton}
+            title="Cadastrar"
+            onPress={handleCadastroPeca}
           />
-
-          <View style={pecStyles.precoInput}>
-            <CustomInput
-              label="Quantidade"
-              value={String(quantidade)}
-              onChangeText={handleQuantidadeChange}
-              placeholder="0"
-              placeholderTextColor="#868686"
-              keyboardType="numeric"
-              onlyNumbers={true}
-              contentStyle={{ width: "100%", maxWidth: 200 }}
-              style={{ width: "49%" }}
-            />
-            <CustomInput
-              label="Preço"
-              value={precoFormatado}
-              onChangeText={handlePrecoChange}
-              placeholder="R$ 0,00"
-              placeholderTextColor="#868686"
-              keyboardType="numeric"
-              contentStyle={{ width: "100%", maxWidth: 200 }}
-              style={{ width: "49%" }}
-            />
-          </View>
-
-          <ImagePickerInput imagem={imagem} setImagem={setImagem} />
-
-          <View style={pecStyles.crudButtons}>
-            <CustomButton
-              style={{ width: "39%", maxWidth: 193, height: 50, backgroundColor: "#868686" }}
-              title="Cancelar"
-              onPress={() => router.back()}
-            />
-            <CustomButton
-              style={{ width: "39%", maxWidth: 193, height: 50 }}
-              title="Cadastrar"
-              onPress={handleCadastroPeca}
-            />
-          </View>
-        </ScrollView>
+        </View>
       </View>
-      <BottomNavigation />
-    </>
+    </ScrollView>
+    <BottomNavigation />
+  </View>
+</>
+
   );
 };
 
@@ -170,6 +177,41 @@ const styles = StyleSheet.create({
   pageTitle: {
     marginBottom: spacing.large,
   },
+  logoNome: {
+  width: 100,
+  height: 60,
+  },
+  formContainer: {
+    width: '90%',
+    maxWidth: 500,
+  },
+  inputField: {
+    marginBottom: spacing.medium,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: spacing.medium,
+  },
+  inputHalf: {
+    flex: 1,
+  },
+  buttonsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: spacing.large,
+  },
+  actionButton: {
+    width: "48%",
+    height: 50,
+  },
+  cancelButton: {
+    backgroundColor: colors.surface,
+  },
+  cancelButtonText: {
+    color: colors.textSecondary,
+  },
+
 });
 
 export default CadastrarPecaScreen;
