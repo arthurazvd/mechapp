@@ -66,3 +66,15 @@ export const remover_peca = async(peca_id: string | string[]) => {
     const data = await response.json();
     return data;
 }
+
+// Listar todas as peças
+export const listar_pecas = async () => {
+    const response = await fetch(`${BASE_URL}/peca`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    const data = await response.json();
+    return data;
+};

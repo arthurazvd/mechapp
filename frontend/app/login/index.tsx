@@ -48,7 +48,7 @@ const LoginScreen = () => {
       localStorage.setItem("usuario_atual", JSON.stringify(json));
 
       Alert.alert("Sucesso", "Login realizado com sucesso!");
-      router.replace('/agendamento/historico');
+      router.replace('/cliente');
     } catch (err) {
       Alert.alert("Erro", "Não foi possível conectar ao servidor.");
     }

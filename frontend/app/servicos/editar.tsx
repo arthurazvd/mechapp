@@ -11,7 +11,7 @@ import { CustomButton } from '../../components/CustomButton';
 import { BackButton } from '../../components/BackButton';
 import { BottomNavigation } from '../../components/BottomNavigation';
 
-import { globalStyles } from '../../styles/globalStyles';
+import { globalStyles,spacing,colors, } from '../../styles/globalStyles';
 import { servStyles } from '../../styles/servStyles';
 import { formatarPreco } from '../../utils/formatters';
 
@@ -61,13 +61,13 @@ const EditarServicoScreen = () => {
     
 
     const handlePrecoMinChange = (text: string) => {
-      const precoFormatado = formatarPreco(text);
-      setPrecoMin(precoFormatado);
+    const { precoFormatado } = formatarPreco(text);
+    setPrecoMin(precoFormatado);
     };
 
     const handlePrecoMaxChange = (text: string) => {
-      const precoFormatado = formatarPreco(text);
-      setPrecoMax(precoFormatado);
+    const { precoFormatado } = formatarPreco(text);
+    setPrecoMax(precoFormatado);
     };
 
     const handleSalvar = () => {

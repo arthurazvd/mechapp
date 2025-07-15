@@ -7,7 +7,7 @@ import { CustomButton } from '../../components/CustomButton';
 import { CustomInput } from "../../components/CustomInput";
 import { BackButton } from '../../components/BackButton';
 
-import { globalStyles } from '../../styles/globalStyles';
+import { globalStyles,spacing,colors } from '../../styles/globalStyles';
 import { cadStyles } from '../../styles/cadStyles';
 import { formatarDocumento, formatarContato } from '../../utils/formatters';
 

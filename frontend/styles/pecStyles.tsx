@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { globalStyles, colors, spacing, typography } from '../../styles/globalStyles';
+import { globalStyles, colors, spacing, typography } from './globalStyles';
 
 export const pecStyles = StyleSheet.create({
 
