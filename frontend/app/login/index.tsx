@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Alert, StatusBar, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, Alert, StatusBar, Image, TouchableOpacity } from "react-native";
 import { useNavigationContainerRef, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -9,7 +9,7 @@ import { CustomInput } from "../../components/CustomInput";
 import { PasswordInput } from "../../components/PasswordInput";
 import { BackButton } from '../../components/BackButton';
 
-import { globalStyles } from "../../styles/globalStyles";
+import { globalStyles, colors, spacing } from "../../styles/globalStyles";
 
 // API
 import { usuario } from "../../api/index";
@@ -36,54 +36,60 @@ const LoginScreen = () => {
       return;
     }
 
-    // Login efetuado com sucesso, salvando no local storage
-    localStorage.setItem("usuario_atual", JSON.stringify(json));
+    try {
+      const json = await usuario.autenticar_usuario(email, senha);
 
-    // Redirecionando
-    return router.replace('/agendamento/historico');
+      if (json.error) {
+        Alert.alert("Erro", json.mensagem || "Erro ao realizar login.");
+        return;
+      }
+
+      // Salvando dados do usuário (em async storage no futuro, aqui tá simplificado)
+      localStorage.setItem("usuario_atual", JSON.stringify(json));
+
+      Alert.alert("Sucesso", "Login realizado com sucesso!");
+      router.replace('/agendamento/historico');
+    } catch (err) {
+      Alert.alert("Erro", "Não foi possível conectar ao servidor.");
+    }
   };
 
   return (
     <>
-      <StatusBar backgroundColor="#A10000" barStyle="light-content" />
-      <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
+      <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
+      <View style={[globalStyles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
         <View style={globalStyles.initialTop}>
-          <BackButton />
+          <BackButton color={colors.white} />
           <Image
             source={require("../../assets/logo-vertical.png")}
-            style={{ width: 170, height: 190 }}
+            style={styles.logo}
             resizeMode="contain"
           />
         </View>
 
-        <View style={globalStyles.initialBottom}>
+        <View style={[globalStyles.initialBottom, styles.formContainer]}>
           <Text style={globalStyles.title}>Login</Text>
           <CustomInput
             placeholder="E-mail"
-            placeholderTextColor="#868686"
             label="E-mail"
             value={email}
             onChangeText={setEmail}
-            contentStyle={{ width: "90%", maxWidth: 400 }}
+            style={styles.inputField}
           />
           <PasswordInput
             placeholder="Senha"
             label="Senha"
-            placeholderTextColor="#868686"
             value={senha}
             onChangeText={setSenha}
+            containerStyle={styles.inputField}
           />
 
-          <Text style={globalStyles.text}>Esqueci minha senha</Text>
+          <TouchableOpacity onPress={() => Alert.alert("Esqueci minha senha", "Funcionalidade a ser implementada.")}>
+            <Text style={[globalStyles.text, styles.forgotPassword]}>Esqueci minha senha</Text>
+          </TouchableOpacity>
 
           <CustomButton
-            style={{
-              width: "90%",
-              maxWidth: 400,
-              height: 50,
-              marginTop: 20,
-              marginBottom: 20,
-            }}
+            style={styles.loginButton}
             title="Entrar"
             onPress={handleLogin}
           />
@@ -97,5 +103,31 @@ const LoginScreen = () => {
     </>
   );
 };
+
+const styles = StyleSheet.create({
+    logo: {
+        width: 170,
+        height: 190,
+    },
+    formContainer: {
+        paddingHorizontal: spacing.large,
+    },
+    inputField: {
+        width: '100%',
+        maxWidth: 400,
+        alignSelf: 'center',
+    },
+    forgotPassword: {
+        marginVertical: spacing.medium,
+    },
+    loginButton: {
+        width: '100%',
+        maxWidth: 400,
+        height: 50,
+        marginTop: spacing.medium,
+        marginBottom: spacing.large,
+        alignSelf: 'center',
+    }
+});
 
 export default LoginScreen;

@@ -1,53 +1,115 @@
-import React, { useState } from 'react';
-import { View, Text, StatusBar} from 'react-native';
-import { useRouter } from 'expo-router';
-import { Image } from 'react-native';
+import React, { useState, useEffect } from 'react'; 
+import { View, Text, StatusBar, ScrollView, StyleSheet, Alert, Image } from 'react-native'; 
+import { useRouter, useLocalSearchParams } from 'expo-router'; 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import CustomButton from '../../components/CustomButton';
-import InfoView from '../../components/InfoView';
+import InfoView from '../../components/InfoView'; 
 import { BackButton } from '../../components/BackButton';
 import { BottomNavigation } from '../../components/BottomNavigation';
 
-import { globalStyles } from '../../styles/globalStyles';
+import { globalStyles, colors, spacing } from '../../styles/globalStyles'; 
 
-const VisualizarServico = () => {
+const getServicoDetails = (servicoId?: string | string[]) => {
+    if (servicoId === '1') { 
+        return {
+            id: '1',
+            nome: 'Troca de Oléo Completa',
+            descricao: 'Substituição do óleo do motor por um novo (Mobil Super 5W-30 Sintético), garantindo a lubrificação adequada das peças internas e o bom desempenho do veículo. Inclui verificação e troca do filtro de óleo (Tecfil). Recomendado a cada 10.000km ou 6 meses.',
+            categoria: 'Mecânica Geral',
+            tempoEstimado: '1 hora',
+            preco: 'R$ 180,00 - R$ 250,00 (varia conforme veículo)',
+            somenteOrcamento: false, 
+        };
+    }
+    return { 
+        id: 'error',
+        nome: 'Serviço Não Encontrado',
+        descricao: 'Os detalhes deste serviço não puderam ser carregados.',
+        categoria: 'N/A',
+        tempoEstimado: 'N/A',
+        preco: 'N/A',
+        somenteOrcamento: true,
+    };
+};
+
+
+const VisualizarServicoScreen = () => { 
     const router = useRouter();
-    
-    const [nome] = useState('Troca de Oléo');
-    const [descricao] = useState('Substituição do óleo do motor por um novo, garantindo a lubrificação adequada das peças internas e o bom desempenho do veículo. Inclui verificação e, se necessário, troca do filtro de óleo. Recomendado conforme a quilometragem ou tempo de uso.');
-    const [categoria] = useState('Mecânica');
-    const [tempoEstimado] = useState('30 minutos');
-    const [preco] = useState('R$ 100,00 - R$ 200,00');
-
+    const { servicoId } = useLocalSearchParams();
     const insets = useSafeAreaInsets();
+
+    const [servico, setServico] = useState(getServicoDetails(servicoId));
+
+    useEffect(() => {
+        const details = getServicoDetails(servicoId);
+        setServico(details);
+        if (details.id === 'error' && servicoId) { 
+            Alert.alert("Erro", "Serviço não encontrado.");
+        }
+    }, [servicoId]);
+
 
   return (
     <>
-      <StatusBar backgroundColor="#A10000" barStyle="light-content" />
-      <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
-          <View style={globalStyles.crudTop}>
-            <BackButton />
-            <Image source={require('../../assets/logo-nome.png')} style={{ width: 100, height: 190 }}
-    resizeMode="contain"/>
-          </View>
-                
-          <View style={globalStyles.crudBottom}>
-              <Text style={globalStyles.title}>{nome}</Text>
-              <InfoView label="Descrição" value={descricao} />
-              <InfoView label="Categoria" value={categoria} />
-              <InfoView label="Tempo estimado" value={tempoEstimado} />
-              <InfoView label="Preço" value={preco} />
-              <CustomButton 
-                  style={{width: '80%', maxWidth: 400, height: 50, marginTop: 20}} 
-                  title="Editar" 
-                  onPress={() => router.push('/servicos/editar')} />
-          </View>
-          <BottomNavigation />
+      <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
+      <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom, justifyContent: 'space-between'}]}>
+        <View style={{flex:1}}>
+            <View style={globalStyles.crudTop}>
+                <BackButton color={colors.white}/>
+                <Image source={require('../../assets/logo-nome.png')} style={styles.logoNome} resizeMode="contain"/>
+            </View>
+
+            <ScrollView
+                style={globalStyles.crudBottom}
+                contentContainerStyle={styles.scrollContentContainer}
+            >
+                <Text style={[globalStyles.title, styles.pageTitle]}>{servico.nome}</Text>
+                <InfoView label="Descrição Detalhada" value={servico.descricao} containerStyle={styles.infoViewContainer}/>
+                <InfoView label="Categoria" value={servico.categoria} containerStyle={styles.infoViewContainer}/>
+                <InfoView label="Tempo Estimado" value={servico.tempoEstimado} containerStyle={styles.infoViewContainer}/>
+                <InfoView
+                    label="Faixa de Preço"
+                    value={servico.somenteOrcamento ? "Somente sob orçamento" : servico.preco}
+                    containerStyle={styles.infoViewContainer}
+                />
+                <CustomButton
+                    style={styles.editButton}
+                    title="Editar Serviço"
+                    onPress={() => router.push({pathname: '/servicos/editar', params: { servicoId: servico.id }})}
+                    disabled={servico.id === 'error'}
+                />
+            </ScrollView>
+        </View>
+        <BottomNavigation />
       </View>
     </>
   );
 };
 
+const styles = StyleSheet.create({
+    logoNome: {
+        width: 100,
+        height: 60,
+    },
+    scrollContentContainer: {
+        paddingBottom: spacing.large,
+        alignItems: 'center',
+    },
+    pageTitle: {
+        marginVertical: spacing.large, 
+    },
+    infoViewContainer: {
+        width: '90%',
+        maxWidth: 500,
+        marginBottom: spacing.medium,
+    },
+    editButton: {
+        width: '90%',
+        maxWidth: 500,
+        height: 50,
+        marginTop: spacing.large,
+    }
+});
 
-export default VisualizarServico;
+export default VisualizarServicoScreen;

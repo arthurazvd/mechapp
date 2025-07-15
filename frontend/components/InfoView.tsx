@@ -1,13 +1,15 @@
 import { View, Text, StyleSheet } from 'react-native';
+import { colors, spacing, typography } from '../styles/globalStyles';
 
 interface InfoViewProps {
   label: string;
   value: string;
+  containerStyle?: object;
 }
 
-export const InfoView = ({ label, value }: InfoViewProps) => {
+export const InfoView = ({ label, value, containerStyle }: InfoViewProps) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       <Text style={styles.label}>{label}</Text>
       <Text style={styles.value}>{value}</Text>
     </View>
@@ -17,24 +19,25 @@ export const InfoView = ({ label, value }: InfoViewProps) => {
 const styles = StyleSheet.create({
   container: {
     borderWidth: 1,
-    borderColor: '#CCC',
-    borderRadius: 8,
-    padding: 10,
-    marginVertical: 6,
-    width: '80%',
-    maxWidth: 400,
-    alignSelf: 'center'
+    borderColor: colors.textLabel, 
+    borderRadius: spacing.small,
+    padding: spacing.medium,        
+    marginVertical: spacing.small,  
+    width: '90%',                  
+    maxWidth: 500,                  
+    alignSelf: 'center',
+    backgroundColor: colors.surface, 
   },
   label: {
-    fontWeight: 'bold',
-    color: '#555',
-    marginBottom: 4,
-    fontSize: 14,
+    fontWeight: typography.fontWeightBold,
+    color: colors.textLabel,        
+    marginBottom: spacing.small / 2, 
+    fontSize: typography.fontSizeLabel,
   },
   value: {
-    fontSize: 16,
-    color:'rgb(231, 231, 231)'
-  }
+    fontSize: typography.fontSizeText, 
+    color: colors.textSecondary,      
+  },
 });
 
 export default InfoView;

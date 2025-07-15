@@ -1,51 +1,42 @@
 import { StyleSheet } from 'react-native';
+import { colors, spacing, typography } from '../../styles/globalStyles';
 
 export const cadStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#151515',
-    justifyContent: 'center',
-  },
-
-  initialTop: {
+  initialTop: { 
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#A10000',
-    height: '17%',
-    borderBottomLeftRadius: 80,
-
+    backgroundColor: colors.primary,
+    paddingVertical: spacing.large, 
+    borderBottomLeftRadius: 80, 
   },
 
-
-  initialBottom: {
-    height: '93%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  crudButtons: {
+  crudButtons: { 
     flexDirection: 'row',
-    columnGap: '2%',
+    gap: spacing.small,
     width: '100%',
     justifyContent: 'center',
-    marginTop: 25,
+    marginTop: spacing.large, 
+    paddingHorizontal: spacing.medium, 
   },
 
-  precoInput: {
+  precoInput: { 
     flexDirection: 'row',
-    columnGap: '2%',
-    width: '80%',
-    maxWidth: 400,
+    gap: spacing.small,
+    width: '100%', 
+    maxWidth: 450, 
     justifyContent: 'center',
+    alignSelf: 'center',
+    paddingHorizontal: spacing.medium,
   },
 
-  viewPecas: {
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    justifyContent: 'space-between', 
-    gap: 50,
-    width: '80%',
-    maxWidth: 400,
+  viewPecas: { 
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: spacing.large, 
+    width: '90%', 
+    maxWidth: 500,
+    alignSelf: 'center',
+    marginBottom: spacing.medium,
   }
-
 });

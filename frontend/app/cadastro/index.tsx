@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StatusBar, TouchableOpacity} from "react-native";
+import { StyleSheet, View, Text, StatusBar, TouchableOpacity, ScrollView} from "react-native";
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -8,15 +8,17 @@ import { CustomInput } from "../../components/CustomInput";
 import { PasswordInput } from "../../components/PasswordInput";
 import { BackButton } from '../../components/BackButton';
 
-import { globalStyles } from '../../styles/globalStyles';
+import { globalStyles, colors, spacing  } from '../../styles/globalStyles';
 import { cadStyles } from '../../styles/cadStyles';
 import { formatarContato } from '../../utils/formatters';
 
 // API
 import { usuario } from "../../api/index";
 
-export default function Index() {
+export default function CadastroScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
+
   const [email, setEmail] = useState("");
   const [nome, setNome] = useState("");
   const [telefone, setTelefone] = useState("");
@@ -29,7 +31,6 @@ export default function Index() {
     setTelefone(ContatoFormatado);
   };
 
-  const insets = useSafeAreaInsets();
   
   // Cadastro de usuário
   const handleCadastro = async () => {
@@ -68,51 +69,63 @@ export default function Index() {
 
   return (
     <>
-      <StatusBar backgroundColor="#A10000" barStyle="light-content" /> 
-      <View style={[globalStyles.container,{paddingTop: insets.top,paddingBottom: insets.bottom,},]}>
-      <View style={cadStyles.initialTop}>
-        <BackButton />
-        <Text style={globalStyles.title}>Cadastro</Text>
-      </View>
-        <View style={globalStyles.initialBottom}>
+      <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
+      <ScrollView
+        style={{ backgroundColor: colors.background }}
+        contentContainerStyle={[
+          globalStyles.container,
+          {
+            paddingTop: insets.top,
+            paddingBottom: insets.bottom,
+            justifyContent: 'flex-start'
+          }
+        ]}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={cadStyles.initialTop}>
+          <BackButton color={colors.white} />
+          <Text style={globalStyles.title}>Cadastro</Text>
+        </View>
+
+        <View style={[globalStyles.initialBottom, styles.formContainer]}>
           <CustomInput
-              placeholder="Nome"
-              placeholderTextColor="#868686"
-              label="Nome"
-              value={nome}
-              onChangeText={setNome}
-              contentStyle={{ width: "90%", maxWidth: 400 }}
+            placeholder="Nome completo"
+            label="Nome"
+            value={nome}
+            onChangeText={setNome}
+            style={styles.inputField}
           />
           <CustomInput
-              placeholder="Telefone" 
-              placeholderTextColor="#868686"
-              label="Telefone"
-              keyboardType='numeric'
-              value={telefone}
-              onChangeText={handleContatoChange}
-              contentStyle={{ width: "90%", maxWidth: 400 }}
+            placeholder="(XX) XXXXX-XXXX"
+            label="Telefone"
+            keyboardType='numeric'
+            value={telefone}
+            onChangeText={handleContatoChange}
+            style={styles.inputField}
+            maxLength={15}
           />
           <CustomInput
-              placeholder="E-mail"
-              placeholderTextColor="#868686"
-              label="E-mail"
-              value={email}
-              onChangeText={setEmail}
-              contentStyle={{ width: "90%", maxWidth: 400 }}
+            placeholder="seuemail@dominio.com"
+            label="E-mail"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            style={styles.inputField}
           />
           <PasswordInput
-              placeholder="Senha"
-              label="Senha"
-              placeholderTextColor="#868686"
-              value={senha}
-              onChangeText={setSenha}
+            placeholder="Mínimo 6 caracteres"
+            label="Senha"
+            value={senha}
+            onChangeText={setSenha}
+            containerStyle={styles.inputField}
           />
           <PasswordInput
-              placeholder="Confirmar Senha"
-              label="Confirmar Senha"
-              placeholderTextColor="#868686"
-              value={confsenha}
-              onChangeText={setConfsenha}
+            placeholder="Repita sua senha"
+            label="Confirmar Senha"
+            value={confsenha}
+            onChangeText={setConfsenha}
+            containerStyle={styles.inputField}
           />
 
           <CustomButton
@@ -132,7 +145,33 @@ export default function Index() {
             <Text style={globalStyles.link}>Fazer Login</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </ScrollView>
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  formContainer: {
+    width: '100%',
+    paddingHorizontal: spacing.large,
+    alignItems: 'center',
+  },
+  inputField: {
+    width: '100%',
+    maxWidth: 450,
+  },
+  actionButton: {
+    width: '100%',
+    maxWidth: 450,
+    height: 50,
+    marginTop: spacing.large,
+    marginBottom: spacing.medium,
+  },
+  loginRedirectContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: spacing.medium,
+    gap: spacing.small,
+  }
+});

@@ -8,14 +8,13 @@ import {
   TextStyle,
   ViewStyle,
 } from 'react-native';
-import { globalStyles } from '../styles/globalStyles';
-
+import { globalStyles, colors, spacing, typography } from '../styles/globalStyles';
 
 interface CustomInputProps extends TextInputProps {
   onlyNumbers?: boolean;
   inputStyle?: StyleProp<TextStyle>;
   containerStyle?: StyleProp<ViewStyle>; 
-  contentStyle?: StyleProp<ViewStyle>; 
+  contentStyle?: StyleProp<ViewStyle>;
   label?: string;
 }
 
@@ -24,10 +23,10 @@ export const CustomInput: React.FC<CustomInputProps> = ({
   value,
   onChangeText,
   inputStyle,
-  containerStyle,
   contentStyle,
-  style,
+  style, 
   label,
+  placeholderTextColor = colors.textHint, 
   ...rest
 }) => {
   const handleChange = (text: string) => {
@@ -43,6 +42,7 @@ export const CustomInput: React.FC<CustomInputProps> = ({
           value={value}
           onChangeText={handleChange}
           style={[styles.input, inputStyle]}
+          placeholderTextColor={placeholderTextColor}
           {...rest}
         />
       </View>
@@ -52,20 +52,19 @@ export const CustomInput: React.FC<CustomInputProps> = ({
 
 const styles = StyleSheet.create({
   outerContainer: {
-    alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: spacing.small, 
     width: '100%',
   },
   innerContainer: {
-    maxWidth: 400,
     width: '100%',
   },
   input: {
     height: 50,
-    borderRadius: 8,
-    paddingHorizontal: 20,
-    backgroundColor: '#242424',
-    color: '#868686',
+    borderRadius: spacing.small,
+    paddingHorizontal: spacing.medium,
+    backgroundColor: colors.inputBackground,
+    color: colors.textHint, 
     width: '100%',
+    fontSize: typography.fontSizeText,
   },
 });

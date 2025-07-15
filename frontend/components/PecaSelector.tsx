@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, TextInput, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import { colors, spacing, typography } from '../styles/globalStyles';
 
 type Props = {
   nome: string;
@@ -9,6 +10,7 @@ type Props = {
   onAdd: () => void;
   onRemove: () => void;
   onAdicionar: () => void;
+  containerStyle?: object;
 };
 
 export const PecaSelector = ({
@@ -18,26 +20,27 @@ export const PecaSelector = ({
   onAdd,
   onRemove,
   onAdicionar,
+  containerStyle,
 }: Props) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       <TextInput
         placeholder="Buscar peça..."
-        placeholderTextColor="#aaa"
+        placeholderTextColor={colors.textHint} 
         value={nome}
         onChangeText={onChangeNome}
         style={styles.input}
       />
       <View style={styles.controls}>
-        <TouchableOpacity style={styles.button} onPress={onRemove}>
-          <Feather name="minus" size={16} color="#fff" />
+        <TouchableOpacity style={[styles.controlButton, styles.removeButton]} onPress={onRemove}>
+          <Feather name="minus" size={16} color={colors.white} />
         </TouchableOpacity>
         <Text style={styles.quantidade}>{quantidade}</Text>
-        <TouchableOpacity style={styles.button} onPress={onAdd}>
-          <Feather name="plus" size={16} color="#fff" />
+        <TouchableOpacity style={[styles.controlButton, styles.addButton]} onPress={onAdd}>
+          <Feather name="plus" size={16} color={colors.white} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.adicionar} onPress={onAdicionar}>
-          <Text style={styles.adicionarText}>Adicionar</Text>
+        <TouchableOpacity style={styles.adicionarButton} onPress={onAdicionar}>
+          <Text style={styles.adicionarButtonText}>Adicionar</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -46,42 +49,50 @@ export const PecaSelector = ({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 16,
-    width: '90%',
+    marginBottom: spacing.medium,
+    width: '90%', 
     alignSelf: 'center',
   },
   input: {
-    backgroundColor: '#242424',
-    color: '#fff',
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    height: 45,
-    marginBottom: 8,
+    backgroundColor: colors.inputBackground,
+    color: colors.textPrimary, 
+    borderRadius: spacing.small,
+    paddingHorizontal: spacing.medium,
+    height: 45, 
+    marginBottom: spacing.small,
+    fontSize: typography.fontSizeText,
   },
   controls: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: spacing.small,
   },
-  button: {
-    backgroundColor: '#A10000',
-    padding: 10,
-    borderRadius: 6,
+  controlButton: { 
+    padding: spacing.small + 2,
+    borderRadius: spacing.small / 2 + 2, 
+  },
+  addButton:{
+    backgroundColor: colors.primary,
+  },
+  removeButton:{
+    backgroundColor: colors.primary, 
   },
   quantidade: {
-    color: '#fff',
-    fontSize: 16,
-    marginHorizontal: 4,
+    color: colors.textPrimary,
+    fontSize: typography.fontSizeText, 
+    marginHorizontal: spacing.small / 2,
+    fontWeight: typography.fontWeightBold,
   },
-  adicionar: {
-    backgroundColor: '#00A100',
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 6,
+  adicionarButton: {
+    backgroundColor: colors.success,
+    paddingVertical: spacing.small + 2, 
+    paddingHorizontal: spacing.medium,
+    borderRadius: spacing.small / 2 + 2, 
     marginLeft: 'auto',
   },
-  adicionarText: {
-    color: '#fff',
-    fontWeight: 'bold',
+  adicionarButtonText: {
+    color: colors.textPrimary,
+    fontWeight: typography.fontWeightBold,
+    fontSize: typography.fontSizeLabel,
   },
 });

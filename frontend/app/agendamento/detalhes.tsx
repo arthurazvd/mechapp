@@ -1,11 +1,9 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import { View, StatusBar, Image, Text, FlatList } from 'react-native';
+import { StyleSheet, ScrollView, View, StatusBar, Image, Text, FlatList } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
 import { BackButton } from '../../components/BackButton';
 import { BottomNavigation } from '../../components/BottomNavigation';
-import { globalStyles } from '../../styles/globalStyles';
+import { globalStyles, colors, spacing, typography } from '../../styles/globalStyles';
 
 const DetalhesAgendamento = () => {
   const insets = useSafeAreaInsets();
@@ -14,64 +12,72 @@ const DetalhesAgendamento = () => {
     servico: 'Troca de óleo',
     descricao: 'Troca completa com filtro incluso e lubrificação.',
     status: 'Confirmado',
+    statusColor: colors.success,
     preco: 120.0,
     pecas: [
       { id: '1', nome: 'Filtro de óleo', quantidade: 1 },
-      { id: '2', nome: 'Óleo 5W30', quantidade: 4 },
+      { id: '2', nome: 'Óleo Sintético 5W30', quantidade: 4 },
+      { id: '3', nome: 'Anel de Vedação do Bujão', quantidade: 1 },
     ],
+    data: '25 de Julho de 2024',
+    horario: '14:30',
+    oficina: 'Oficina Premium Motors',
   };
 
   return (
     <>
-      <StatusBar backgroundColor="#A10000" barStyle="light-content" />
-      <View
-        style={[
-          globalStyles.container,
-          { paddingTop: insets.top, paddingBottom: insets.bottom },
-        ]}
-      >
-        <View style={globalStyles.crudTop}>
-          <BackButton />
-          <Image
-            source={require('../../assets/logo-nome.png')}
-            style={{ width: 100, height: 190 }}
-            resizeMode="contain"
-          />
-        </View>
-
-        <View style={globalStyles.telaServicos}>
-          <Text style={globalStyles.title}>Agendamento</Text>
-
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Serviço</Text>
-            <Text style={styles.label}>Nome:</Text>
-            <Text style={styles.value}>{agendamento.servico}</Text>
-            <Text style={styles.label}>Descrição:</Text>
-            <Text style={styles.value}>{agendamento.descricao}</Text>
-            <Text style={styles.label}>Status:</Text>
-            <Text style={[styles.value, { color: '#00A100' }]}>
-              {agendamento.status}
-            </Text>
-          </View>
-
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Preço estimado</Text>
-            <Text style={styles.value}>R$ {agendamento.preco.toFixed(2)}</Text>
-          </View>
-
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Peças incluídas</Text>
-            <FlatList
-              data={agendamento.pecas}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => (
-                <View style={styles.pecaItem}>
-                  <Text style={styles.value}>{item.nome}</Text>
-                  <Text style={styles.quantidade}>x{item.quantidade}</Text>
-                </View>
-              )}
+      <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
+      <View style={[globalStyles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
+        <View style={{flex: 1}}>
+          <View style={globalStyles.crudTop}>
+            <BackButton color={colors.white} />
+            <Image
+              source={require('../../assets/logo-nome.png')}
+              style={styles.logoNome}
+              resizeMode="contain"
             />
           </View>
+
+          <ScrollView
+            style={globalStyles.telaServicos}
+            contentContainerStyle={styles.scrollContentContainer}
+          >
+            <Text style={[globalStyles.title, styles.pageTitle]}>Detalhes do Agendamento</Text>
+
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Informações Gerais</Text>
+              <InfoItem label="Serviço:" value={agendamento.servico} />
+              <InfoItem label="Oficina:" value={agendamento.oficina} />
+              <InfoItem label="Data:" value={agendamento.data} />
+              <InfoItem label="Horário:" value={agendamento.horario} />
+              <InfoItem label="Status:" value={agendamento.status} valueColor={agendamento.statusColor} />
+            </View>
+
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Descrição do Serviço</Text>
+              <Text style={styles.descriptionText}>{agendamento.descricao}</Text>
+            </View>
+
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Preço Estimado</Text>
+              <Text style={styles.priceText}>R$ {agendamento.preco.toFixed(2)}</Text>
+            </View>
+
+            {agendamento.pecas.length > 0 && (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Peças Incluídas</Text>
+                {agendamento.pecas.map((item) => (
+                  <View key={item.id}>
+                    <View style={styles.pecaItem}>
+                      <Text style={styles.valueText}>{item.nome}</Text>
+                      <Text style={styles.quantityText}>x{item.quantidade}</Text>
+                    </View>
+                    <View style={styles.separator} />
+                  </View>
+                ))}
+              </View>
+            )}
+          </ScrollView>
         </View>
 
         <BottomNavigation />
@@ -80,40 +86,78 @@ const DetalhesAgendamento = () => {
   );
 };
 
-export default DetalhesAgendamento;
+const InfoItem = ({ label, value, valueColor }: { label: string; value: string; valueColor?: string }) => (
+  <View style={styles.infoItemContainer}>
+    <Text style={styles.labelText}>{label}</Text>
+    <Text style={[styles.valueText, valueColor ? { color: valueColor } : {}]}>{value}</Text>
+  </View>
+);
 
 const styles = StyleSheet.create({
+  logoNome: {
+    width: 100,
+    height: 60,
+  },
+  scrollContentContainer: {
+    paddingBottom: spacing.large,
+  },
+  pageTitle: {
+    marginBottom: spacing.large,
+  },
   section: {
-    backgroundColor: '#1e1e1e',
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 16,
+    backgroundColor: colors.surface,
+    borderRadius: spacing.small,
+    padding: spacing.medium,
+    marginBottom: spacing.medium,
     width: '90%',
     alignSelf: 'center',
   },
   sectionTitle: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 12,
+    color: colors.textPrimary,
+    fontSize: typography.fontSizeTitle2 - 4,
+    fontWeight: typography.fontWeightBold,
+    marginBottom: spacing.medium,
   },
-  label: {
-    color: '#aaa',
-    fontSize: 13,
-    marginTop: 8,
+  infoItemContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: spacing.small,
   },
-  value: {
-    color: '#fff',
-    fontSize: 14,
-    marginTop: 2,
+  labelText: {
+    color: colors.textLabel,
+    fontSize: typography.fontSizeLabel,
+  },
+  valueText: {
+    color: colors.textPrimary,
+    fontSize: typography.fontSizeLabel,
+    fontWeight: typography.fontWeightBold,
+    flexShrink: 1,
+    textAlign: 'right',
+  },
+  descriptionText: {
+    color: colors.textSecondary,
+    fontSize: typography.fontSizeLabel,
+    lineHeight: typography.fontSizeLabel + 6,
+  },
+  priceText: {
+    color: colors.success,
+    fontSize: typography.fontSizeText,
+    fontWeight: typography.fontWeightBold,
   },
   pecaItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    paddingVertical: spacing.small / 2,
   },
-  quantidade: {
-    color: '#ccc',
-    fontSize: 14,
+  quantityText: {
+    color: colors.textHint,
+    fontSize: typography.fontSizeLabel,
   },
+  separator: {
+    height: 1,
+    backgroundColor: colors.inputBackground,
+    marginVertical: spacing.small / 2,
+  }
 });
+
+export default DetalhesAgendamento;

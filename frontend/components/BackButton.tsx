@@ -2,14 +2,14 @@ import React from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-
+import { colors, spacing } from '../styles/globalStyles';
 
 interface BackButtonProps {
   color?: string;
   size?: number;
 }
 
-export const BackButton: React.FC<BackButtonProps> = ({ color = '#fff', size = 24 }) => {
+export const BackButton: React.FC<BackButtonProps> = ({ color = colors.white, size = 24 }) => {
   const router = useRouter();
 
   return (
@@ -21,10 +21,10 @@ export const BackButton: React.FC<BackButtonProps> = ({ color = '#fff', size = 2
 
 const styles = StyleSheet.create({
   button: {
-    padding: 8,
+    padding: spacing.small,
     position: 'absolute',
-    top: 10,
-    left: 10,
+    top: spacing.small, 
+    left: spacing.small,
     zIndex: 10,
   },
 });

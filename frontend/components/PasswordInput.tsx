@@ -8,32 +8,37 @@ import {
   TextInputProps,
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import { globalStyles } from '../styles/globalStyles';
-
+import { globalStyles, colors, spacing, typography } from '../styles/globalStyles';
 
 interface PasswordInputProps extends TextInputProps {
   value: string;
   onChangeText: (text: string) => void;
   label?: string;
+  containerStyle?: object; 
+  contentStyle?: object; 
 }
 
 export const PasswordInput: React.FC<PasswordInputProps> = ({
   value,
   onChangeText,
   label,
+  placeholderTextColor = colors.textHint,
+  containerStyle,
+  contentStyle,
   ...rest
 }) => {
   const [mostrarSenha, setMostrarSenha] = useState(false);
 
   return (
-    <View style={styles.wrapper}>
+    <View style={[styles.wrapper, containerStyle]}>
       {label && <Text style={globalStyles.label}>{label}</Text>}
-      <View style={styles.container}>
+      <View style={[styles.container, contentStyle]}>
         <TextInput
           value={value}
           onChangeText={onChangeText}
           secureTextEntry={!mostrarSenha}
           style={styles.input}
+          placeholderTextColor={placeholderTextColor}
           {...rest}
         />
         <TouchableOpacity
@@ -42,8 +47,8 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
         >
           <Feather
             name={mostrarSenha ? 'eye' : 'eye-off'}
-            size={19}
-            color="#888"
+            size={19} 
+            color={colors.textLabel} 
           />
         </TouchableOpacity>
       </View>
@@ -53,27 +58,27 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
 
 const styles = StyleSheet.create({
   wrapper: {
-    width: '90%',
-    maxWidth: 400,
-    marginBottom: 2,
+    width: '100%', 
+    marginBottom: spacing.small, 
   },
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 8,
-    height: 50,
-    backgroundColor: '#464646',
+    borderRadius: spacing.small,
+    height: 50, 
+    backgroundColor: colors.inputBackground, 
   },
   input: {
+    flex: 1, 
     height: '100%',
-    width: '87%',
-    borderRadius: 8,
-    paddingHorizontal: 20,
-    backgroundColor: '#242424',
-    color: '#868686',
+    borderRadius: spacing.small, 
+    paddingHorizontal: spacing.medium,
+    backgroundColor: colors.inputBackground, 
+    color: colors.textHint,
+    fontSize: typography.fontSizeText,
   },
   iconButton: {
-    paddingHorizontal: 8,
+    paddingHorizontal: spacing.medium, 
     justifyContent: 'center',
     alignItems: 'center',
     height: '100%',

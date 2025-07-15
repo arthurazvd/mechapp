@@ -1,39 +1,74 @@
-import { Button, StyleSheet, TextInput } from 'react-native';
+import { StyleSheet } from 'react-native';
+
+export const colors = {
+  primary: '#A10000',
+  secondary: '#007BFF',
+  background: '#151515',
+  surface: '#1e1e1e',
+  inputBackground: '#242424',
+  textPrimary: '#FFFFFF',
+  textSecondary: '#E0E0E0',
+  textHint: '#868686',
+  textLabel: '#888888',
+  error: '#D00000', 
+  success: '#00A100',
+  warning: '#FFA500', 
+  black_transparent: '#000000aa', 
+  white: '#FFFFFF',
+  black: '#000000',
+  gold: '#FFD700', 
+};
+
+export const spacing = {
+  small: 8,
+  medium: 16,
+  large: 24,
+  xlarge: 32,
+};
+
+export const typography = {
+  fontSizeLabel: 14,
+  fontSizeText: 15,
+  fontSizeLink: 20,
+  fontSizeTitle2: 20,
+  fontSizeTitle: 40,
+  fontWeightBold: 'bold' as 'bold',
+};
 
 export const globalStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#151515',
+    backgroundColor: colors.background,
     justifyContent: 'center',
   },
 
   title: {
-    fontSize: 40,
-    fontWeight: 'bold',
+    fontSize: typography.fontSizeTitle,
+    fontWeight: typography.fontWeightBold,
     textAlign: 'center',
-    marginBottom: 20,
-    color: 'white',
+    marginBottom: spacing.medium,
+    color: colors.textPrimary,
   },
 
   link: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: typography.fontSizeLink,
+    fontWeight: typography.fontWeightBold,
     textAlign: 'center',
-    color: 'white',
+    color: colors.textPrimary,
   },
 
-  text:{
-    fontSize: 15,
+  text: {
+    fontSize: typography.fontSizeText,
     textAlign: 'center',
-    color: '#868686',
+    color: colors.textHint, 
   },
 
   initialTop: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#A10000',
-    height: 100,
+    backgroundColor: colors.primary,
+    height: 100, 
     borderBottomLeftRadius: 80,
   },
 
@@ -41,109 +76,104 @@ export const globalStyles = StyleSheet.create({
     flex: 1.5,
     justifyContent: 'center',
     alignItems: 'center',
-    rowGap: 10,
-    
+    rowGap: spacing.small, 
   },
 
   crudTop: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#A10000',
-    height: '7%',
+    backgroundColor: colors.primary,
+    height: '7%', 
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
   },
 
   crudBottom: {
     height: '83%',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 
   label: {
-    fontSize: 14,
-    marginBottom: 6,
-    color: '#888',
+    fontSize: typography.fontSizeLabel,
+    marginBottom: spacing.small / 2,
+    color: colors.textLabel, 
     textAlign: 'left',
   },
 
   title2: {
-    fontSize: 20,
+    fontSize: typography.fontSizeTitle2,
     textAlign: 'center',
-    marginBottom: 20,
-    color: '#888',
+    marginBottom: spacing.medium, 
+    color: colors.textLabel, 
   },
 
   homeButtons: {
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    rowGap: 10,
+    rowGap: spacing.small, 
   },
 
   telaServicos: {
-    justifyContent: 'flex-start',
     width: '100%',
-    paddingTop: 30,
+    paddingTop: spacing.large, 
     height: '83%',
   },
 
   modalOverlay: {
     flex: 1,
-    backgroundColor: '#000000aa',
+    backgroundColor: colors.black_transparent,
     justifyContent: 'center',
     alignItems: 'center',
   },
 
   modalContent: {
     position: 'relative',
-    backgroundColor: '#1e1e1e',
-    padding: 25,
-    borderRadius: 16,
+    backgroundColor: colors.surface, 
+    padding: spacing.large,         
+    borderRadius: spacing.medium,  
     width: '80%',
     alignItems: 'center',
-    elevation: 10, 
-    shadowColor: '#000', 
+    elevation: 10,
+    shadowColor: colors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
   },
 
   modalTitle: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 20,
+    color: colors.textPrimary,
+    fontSize: spacing.medium,    
+    fontWeight: typography.fontWeightBold,
+    marginBottom: spacing.medium, 
     textAlign: 'center',
   },
 
   modalButton: {
-    backgroundColor: '#A10000',
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    marginTop: 20,
+    backgroundColor: colors.primary, 
+    paddingVertical: spacing.small + spacing.small / 2, 
+    paddingHorizontal: spacing.large, 
+    borderRadius: spacing.small,      
+    marginTop: spacing.medium,       
     alignItems: 'center',
   },
 
   modalButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 15,
+    color: colors.textPrimary, 
+    fontWeight: typography.fontWeightBold,
+    fontSize: typography.fontSizeText,
   },
 
-  closeButton: {
+  closeButton: { 
     position: 'absolute',
-    top: 10,
-    right: 10,
-    padding: 8,
+    top: spacing.small,
+    right: spacing.small,
+    padding: spacing.small,
     zIndex: 1,
   },
 
-  closeButtonText: {
+  closeButtonText: { 
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#ff0000', 
+    fontWeight: typography.fontWeightBold,
+    color: colors.error, 
   },
-
 });
