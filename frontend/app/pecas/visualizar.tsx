@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StatusBar, ScrollView, StyleSheet, Alert } from 'react-native';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { View, Text, Image, StatusBar, ScrollView, StyleSheet } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 
@@ -12,35 +12,30 @@ import { BottomNavigation } from '../../components/BottomNavigation';
 import { globalStyles, colors, spacing } from '../../styles/globalStyles';
 import { pecStyles } from '../../styles/pecStyles';
 
-// API
-import { peca } from '../../api';
-
 const VisualizarPecaScreen = () => {
   const router = useRouter();
-  const { pecaId } = useLocalSearchParams();
   const insets = useSafeAreaInsets();
 
   const [pecaInfo, setPecaInfo] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
+  // Simula carregamento de dados mockados
   useEffect(() => {
-    const fetchPeca = async () => {
-      if (!pecaId) return;
-
-      const data = await peca.consultar_peca(pecaId);
-
-      if (!data || data.error) {
-        Alert.alert("Erro", "Peça não encontrada.");
-        setPecaInfo(null);
-      } else {
-        setPecaInfo(data);
-      }
-
-      setLoading(false);
+    const mock = {
+      id: 'peca-001',
+      nome: 'Pastilha de Freio',
+      descricao: 'Pastilha de freio dianteira para carros populares',
+      fabricante: 'Bosch',
+      quantidade: 42,
+      preco: 89.9,
+      imagem: '', // ou base64 se quiser testar imagem
     };
 
-    fetchPeca();
-  }, [pecaId]);
+    setTimeout(() => {
+      setPecaInfo(mock);
+      setLoading(false);
+    }, 800); // Simula tempo de carregamento
+  }, []);
 
   if (loading) {
     return (

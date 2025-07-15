@@ -17,7 +17,6 @@ const TelaCliente = () => {
   const buttons = [
     { title: 'Buscar Oficinas', icon: 'car-wrench', onPress: () => router.push('cliente/busca'), height: 100 }, 
     { title: 'Agendamentos', icon: 'calendar-clock', onPress: () => router.push('/agendamento'), height: 100 }, 
-    { title: 'Orçamentos', icon: 'cash-multiple', onPress: () => router.back(), height: 100 }, 
     { title: 'Histórico', icon: 'history', onPress: () => router.push('/agendamento/historico'), height: 100 }, 
   ] as const;
 
@@ -57,8 +56,8 @@ const TelaCliente = () => {
                   />
                   <CustomButton
                     style={[
-                        styles.menuButton,
-                        { height: btn.height || 100 }
+                      styles.menuButton,
+                      { height: btn.height || 100 }
                     ]}
                     textStyle={styles.menuButtonText} 
                     title={btn.title}
@@ -113,7 +112,8 @@ const styles = StyleSheet.create({
   },
   menuButtonText: {
     fontSize: typography.fontSizeText + 2, 
-    fontWeight: typography.fontWeightBold, 
+    fontWeight: typography.fontWeightBold,
+    paddingLeft: spacing.large + 8, // Aumenta o espaço entre o ícone e o texto
   }
 });
 

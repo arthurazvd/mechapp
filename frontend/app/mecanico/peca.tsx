@@ -18,7 +18,6 @@ import { BottomNavigation } from '../../components/BottomNavigation';
 import { BackButton } from '../../components/BackButton';
 import { globalStyles, colors } from '../../styles/globalStyles';
 import { cliStyles } from '../../styles/cliStyles';
-import { peca } from '../../api';
 
 interface Peca {
   id: string;
@@ -38,64 +37,51 @@ const ListaPecas = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  // Dados mockados como fallback
+  // Dados mockados fixos
   const pecasMock: Peca[] = [
     {
       id: 'peca-001',
       nome: 'Pastilha de Freio',
       descricao: 'Pastilha de freio dianteira para carros populares',
       quantidade: 50,
-      preco: 89.90
+      preco: 89.9
     },
     {
       id: 'peca-002',
       nome: 'Disco de Freio',
       descricao: 'Disco de freio ventilado',
       quantidade: 30,
-      preco: 199.90
+      preco: 199.9
     },
-    // Adicione outras peças conforme necessário
+    // Pode adicionar mais peças aqui se quiser
   ];
 
-  const carregarPecas = async () => {
-    try {
-      setLoading(true);
-      const response = await peca.listar_pecas();
-      console.log('Resposta da API:', response);
-
-      // Se a API retornar dados válidos, usa eles, senão usa os mockados
-      if (response && Array.isArray(response) && response.length > 0) {
-        setPecas(response);
-      } else {
-        console.warn('Usando dados mockados - API não retornou resultados');
-        setPecas(pecasMock);
-      }
-    } catch (error) {
-      console.error('Erro ao carregar peças, usando dados mockados:', error);
+  const carregarPecas = () => {
+    setLoading(true);
+    setTimeout(() => {
       setPecas(pecasMock);
-    } finally {
       setLoading(false);
       setRefreshing(false);
-    }
+    }, 1000); // Simula um "load"
   };
 
   useEffect(() => {
     carregarPecas();
   }, []);
 
-  const pecasFiltradas = pecas.filter((peca) =>
-    peca.nome.toLowerCase().includes(busca.toLowerCase())
-  );
-
   const handleRefresh = () => {
     setRefreshing(true);
     carregarPecas();
   };
 
+  const pecasFiltradas = pecas.filter((peca) =>
+    peca.nome.toLowerCase().includes(busca.toLowerCase())
+  );
+
   const renderItem = ({ item }: { item: Peca }) => (
     <TouchableOpacity
       style={cliStyles.card}
-      onPress={() => router.push(`/pecas/visualizar/${item.id}`)}
+      onPress={() => router.push(`/pecas/visualizar/`)}
     >
       {item.imagem ? (
         <Image 
@@ -139,7 +125,6 @@ const ListaPecas = () => {
   return (
     <>
       <StatusBar backgroundColor="#A10000" barStyle="light-content" />
-
       <View style={[
         globalStyles.container,
         { paddingTop: insets.top, paddingBottom: insets.bottom }
