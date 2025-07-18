@@ -74,7 +74,7 @@ const EditarPecas = () => {
     }
 
     alert("Oficina removida!");
-    router.replace("/agendamento/historico");
+    router.replace("/agendamento/servicos");
   };
 
   if (loading) {

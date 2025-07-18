@@ -58,7 +58,7 @@ const CadastrarPecas = () => {
       return;
     }
 
-    return router.replace("/agendamento/historico");
+    return router.replace("/agendamento/servicos");
   };
 
   return (

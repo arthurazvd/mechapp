@@ -32,9 +32,12 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
         <Text style={styles.homeLabel}>Home</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => router.replace("servicos/oficinas")}
+      >
         <Feather name="list" size={22} color="#fff" />
-        <Text style={styles.label}>Histórico</Text>
+        <Text style={styles.label}>Serviços</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.button}>
