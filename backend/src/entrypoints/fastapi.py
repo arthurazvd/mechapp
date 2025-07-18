@@ -36,6 +36,7 @@ app.add_middleware(
 app.include_router(usuario_router)
 app.include_router(peca_router)
 app.include_router(oficina_router)
+app.include_router(servico_router)
 
 # Error Handling
 @app.exception_handler(DomainError)

@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 from datetime import datetime
+from decimal import Decimal
 from uuid import uuid4
 from re import match
 
@@ -86,22 +87,32 @@ class Servico:
     nome: str
     descricao: str
     tempo: int
-    preco_min: float
-    preco_max: float
+    preco_min: float | Decimal
+    preco_max: float | Decimal
     oficina: Oficina
     id: str = field(default_factory=lambda: str(uuid4()))
-
-    def to_dict(self) -> dict:
-        return {
+    
+    def to_dict(self, include_oficina: bool = False) -> dict:
+        def convert_decimal(value):
+            """Converte Decimal para float se necessário"""
+            if isinstance(value, Decimal):
+                return float(value)
+            return value
+        
+        servico = {
             "id": self.id,
             "nome": self.nome,
             "descricao": self.descricao,
             "tempo": self.tempo,
-            "preco_min": self.preco_min,
-            "preco_max": self.preco_max,
-            "oficina": self.oficina.to_dict(),
+            "preco_min": convert_decimal(self.preco_min),
+            "preco_max": convert_decimal(self.preco_max),
+            "oficina": self.oficina.id,
         }
 
+        if include_oficina:
+            servico["oficina"] = self.oficina.to_dict()
+        
+        return servico
 @dataclass
 class PecaDoAgendamento:
     peca: Peca

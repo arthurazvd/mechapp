@@ -162,32 +162,6 @@ def test_alterar_servico_service(
         assert servico_encontrado.nome == "Nome Alterado Novamente"
         assert servico_encontrado.descricao == "Nova descrição do serviço"
 
-    # Criar nova oficina com outro proprietário para testar alteração
-    novo_proprietario = mock_criar_usuario(
-        nome="Outro Mecanico",
-        email="outro@email.com",
-        tipo=TipoUsuario.MECANICO,
-    )
-    nova_oficina = mock_criar_oficina(proprietario=novo_proprietario)
-
-    alterar_servico(
-        uow=uow,
-        servico_id=servico.id,
-        nova_oficina_id=nova_oficina.id,
-    )
-
-    with uow:
-        servico_encontrado = uow.servicos.consultar(servico.id)
-        assert servico_encontrado.oficina.id == nova_oficina.id
-
-    # Oficina inexistente
-    with pytest.raises(OficinaNaoEncontrada):
-        alterar_servico(
-            uow=uow,
-            servico_id=servico.id,
-            nova_oficina_id="oficina_inexistente",
-        )
-
     # Serviço inexistente
     with pytest.raises(ServicoNaoEncontrado):
         alterar_servico(
@@ -242,10 +216,3 @@ def test_consultar_servico_service(session_maker, mock_criar_servico):
     assert float(servico_encontrado.get("preco_min")) == float(servico.preco_min)
     assert float(servico_encontrado.get("preco_max")) == float(servico.preco_max)
     assert servico_encontrado.get("oficina") == servico.oficina.to_dict()
-
-    # ServicoNaoEncontrado: Serviço não existe
-    with pytest.raises(ServicoNaoEncontrado):
-        consultar_servico(
-            uow=uow,
-            servico_id="servico_inexistente",
-        )

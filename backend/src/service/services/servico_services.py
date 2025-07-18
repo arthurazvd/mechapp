@@ -10,7 +10,7 @@ def criar_servico(
     preco_min: float,
     preco_max: float,
     oficina_id: str,
-):
+) -> str:
     """
     Serviço de criação de serviços no sistema. Recebendo as informações de um serviço, levantando possíveis problemas
     e persistindo as informações quando possível.
@@ -23,7 +23,8 @@ def criar_servico(
         preco_min (float): Preço mínimo do serviço.
         preco_max (float): Preço máximo do serviço.
         oficina_id (str): ID da oficina.
-
+    Returns:
+        str: identificador da oficina
     Raises:
         ServicoInvalido: O serviço informado é inválido.
         OficinaNaoEncontrada: A oficina informada não foi encontrada.
@@ -67,11 +68,8 @@ def alterar_servico(
         nova_descricao (str | None): Nova descrição do serviço.
         novo_preco_min (float | None): Novo preço mínimo do serviço.
         novo_preco_max (float | None): Novo preço máximo do serviço
-        nova_oficina_id (str | None): Nova oficina do serviço.
-    
     Raises:
         ServicoNaoEncontrado: O serviço informado não foi encontrado.
-        OficinaNaoEncontrada: A oficina informada não foi encontrada.
     """
     
     with uow:
@@ -81,23 +79,13 @@ def alterar_servico(
             raise ServicoNaoEncontrado("O serviço informado não foi encontrado.")
 
         # Atualiza os campos informados
-        if novo_nome is not None:
-            servico.nome = novo_nome
-        if novo_tempo is not None:
-            servico.tempo = novo_tempo
-        if nova_descricao is not None:
-            servico.descricao = nova_descricao
-        if novo_preco_min is not None:
-            servico.preco_min = novo_preco_min
-        if novo_preco_max is not None:
-            servico.preco_max = novo_preco_max
-        if nova_oficina_id is not None:
-            nova_oficina = uow.oficinas.consultar(nova_oficina_id)
-            if not nova_oficina:
-                raise OficinaNaoEncontrada("A oficina informada não foi encontrada.")
-            servico.oficina = nova_oficina
+        servico.nome = novo_nome or servico.nome
+        servico.tempo = novo_tempo or servico.tempo
+        servico.descricao = nova_descricao or servico.descricao
+        servico.preco_min = novo_preco_min or servico.preco_min
+        servico.preco_max = novo_preco_max or servico.preco_max
 
-        uow.servicos.salvar(servico)  # Mudou de atualizar para salvar
+        uow.servicos.salvar(servico)
         uow.commit()
 
 def remover_servico(
@@ -134,17 +122,35 @@ def consultar_servico(
     Args:
         uow (AbstractUnidadeDeTrabalho): Unidade de Trabalho abstrata.
         servico_id (str): ID do serviço a ser consultado.
-
     Returns:
         dict: O serviço consultado em formato de dicionário.
-
-    Raises:
-        ServicoNaoEncontrado: O serviço informado não foi encontrado.
     """
     
     with uow:
         servico = uow.servicos.consultar(servico_id)
-        if not servico:
-            raise ServicoNaoEncontrado("O serviço informado não foi encontrado.")
-        
-        return servico.to_dict()
+        if servico is None:
+            return {}
+        return servico.to_dict(include_oficina=True)
+    
+def listar_servicos_de_oficina(
+    uow: AbstractUnidadeDeTrabalho,
+    oficina_id: str,
+) -> list[dict]:
+    """
+    Serviço para consultar todos os serviços de uma oficina
+
+    Args:
+        uow (AbstractUnidadeDeTrabalho): Unidade de Trabalho abstrata.
+        oficina_id (str): ID do serviço a ser consultado.
+    Returns:
+        list[dict]: A lista de todos os serviços de uma oficina
+    Raises:
+        OficinaNaoEncontrada: A oficina identificada não existe.
+    """
+
+    with uow:
+        oficina = uow.oficinas.consultar(oficina_id)
+        if oficina is None:
+            raise OficinaNaoEncontrada("A oficina identificada não existe.")
+        servicos = uow.servicos.consultar_por_oficina(oficina_id)
+        return [servico.to_dict() for servico in servicos]
