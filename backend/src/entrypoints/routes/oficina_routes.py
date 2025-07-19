@@ -48,10 +48,12 @@ def criacao_de_oficina(
 
 @router.get("/listar", response_model=list[dict])
 def listando_oficinas(
+    proprietario_id: str | None = None,
     uow: UnidadeDeTrabalho = Depends(get_uow),
 ):
     oficinas = listar_oficinas(
         uow=uow,
+        proprietario_id=proprietario_id,
     )
 
     return JSONResponse(

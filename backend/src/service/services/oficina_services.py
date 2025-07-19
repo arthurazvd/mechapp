@@ -156,6 +156,7 @@ def consultar_oficina(
     
 def listar_oficinas(
     uow: AbstractUnidadeDeTrabalho,
+    proprietario_id: str | None = None,
 ) -> list[dict]:
     """
     Serviço de listagem de todas as oficinas no sistema.
@@ -167,5 +168,5 @@ def listar_oficinas(
     """
     
     with uow:
-        oficinas = uow.oficinas.listar() 
+        oficinas = uow.oficinas.listar(proprietario_id=proprietario_id) 
         return [oficina.to_dict() for oficina in oficinas] 

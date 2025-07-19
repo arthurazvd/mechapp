@@ -28,7 +28,7 @@ class AbstractOficinaRepository():
         raise NotImplementedError
     
     @abstractmethod
-    def listar(self) -> list[Oficina]:
+    def listar(self, proprietario_id: str | None = None) -> list[Oficina]:
         raise NotImplementedError
 
 class OficinaRepository(AbstractOficinaRepository, AbstractSQLAlchemyRepository):
@@ -51,5 +51,10 @@ class OficinaRepository(AbstractOficinaRepository, AbstractSQLAlchemyRepository)
     def consultar_por_proprietario(self, proprietario_id: str) -> Oficina | None:
         return self.session.query(Oficina).filter(Oficina.usuario_id == proprietario_id).first()
     
-    def listar(self) -> list[Oficina]:
-        return self.session.query(Oficina).all()
+    def listar(self, proprietario_id: str | None = None) -> list[Oficina]:
+        query = self.session.query(Oficina)
+
+        if proprietario_id:
+            query = query.filter(Oficina.usuario_id == proprietario_id)
+
+        return query.all();
