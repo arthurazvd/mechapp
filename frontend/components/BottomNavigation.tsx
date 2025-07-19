@@ -39,7 +39,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
 
         <TouchableOpacity
           style={[styles.button, isActive("home") && styles.activeButton]}
-          onPress={() => router.replace("autenticacao/home")}
+          onPress={() => router.replace("agendamento")}
         >
           <Feather
             name="home"
@@ -89,7 +89,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
 
         <TouchableOpacity
           style={[styles.button, isActive("home") && styles.activeButton]}
-          onPress={() => router.replace("autenticacao/home")}
+          onPress={() => router.replace("agendamento")}
         >
           <Feather
             name="home"
