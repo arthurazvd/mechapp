@@ -75,8 +75,7 @@ def test_criar_agendamento_service(
     with pytest.raises(AgendamentoInvalido):
         criar_agendamento(
             uow=uow,
-            data=None,
-            status=StatusAgendamento.PENDENTE.value,
+            status="abluble",
             cliente_id=cliente.id,
             servico_id=servico.id,
         )
@@ -134,7 +133,6 @@ def test_alterar_agendamento_service(
         agendamento_id=agendamento.id,
         nova_data=nova_data,
         novo_status=StatusAgendamento.CONFIRMADO.value,
-        novo_cliente_id=novo_cliente.id,
         novo_servico_id=novo_servico.id
     )
 
@@ -142,7 +140,6 @@ def test_alterar_agendamento_service(
         agendamento_alterado = uow.agendamentos.consultar(agendamento.id)
         assert agendamento_alterado.data.date() == nova_data.date()
         assert agendamento_alterado.status == StatusAgendamento.CONFIRMADO
-        assert agendamento_alterado.cliente.id == novo_cliente.id
         assert agendamento_alterado.servico.id == novo_servico.id
 
     with pytest.raises(AgendamentoNaoEncontrado):
@@ -157,13 +154,6 @@ def test_alterar_agendamento_service(
             uow=uow,
             agendamento_id=agendamento.id,
             novo_status="STATUS_INVALIDO",
-        )
-
-    with pytest.raises(UsuarioNaoEncontrado):
-        alterar_agendamento(
-            uow=uow,
-            agendamento_id=agendamento.id,
-            novo_cliente_id='cliente-nao-existe',
         )
 
     with pytest.raises(ServicoNaoEncontrado):
