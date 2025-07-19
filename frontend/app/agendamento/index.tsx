@@ -15,6 +15,7 @@ import { globalStyles } from "../../styles/globalStyles";
 
 // API
 import { agendamento } from "../../api/index";
+import CustomButton from "../../components/CustomButton";
 
 interface AgendamentosOrganizados {
   pendente_list: agendamento.Agendamento[];
@@ -135,6 +136,20 @@ const TelaAgendamento = () => {
           <Text style={styles.userTitle}>
             Bem vindo de volta, {usuario.nome}
           </Text>
+
+          <View style={{ alignItems: "center", marginVertical: 10 }}>
+            <CustomButton
+              style={{
+                width: "100%",
+                maxWidth: 200,
+                height: 50,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              title="Criar Nova Oficina"
+              onPress={() => router.push("oficina/cadastrar")}
+            />
+          </View>
 
           {possuiAgendamentos ? (
             <>

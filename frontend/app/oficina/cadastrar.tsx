@@ -44,7 +44,7 @@ const CadastrarOficina = () => {
       return;
     }
 
-    return router.replace("/agendamento/servicos");
+    return router.replace("/agendamento/");
   };
 
   return (
@@ -113,7 +113,7 @@ const CadastrarOficina = () => {
             />
           </View>
         </View>
-        <BottomNavigation />
+        <BottomNavigation activeRoute="home" />
       </View>
     </>
   );

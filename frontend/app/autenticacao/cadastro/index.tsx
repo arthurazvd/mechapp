@@ -67,7 +67,7 @@ export default function Index() {
     localStorage.setItem("usuario_atual", JSON.stringify(json.usuario));
 
     // Redirecionando
-    router.replace("/pecas/cadastrar");
+    router.replace("/oficina/cadastrar");
   };
 
   return (
