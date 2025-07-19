@@ -79,6 +79,8 @@ const DetalhesAgendamento = () => {
             <Text style={styles.value}>{agendamento.servico.nome}</Text>
             <Text style={styles.label}>Descrição:</Text>
             <Text style={styles.value}>{agendamento.servico.descricao}</Text>
+            <Text style={styles.label}>Data:</Text>
+            <Text style={styles.value}>{agendamento.data}</Text>
             <Text style={styles.label}>Status:</Text>
             <Text style={[styles.value, { color: "#00A100" }]}>
               {agendamento.status}

@@ -1,6 +1,6 @@
 // React
 import React, { useState, useEffect } from "react";
-import { View, StatusBar, Image, Text } from "react-native";
+import { View, StatusBar, Image, Text, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
@@ -119,45 +119,50 @@ const TelaAgendamento = () => {
           />
         </View>
 
-        <View style={globalStyles.telaServicos}>
+        <ScrollView
+          style={styles.telaServicos}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 20 }}
+        >
           <Text style={styles.userTitle}>
             Bem vindo de volta, {usuario.nome}
           </Text>
+
           <View style={globalStyles.homeButtons}>
             {usuario.tipo == "CLIENTE" ? (
               <>
                 <Text style={styles.title}>Agendamentos Pendentes</Text>
                 {agendamentos_pendentes.map((item) => (
-                  <>
-                    <AgendamentoCard
-                      servico={item.servico.nome}
-                      oficina={item.servico.oficina.nome}
-                      status={item.status}
-                      onPress={() => router.push(`agendamento/${item.id}`)}
-                    />
-                  </>
+                  <AgendamentoCard
+                    key={item.id}
+                    servico={item.servico.nome}
+                    oficina={item.servico.oficina.nome}
+                    data={item.data}
+                    status={item.status}
+                    onPress={() => router.push(`agendamento/${item.id}`)}
+                  />
                 ))}
               </>
             ) : (
-              oficinas.map((item) => <h1>Teste</h1>)
+              oficinas.map((item) => <h1 key={item.id}>Teste</h1>)
             )}
           </View>
 
           <View style={globalStyles.homeButtons}>
             <Text style={styles.title}>Histórico de Agendamentos</Text>
-
             {agendamentos_historico.map((item) => (
-              <>
-                <AgendamentoCard
-                  servico={item.servico.nome}
-                  oficina={item.servico.oficina.nome}
-                  status={item.status}
-                  onPress={() => router.push(`agendamento/${item.id}`)}
-                />
-              </>
+              <AgendamentoCard
+                key={item.id}
+                servico={item.servico.nome}
+                oficina={item.servico.oficina.nome}
+                data={item.data}
+                status={item.status}
+                onPress={() => router.push(`agendamento/${item.id}`)}
+              />
             ))}
           </View>
-        </View>
+        </ScrollView>
+
         <BottomNavigation activeRoute="home" />
       </View>
     </>
@@ -181,6 +186,12 @@ const styles = StyleSheet.create({
     paddingTop: 25,
     color: "white",
     paddingBottom: 5,
+  },
+  telaServicos: {
+    // justifyContent: "flex-start",
+    width: "100%",
+    paddingTop: 30,
+    height: "83%",
   },
 });
 

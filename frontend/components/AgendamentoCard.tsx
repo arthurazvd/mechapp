@@ -8,6 +8,7 @@ type Props = {
   servico: string;
   oficina: string;
   status: Status;
+  data: string;
   onPress: () => void;
 };
 
@@ -15,6 +16,7 @@ export const AgendamentoCard = ({
   servico,
   oficina,
   status,
+  data,
   onPress,
 }: Props) => {
   const statusInfo = {
@@ -31,6 +33,7 @@ export const AgendamentoCard = ({
       <View style={styles.infoBox}>
         <Text style={styles.servico}>{servico}</Text>
         <Text style={styles.oficina}>{oficina}</Text>
+        <Text style={styles.oficina}>{data}</Text>
       </View>
 
       <View style={styles.statusBox}>
