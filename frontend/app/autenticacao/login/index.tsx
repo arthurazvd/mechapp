@@ -42,7 +42,7 @@ const LoginScreen = () => {
     localStorage.setItem("usuario_atual", JSON.stringify(json));
 
     // Redirecionando
-    return router.replace("/agendamento/servicos");
+    return router.replace("/agendamento");
   };
 
   return (

@@ -1,15 +1,16 @@
 import { BASE_URL } from "..";
 
 interface AgendamentoCreate {
-  nome: string;
-  endereco: string;
-  cnpj: string;
+  cliente_id: string;
+  servico_id: string | string[];
+  data: string;
+  status: string;
 }
 
 interface AgendamentoUpdate {
-  nome?: string;
-  endereco?: string;
-  cnpj?: string;
+  servico_id?: string;
+  data?: string;
+  status?: string;
 }
 
 export interface Agendamento {
@@ -40,18 +41,14 @@ export interface Agendamento {
 }
 
 // Função de criação de agendamentos
-export const criar_agendamento = async (
-  proprietario_id: string,
-  oficina: AgendamentoCreate
-) => {
-  const response = await fetch(`${BASE_URL}/oficina/criar`, {
+export const criar_agendamento = async (agendamento: AgendamentoCreate) => {
+  const response = await fetch(`${BASE_URL}/agendamento/criar`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      proprietario_id,
-      ...oficina,
+      ...agendamento,
     }),
   });
   const data = await response.json();
