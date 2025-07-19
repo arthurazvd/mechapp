@@ -37,6 +37,7 @@ app.include_router(usuario_router)
 app.include_router(peca_router)
 app.include_router(oficina_router)
 app.include_router(servico_router)
+app.include_router(agendamento_router)
 
 # Error Handling
 @app.exception_handler(DomainError)
