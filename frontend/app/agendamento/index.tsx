@@ -1,14 +1,25 @@
+// React
 import React, { useState, useEffect } from "react";
 import { View, StatusBar, Image, Text } from "react-native";
-import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { StyleSheet } from "react-native";
+import { useRouter } from "expo-router";
 
+// Componentes
 import { BackButton } from "../../components/BackButton";
 import { BottomNavigation } from "../../components/BottomNavigation";
 import { AgendamentoCard } from "../../components/AgendamentoCard";
 
+// Styles
 import { globalStyles } from "../../styles/globalStyles";
+
+// API
+import { agendamento } from "../../api/index";
+
+interface AgendamentosOrganizados {
+  pendente_list: agendamento.Agendamento[];
+  historic_list: agendamento.Agendamento[];
+}
 
 const TelaAgendamento = () => {
   const router = useRouter();
@@ -20,20 +31,65 @@ const TelaAgendamento = () => {
   );
 
   // Para as oficinas de um mecanico
-  const [oficinas, setOficina] = useState([
-    {
-      id: "",
-      agendamentos: "",
-    },
-  ]);
+  const [oficinas, setOficina] = useState<agendamento.Agendamento[]>([]);
   const fetchOficinasAgendamentos = async () => {
     console.log("Recuperando agendamentos de oficinas...");
   };
 
   // Para um cliente comum
-  const [agendamento, setAgendamentos] = useState({});
+  const [agendamentos_historico, setAgendamentosHistoricos] = useState<
+    agendamento.Agendamento[]
+  >([]);
+  const [agendamentos_pendentes, setAgendamentsPendentes] = useState<
+    agendamento.Agendamento[]
+  >([]);
+
+  const organizarAgendamentos = (
+    agendamentos: agendamento.Agendamento[]
+  ): AgendamentosOrganizados => {
+    // Separar agendamentos pendentes
+    const pendente_list = agendamentos
+      .filter((agendamento) => agendamento.status === "PENDENTE")
+      .sort((a, b) => {
+        return new Date(b.data).getTime() - new Date(a.data).getTime();
+      });
+
+    // Separar outros agendamentos (histórico)
+    const outrosAgendamentos = agendamentos.filter(
+      (agendamento) => agendamento.status !== "PENDENTE"
+    );
+
+    // Definir ordem de prioridade dos status
+    const statusOrder = {
+      CONFIRMADO: 1,
+      CONCLUIDO: 2,
+      CANCELADO: 3,
+      PENDENTE: 4,
+    };
+
+    const historic_list = outrosAgendamentos.sort((a, b) => {
+      // Primeiro critério: ordem de status (CONFIRMADO > CONCLUIDO > CANCELADO)
+      const statusDiff = statusOrder[a.status] - statusOrder[b.status];
+      if (statusDiff !== 0) {
+        return statusDiff;
+      }
+
+      // Segundo critério: ordem de data (mais recente para ma'is antigo)
+      return new Date(b.data).getTime() - new Date(a.data).getTime();
+    });
+
+    return {
+      pendente_list,
+      historic_list,
+    };
+  };
+
   const fetchAgendamentos = async () => {
-    console.log("Recuperando agendamentos...");
+    const data = await agendamento.listar_agendamentos(usuario.id);
+    const { pendente_list, historic_list } = organizarAgendamentos(data);
+
+    setAgendamentsPendentes(pendente_list);
+    setAgendamentosHistoricos(historic_list);
   };
 
   // Verificar se o usuário é um Mecanico
@@ -71,12 +127,16 @@ const TelaAgendamento = () => {
             {usuario.tipo == "CLIENTE" ? (
               <>
                 <Text style={styles.title}>Agendamentos Pendentes</Text>
-                <AgendamentoCard
-                  servico="Troca de óleo"
-                  oficina="Oficina Premium"
-                  status="pendente"
-                  onPress={() => router.push("agendamento/detalhes")}
-                />
+                {agendamentos_pendentes.map((item) => (
+                  <>
+                    <AgendamentoCard
+                      servico={item.servico.nome}
+                      oficina={item.servico.oficina.nome}
+                      status={item.status}
+                      onPress={() => router.push(`agendamento/${item.id}`)}
+                    />
+                  </>
+                ))}
               </>
             ) : (
               oficinas.map((item) => <h1>Teste</h1>)
@@ -86,12 +146,16 @@ const TelaAgendamento = () => {
           <View style={globalStyles.homeButtons}>
             <Text style={styles.title}>Histórico de Agendamentos</Text>
 
-            <AgendamentoCard
-              servico="Troca de óleo"
-              oficina="Oficina Premium"
-              status="pendente"
-              onPress={() => router.push("agendamento/detalhes")}
-            />
+            {agendamentos_historico.map((item) => (
+              <>
+                <AgendamentoCard
+                  servico={item.servico.nome}
+                  oficina={item.servico.oficina.nome}
+                  status={item.status}
+                  onPress={() => router.push(`agendamento/${item.id}`)}
+                />
+              </>
+            ))}
           </View>
         </View>
         <BottomNavigation activeRoute="home" />

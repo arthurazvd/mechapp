@@ -1,8 +1,8 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import React from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { Feather } from "@expo/vector-icons";
 
-type Status = 'pendente' | 'confirmado' | 'cancelado' | 'concluido';
+type Status = "PENDENTE" | "CONFIRMADO" | "CANCELADO" | "CONCLUIDO";
 
 type Props = {
   servico: string;
@@ -11,12 +11,17 @@ type Props = {
   onPress: () => void;
 };
 
-export const AgendamentoCard = ({ servico, oficina, status, onPress }: Props) => {
+export const AgendamentoCard = ({
+  servico,
+  oficina,
+  status,
+  onPress,
+}: Props) => {
   const statusInfo = {
-    pendente: { label: 'Pendente', color: '#FFA500', icon: 'clock' },
-    confirmado: { label: 'Confirmado', color: '#00A100', icon: 'check-circle' },
-    cancelado: { label: 'Cancelado', color: '#D00000', icon: 'x-circle' },
-    concluido: { label: 'Concluído', color: '#007BFF', icon: 'check' },
+    PENDENTE: { label: "Pendente", color: "#FFA500", icon: "clock" },
+    CONFIRMADO: { label: "Confirmado", color: "#00A100", icon: "check-circle" },
+    CANCELADO: { label: "Cancelado", color: "#D00000", icon: "x-circle" },
+    CONCLUIDO: { label: "Concluído", color: "#007BFF", icon: "check" },
   };
 
   const { label, color, icon } = statusInfo[status];
@@ -38,37 +43,37 @@ export const AgendamentoCard = ({ servico, oficina, status, onPress }: Props) =>
 
 export const styles = StyleSheet.create({
   card: {
-    flexDirection: 'row',
-    backgroundColor: '#1e1e1e',
+    flexDirection: "row",
+    backgroundColor: "#1e1e1e",
     padding: 16,
     borderRadius: 8,
     marginBottom: 10,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '90%',
-    alignSelf: 'center',
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "90%",
+    alignSelf: "center",
   },
   infoBox: {
     flex: 1,
   },
   servico: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   oficina: {
-    color: '#aaa',
+    color: "#aaa",
     fontSize: 13,
     marginTop: 4,
   },
   statusBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 6,
   },
   statusText: {
     fontSize: 14,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginLeft: 6,
   },
 });

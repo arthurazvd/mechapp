@@ -141,7 +141,7 @@ class Agendamento:
             "data": self.data.isoformat(),
             "status": str(self.status),
             "cliente": self.cliente.to_dict(),
-            "servico": self.servico.to_dict(),
+            "servico": self.servico.to_dict(include_oficina=True),
             "pecas_do_agendamento": [peca.to_dict() for peca in self.pecas_do_agendamento],
         }
 

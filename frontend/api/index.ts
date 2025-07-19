@@ -6,6 +6,7 @@ import * as usuario from "./models/usuarios";
 import * as peca from "./models/pecas";
 import * as oficina from "./models/oficinas";
 import * as servico from "./models/servicos";
+import * as agendamento from "./models/agendamentos";
 
 // Exportando API
-export { usuario, peca, oficina, servico };
+export { usuario, peca, oficina, servico, agendamento };
