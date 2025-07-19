@@ -66,7 +66,7 @@ const CadastrarOficina = () => {
         </View>
 
         <View style={globalStyles.crudBottom}>
-          <Text style={globalStyles.title}>Cadastrar Peça</Text>
+          <Text style={globalStyles.title}>Cadastrar Oficina</Text>
 
           <CustomInput
             label="Nome"

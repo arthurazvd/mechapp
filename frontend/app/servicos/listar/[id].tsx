@@ -7,6 +7,7 @@ import {
   FlatList,
   StatusBar,
   Image,
+  StyleSheet,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -23,7 +24,9 @@ const ListaServicos = () => {
   const { id } = useLocalSearchParams();
   const insets = useSafeAreaInsets();
   const router = useRouter();
-
+  const [usuario, setUsuario] = useState(
+    JSON.parse(localStorage.getItem("usuario_atual")!)
+  );
   const [servicos, setServicos] = useState([
     {
       id: "",
@@ -33,6 +36,7 @@ const ListaServicos = () => {
       preco_min: 0,
       preco_max: 0,
       servico_id: "",
+      oficina: "",
     },
   ]);
   const [busca, setBusca] = useState("");
@@ -76,20 +80,26 @@ const ListaServicos = () => {
           />
         </View>
 
+        <View style={styles.titleContainer}>
+          <Text style={styles.titleText}>Escolha um Serviço</Text>
+        </View>
+
         <View style={cliStyles.searchContainer}>
           <TextInput
-            placeholder="Buscar peça..."
+            placeholder="Buscar Serviço da Oficina"
             placeholderTextColor="#aaa"
             value={busca}
             onChangeText={setBusca}
             style={cliStyles.searchInput}
           />
-          <TouchableOpacity
-            style={cliStyles.filterButton}
-            onPress={() => router.push(`servicos/cadastrar/${id}`)}
-          >
-            <Feather name="plus" size={20} color="#fff" />
-          </TouchableOpacity>
+          {usuario.tipo == "MECANICO" ? (
+            <TouchableOpacity
+              style={cliStyles.filterButton}
+              onPress={() => router.push(`servicos/cadastrar/${id}`)}
+            >
+              <Feather name="plus" size={20} color="#fff" />
+            </TouchableOpacity>
+          ) : null}
         </View>
 
         <FlatList
@@ -102,7 +112,7 @@ const ListaServicos = () => {
               onPress={() => router.push(`servicos/${item.id}`)}
             >
               <View style={cliStyles.placeholderImage}>
-                <Feather name="package" size={24} color="#888" />
+                <Feather name="layers" size={24} color="#888" />
               </View>
 
               <TouchableOpacity
@@ -119,10 +129,27 @@ const ListaServicos = () => {
           )}
         />
 
-        <BottomNavigation />
+        <BottomNavigation activeRoute="servicos" />
       </View>
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  titleContainer: {
+    alignItems: "center",
+  },
+  titleText: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#fff",
+    textAlign: "center",
+    letterSpacing: 1,
+    textShadowColor: "rgba(0, 0, 0, 0.3)",
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 4,
+    marginTop: 12,
+  },
+});
 
 export default ListaServicos;

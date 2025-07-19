@@ -27,6 +27,9 @@ const VisualizarOficina = () => {
     telefone: "",
   });
   const [loading, setLoading] = useState(true);
+  const [usuario, setUsuario] = useState(
+    JSON.parse(localStorage.getItem("usuario_atual")!)
+  );
 
   const insets = useSafeAreaInsets();
 
@@ -86,12 +89,13 @@ const VisualizarOficina = () => {
             label="Telefone do Proprietario"
             value={proprietario.telefone}
           />
-
-          <CustomButton
-            style={{ width: "80%", maxWidth: 400, height: 50, marginTop: 20 }}
-            title="Editar"
-            onPress={() => router.push(`/oficina/editar/${id}`)}
-          />
+          {usuario.tipo == "BARBEIRO" ? (
+            <CustomButton
+              style={{ width: "80%", maxWidth: 400, height: 50, marginTop: 20 }}
+              title="Editar"
+              onPress={() => router.push(`/oficina/editar/${id}`)}
+            />
+          ) : null}
         </View>
         <BottomNavigation />
       </View>

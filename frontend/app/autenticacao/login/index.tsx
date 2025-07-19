@@ -1,25 +1,20 @@
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  Alert,
-  StatusBar,
-  Image,
-  TouchableOpacity,
-} from "react-native";
-import { useNavigationContainerRef, useRouter } from "expo-router";
+// React
+import React, { useState } from "react";
+import { View, Text, StatusBar, Image, TouchableOpacity } from "react-native";
+import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // Componentes
-import { CustomButton } from "../../components/CustomButton";
-import { CustomInput } from "../../components/CustomInput";
-import { PasswordInput } from "../../components/PasswordInput";
-import { BackButton } from "../../components/BackButton";
+import { CustomButton } from "../../../components/CustomButton";
+import { CustomInput } from "../../../components/CustomInput";
+import { PasswordInput } from "../../../components/PasswordInput";
+import { BackButton } from "../../../components/BackButton";
 
-import { globalStyles } from "../../styles/globalStyles";
+// Styles
+import { globalStyles } from "../../../styles/globalStyles";
 
 // API
-import { usuario } from "../../api/index";
+import { usuario } from "../../../api/index";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -62,7 +57,7 @@ const LoginScreen = () => {
         <View style={globalStyles.initialTop}>
           <BackButton />
           <Image
-            source={require("../../assets/logo-vertical.png")}
+            source={require("../../../assets/logo-vertical.png")}
             style={{ width: 170, height: 190 }}
             resizeMode="contain"
           />
@@ -101,7 +96,9 @@ const LoginScreen = () => {
           />
 
           <Text style={globalStyles.text}>Não tem uma conta?</Text>
-          <TouchableOpacity onPress={() => router.push("/cadastro/escolher")}>
+          <TouchableOpacity
+            onPress={() => router.push("autenticacao/cadastro/escolher")}
+          >
             <Text style={globalStyles.link}>Cadastre-se</Text>
           </TouchableOpacity>
         </View>

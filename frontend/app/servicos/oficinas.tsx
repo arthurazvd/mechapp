@@ -7,23 +7,24 @@ import {
   FlatList,
   StatusBar,
   Image,
+  StyleSheet,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
 import { BottomNavigation } from "../../components/BottomNavigation";
 import { BackButton } from "../../components/BackButton";
 import { globalStyles } from "../../styles/globalStyles";
 import { cliStyles } from "../../styles/cliStyles";
 import { useRouter } from "expo-router";
-
 // API
 import { oficina } from "../../api";
 
 const ListarOficinas = () => {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-
+  const [usuario, setUsuario] = useState(
+    JSON.parse(localStorage.getItem("usuario_atual")!)
+  );
   const [oficinas, setOficinas] = useState([
     {
       id: "",
@@ -49,7 +50,6 @@ const ListarOficinas = () => {
   return (
     <>
       <StatusBar backgroundColor="#A10000" barStyle="light-content" />
-
       <View
         style={[
           globalStyles.container,
@@ -65,6 +65,10 @@ const ListarOficinas = () => {
           />
         </View>
 
+        <View style={styles.titleContainer}>
+          <Text style={styles.titleText}>Escolha uma Oficina</Text>
+        </View>
+
         <View style={cliStyles.searchContainer}>
           <TextInput
             placeholder="Buscar oficina"
@@ -73,12 +77,14 @@ const ListarOficinas = () => {
             onChangeText={setBusca}
             style={cliStyles.searchInput}
           />
-          <TouchableOpacity
-            style={cliStyles.filterButton}
-            onPress={() => router.push("oficina/cadastrar")}
-          >
-            <Feather name="plus" size={20} color="#fff" />
-          </TouchableOpacity>
+          {usuario.tipo == "MECANICO" ? (
+            <TouchableOpacity
+              style={cliStyles.filterButton}
+              onPress={() => router.push("oficina/cadastrar")}
+            >
+              <Feather name="plus" size={20} color="#fff" />
+            </TouchableOpacity>
+          ) : null}
         </View>
 
         <FlatList
@@ -88,12 +94,11 @@ const ListarOficinas = () => {
           renderItem={({ item }) => (
             <TouchableOpacity
               style={cliStyles.card}
-              onPress={() => router.push(`oficina/${item.id}`)}
+              onPress={() => router.push(`servicos/listar/${item.id}`)}
             >
-              <View style={cliStyles.placeholderImage}>
-                <Feather name="package" size={24} color="#888" />
-              </View>
-
+              {/* <View style={cliStyles.placeholderImage}>
+                <Feather name="link" size={12} color="#888" />
+              </View> */}
               <TouchableOpacity
                 style={cliStyles.cardInfo}
                 onPress={() => router.push(`servicos/listar/${item.id}`)}
@@ -104,11 +109,27 @@ const ListarOficinas = () => {
             </TouchableOpacity>
           )}
         />
-
-        <BottomNavigation />
+        <BottomNavigation activeRoute="servicos" />
       </View>
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  titleContainer: {
+    alignItems: "center",
+  },
+  titleText: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#fff",
+    textAlign: "center",
+    letterSpacing: 1,
+    textShadowColor: "rgba(0, 0, 0, 0.3)",
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 4,
+    marginTop: 12,
+  },
+});
 
 export default ListarOficinas;

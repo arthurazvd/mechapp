@@ -23,6 +23,9 @@ import { oficina } from "../../api";
 const ListaOficinas = () => {
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const [usuario, setUsuario] = useState(
+    JSON.parse(localStorage.getItem("usuario_atual")!)
+  );
 
   const [oficinas, setOficinas] = useState([
     {
@@ -67,18 +70,22 @@ const ListaOficinas = () => {
 
         <View style={cliStyles.searchContainer}>
           <TextInput
-            placeholder="Buscar peça..."
+            placeholder="Buscar oficina..."
             placeholderTextColor="#aaa"
             value={busca}
             onChangeText={setBusca}
             style={cliStyles.searchInput}
           />
-          <TouchableOpacity
-            style={cliStyles.filterButton}
-            onPress={() => router.push("oficina/cadastrar")}
-          >
-            <Feather name="plus" size={20} color="#fff" />
-          </TouchableOpacity>
+          {usuario.tipo == "MECANICO" ? (
+            <TouchableOpacity
+              style={cliStyles.filterButton}
+              onPress={() => router.push("oficina/cadastrar")}
+            >
+              <Feather name="plus" size={20} color="#fff" />
+            </TouchableOpacity>
+          ) : (
+            <></>
+          )}
         </View>
 
         <FlatList
@@ -91,7 +98,7 @@ const ListaOficinas = () => {
               onPress={() => router.push(`oficina/${item.id}`)}
             >
               <View style={cliStyles.placeholderImage}>
-                <Feather name="package" size={24} color="#888" />
+                <Feather name="map-pin" size={24} color="#888" />
               </View>
 
               <TouchableOpacity
@@ -105,7 +112,7 @@ const ListaOficinas = () => {
           )}
         />
 
-        <BottomNavigation />
+        <BottomNavigation activeRoute="oficinas" />
       </View>
     </>
   );

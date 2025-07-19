@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { View, Text, Image, StatusBar } from 'react-native';
-import { useRouter } from 'expo-router';
+import React, { useState } from "react";
+import { View, Text, Image, StatusBar } from "react-native";
+import { useRouter } from "expo-router";
 
-import { CustomButton } from '../components/CustomButton';
+import { CustomButton } from "../components/CustomButton";
 
-import { globalStyles } from '../styles/globalStyles';
+import { globalStyles } from "../styles/globalStyles";
 
 export default function Index() {
   const router = useRouter();
@@ -25,12 +25,12 @@ export default function Index() {
           <CustomButton
             title="Entrar"
             style={{ height: 50, width: "90%", maxWidth: 400, marginBottom: 5 }}
-            onPress={() => router.push('/login')}
+            onPress={() => router.push("autenticacao/login")}
           />
           <CustomButton
             title="Cadastre-se"
             style={{ height: 50, width: "90%", maxWidth: 400, marginBottom: 5 }}
-            onPress={() => router.push('/cadastro/escolher')}
+            onPress={() => router.push("autenticacao/cadastro/escolher")}
           />
         </View>
       </View>

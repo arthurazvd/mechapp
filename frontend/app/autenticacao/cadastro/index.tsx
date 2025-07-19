@@ -3,17 +3,17 @@ import { View, Text, StatusBar, TouchableOpacity } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { CustomButton } from "../../components/CustomButton";
-import { CustomInput } from "../../components/CustomInput";
-import { PasswordInput } from "../../components/PasswordInput";
-import { BackButton } from "../../components/BackButton";
+import { CustomButton } from "../../../components/CustomButton";
+import { CustomInput } from "../../../components/CustomInput";
+import { PasswordInput } from "../../../components/PasswordInput";
+import { BackButton } from "../../../components/BackButton";
 
-import { globalStyles } from "../../styles/globalStyles";
-import { cadStyles } from "../../styles/cadStyles";
-import { formatarContato } from "../../utils/formatters";
+import { globalStyles } from "../../../styles/globalStyles";
+import { cadStyles } from "../../../styles/cadStyles";
+import { formatarContato } from "../../../utils/formatters";
 
 // API
-import { usuario } from "../../api/index";
+import { usuario } from "../../../api/index";
 
 export default function Index() {
   const router = useRouter();

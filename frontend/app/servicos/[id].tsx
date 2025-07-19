@@ -15,6 +15,9 @@ import { servico } from "../../api/index";
 const VisualizarServico = () => {
   const router = useRouter();
   const { id } = useLocalSearchParams();
+  const [usuario, setUsuario] = useState(
+    JSON.parse(localStorage.getItem("usuario_atual")!)
+  );
 
   const [nome, setNome] = useState("");
   const [descricao, setDescricao] = useState("");
@@ -61,11 +64,19 @@ const VisualizarServico = () => {
           <InfoView label="Tempo estimado" value={tempo} />
           <InfoView label="Preço Mínimo" value={precoMin} />
           <InfoView label="Preço Máximo" value={precoMax} />
-          <CustomButton
-            style={{ width: "80%", maxWidth: 400, height: 50, marginTop: 20 }}
-            title="Editar"
-            onPress={() => router.push(`/servicos/editar/${id}`)}
-          />
+          {usuario.tipo == "MECANICO" ? (
+            <CustomButton
+              style={{ width: "80%", maxWidth: 400, height: 50, marginTop: 20 }}
+              title="Editar"
+              onPress={() => router.push(`/servicos/editar/${id}`)}
+            />
+          ) : (
+            <CustomButton
+              style={{ width: "80%", maxWidth: 400, height: 50, marginTop: 20 }}
+              title="Agendar"
+              onPress={() => router.push(`/agendamento/agendar/${id}`)}
+            />
+          )}
         </View>
         <BottomNavigation />
       </View>
