@@ -39,11 +39,32 @@ const ListaOficinas = () => {
 
   useEffect(() => {
     const fetchPecas = async () => {
-      const data = await oficina.listar_oficinas();
+      var data = [
+        {
+          id: "",
+          nome: "",
+          endereco: "",
+          proprietario: {},
+        },
+      ];
+
+      if (usuario.tipo === "MECANICO") {
+        data = await oficina.listar_oficinas(usuario.id);
+      } else {
+        data = await oficina.listar_oficinas();
+      }
       setOficinas(data);
     };
     fetchPecas();
   }, []);
+
+  const resolveEditor = (item: any) => {
+    if (usuario.tipo === "MECANICO") {
+      router.push(`oficina/editar/${item.id}`);
+    } else {
+      router.push(`oficina/${item.id}`);
+    }
+  };
 
   const oficinasFiltradas = oficinas.filter((peca) =>
     peca.nome.toLowerCase().includes(busca.toLowerCase())
@@ -95,7 +116,7 @@ const ListaOficinas = () => {
           renderItem={({ item }) => (
             <TouchableOpacity
               style={cliStyles.card}
-              onPress={() => router.push(`oficina/${item.id}`)}
+              onPress={() => resolveEditor(item)}
             >
               <View style={cliStyles.placeholderImage}>
                 <Feather name="map-pin" size={24} color="#888" />
@@ -103,7 +124,7 @@ const ListaOficinas = () => {
 
               <TouchableOpacity
                 style={cliStyles.cardInfo}
-                onPress={() => router.push(`oficina/${item.id}`)}
+                onPress={() => resolveEditor(item)}
               >
                 <Text style={cliStyles.cardTitle}>{item.nome}</Text>
                 <Text style={cliStyles.cardSubtitle}>{item.endereco}</Text>

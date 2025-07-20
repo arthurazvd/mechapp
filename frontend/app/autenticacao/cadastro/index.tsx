@@ -67,7 +67,8 @@ export default function Index() {
     localStorage.setItem("usuario_atual", JSON.stringify(json.usuario));
 
     // Redirecionando
-    router.replace("/oficina/cadastrar");
+    if (tipo === "MECANICO") router.replace("/oficina/cadastrar");
+    else router.replace("/agendamento");
   };
 
   return (

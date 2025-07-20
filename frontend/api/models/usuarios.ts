@@ -32,7 +32,6 @@ export const registar_usuario = async (usuario: UsuarioCreate) => {
 
 // Função de autenticação
 export const autenticar_usuario = async (email: string, senha: string) => {
-  console.log(JSON.stringify({ email, senha }));
   const response = await fetch(`${BASE_URL}/usuario/autenticar`, {
     method: "POST",
     headers: {

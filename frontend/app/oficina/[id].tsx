@@ -97,7 +97,7 @@ const VisualizarOficina = () => {
             />
           ) : null}
         </View>
-        <BottomNavigation />
+        <BottomNavigation activeRoute="oficinas" />
       </View>
     </>
   );

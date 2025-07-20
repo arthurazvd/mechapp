@@ -46,12 +46,10 @@ const ListaServicos = () => {
       const data = await servico.listar_servicos(id);
 
       if (data.error) {
-        console.log(data.mensagem);
         router.push(`servicos/escolher`);
         return;
       }
 
-      console.log(data);
       setServicos(data);
     };
     fetchPecas();

@@ -151,7 +151,7 @@ const EditarPecas = () => {
             />
           </View>
         </View>
-        <BottomNavigation />
+        <BottomNavigation activeRoute="oficinas" />
       </View>
     </>
   );

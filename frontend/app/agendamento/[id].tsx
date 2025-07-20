@@ -47,7 +47,6 @@ const DetalhesAgendamento = () => {
     const fetchAgendamento = async () => {
       const data = await agendamento_api.consultar_agendamento(id);
       setAgendamento(data);
-      console.log(data);
     };
     fetchAgendamento();
   }, []);
