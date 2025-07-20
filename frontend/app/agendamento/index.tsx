@@ -187,19 +187,21 @@ const TelaAgendamento = () => {
             Bem vindo de volta, {usuario.nome}
           </Text>
 
-          <View style={{ alignItems: "center", marginVertical: 10 }}>
-            <CustomButton
-              style={{
-                width: "100%",
-                maxWidth: 200,
-                height: 50,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-              title="Criar Nova Oficina"
-              onPress={() => router.push("oficina/cadastrar")}
-            />
-          </View>
+          {usuario.tipo === "MECANICO" ? (
+            <View style={{ alignItems: "center", marginVertical: 10 }}>
+              <CustomButton
+                style={{
+                  width: "100%",
+                  maxWidth: 200,
+                  height: 50,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                title="Criar Nova Oficina"
+                onPress={() => router.push("oficina/cadastrar")}
+              />
+            </View>
+          ) : null}
 
           {possuiAgendamentos ? (
             usuario.tipo === "CLIENTE" ? (
