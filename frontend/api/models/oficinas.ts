@@ -1,5 +1,13 @@
 import { BASE_URL } from "..";
 
+export interface Oficina {
+  id: string;
+  nome: string;
+  cnpj: string;
+  endereco: string;
+  proprietario: {};
+}
+
 interface OficinaCreate {
   nome: string;
   endereco: string;
@@ -72,8 +80,13 @@ export const consultar_oficina = async (oficina_id: string | string[]) => {
 };
 
 // Listar oficinas Existentes
-export const listar_oficinas = async () => {
-  const response = await fetch(`${BASE_URL}/oficina/listar`, {
+export const listar_oficinas = async (proprietario_id?: string) => {
+  var url = `${BASE_URL}/oficina/listar`;
+  if (proprietario_id) {
+    url = `${url}?proprietario_id=${proprietario_id}`;
+  }
+
+  const response = await fetch(url, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

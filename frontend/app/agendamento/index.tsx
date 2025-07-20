@@ -1,23 +1,31 @@
 // React
 import React, { useState, useEffect } from "react";
-import { View, StatusBar, Image, Text, ScrollView } from "react-native";
+import {
+  View,
+  StatusBar,
+  Image,
+  Text,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 
 // Componentes
 import { BackButton } from "../../components/BackButton";
 import { BottomNavigation } from "../../components/BottomNavigation";
 import { AgendamentoCard } from "../../components/AgendamentoCard";
+import CustomButton from "../../components/CustomButton";
+import HorizontalRule from "../../components/HorizontalRule";
 
 // Styles
 import { globalStyles } from "../../styles/globalStyles";
 
 // API
-import { agendamento } from "../../api/index";
-import CustomButton from "../../components/CustomButton";
+import { agendamento, oficina } from "../../api/index";
 
 interface AgendamentosOrganizados {
+  oficina?: string;
   pendente_list: agendamento.Agendamento[];
   historic_list: agendamento.Agendamento[];
 }
@@ -26,20 +34,21 @@ const TelaAgendamento = () => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
-  // Usuário do sistema
-  const [usuario, setUsuario] = useState(
-    JSON.parse(localStorage.getItem("usuario_atual")!)
-  );
+  const [usuario, setUsuario] = useState(() => {
+    const data = localStorage.getItem("usuario_atual");
+    return data ? JSON.parse(data) : null;
+  });
 
+  const [loading, setLoading] = useState(true);
   const [possuiAgendamentos, setPossuiAgendamentos] = useState(false);
 
-  // Para as oficinas de um mecanico
-  const [oficinas, setOficina] = useState<agendamento.Agendamento[]>([]);
-  const fetchOficinasAgendamentos = async () => {
-    console.log("Recuperando agendamentos de oficinas...");
-  };
+  // Para mecânico
+  const [oficinas, setOficina] = useState<oficina.Oficina[]>([]);
+  const [oficinaAgendamentos, setOficinaAgendamentos] = useState<
+    AgendamentosOrganizados[]
+  >([]);
 
-  // Para um cliente comum
+  // Para cliente
   const [agendamentos_historico, setAgendamentosHistoricos] = useState<
     agendamento.Agendamento[]
   >([]);
@@ -50,19 +59,12 @@ const TelaAgendamento = () => {
   const organizarAgendamentos = (
     agendamentos: agendamento.Agendamento[]
   ): AgendamentosOrganizados => {
-    // Separar agendamentos pendentes
     const pendente_list = agendamentos
-      .filter((agendamento) => agendamento.status === "PENDENTE")
-      .sort((a, b) => {
-        return new Date(b.data).getTime() - new Date(a.data).getTime();
-      });
+      .filter((a) => a.status === "PENDENTE")
+      .sort((a, b) => new Date(b.data).getTime() - new Date(a.data).getTime());
 
-    // Separar outros agendamentos (histórico)
-    const outrosAgendamentos = agendamentos.filter(
-      (agendamento) => agendamento.status !== "PENDENTE"
-    );
+    const outros = agendamentos.filter((a) => a.status !== "PENDENTE");
 
-    // Definir ordem de prioridade dos status
     const statusOrder = {
       CONFIRMADO: 1,
       CONCLUIDO: 2,
@@ -70,45 +72,93 @@ const TelaAgendamento = () => {
       PENDENTE: 4,
     };
 
-    const historic_list = outrosAgendamentos.sort((a, b) => {
-      // Primeiro critério: ordem de status (CONFIRMADO > CONCLUIDO > CANCELADO)
+    const historic_list = outros.sort((a, b) => {
       const statusDiff = statusOrder[a.status] - statusOrder[b.status];
-      if (statusDiff !== 0) {
-        return statusDiff;
-      }
-
-      // Segundo critério: ordem de data (mais recente para ma'is antigo)
+      if (statusDiff !== 0) return statusDiff;
       return new Date(b.data).getTime() - new Date(a.data).getTime();
     });
 
-    return {
-      pendente_list,
-      historic_list,
-    };
+    return { pendente_list, historic_list };
+  };
+
+  const fetchOficinasAgendamentos = async () => {
+    try {
+      const data = await oficina.listar_oficinas(usuario.id);
+      if (data.length === 0) return;
+
+      setOficina(data);
+      setPossuiAgendamentos(true);
+
+      const todasAgendas: AgendamentosOrganizados[] = [];
+
+      for (const ofi of data) {
+        const agendamentos = await agendamento.listar_agendamentos(
+          undefined,
+          ofi.id
+        );
+
+        if (agendamentos.length > 0) {
+          const { pendente_list, historic_list } =
+            organizarAgendamentos(agendamentos);
+          todasAgendas.push({
+            oficina: ofi.nome,
+            pendente_list,
+            historic_list,
+          });
+        } else {
+          todasAgendas.push({
+            oficina: ofi.nome,
+            pendente_list: [],
+            historic_list: [],
+          });
+        }
+      }
+      setOficinaAgendamentos(todasAgendas);
+    } catch (error) {
+      console.error("Erro ao carregar oficinas:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const fetchAgendamentos = async () => {
-    const data = await agendamento.listar_agendamentos(usuario.id);
+    try {
+      const data = await agendamento.listar_agendamentos(usuario.id);
+      if (data.length === 0) return;
 
-    if (data.length <= 0) {
-      return;
+      const { pendente_list, historic_list } = organizarAgendamentos(data);
+      setAgendamentsPendentes(pendente_list);
+      setAgendamentosHistoricos(historic_list);
+      setPossuiAgendamentos(true);
+    } catch (error) {
+      console.error("Erro ao carregar agendamentos:", error);
+    } finally {
+      setLoading(false);
     }
-
-    const { pendente_list, historic_list } = organizarAgendamentos(data);
-
-    setAgendamentsPendentes(pendente_list);
-    setAgendamentosHistoricos(historic_list);
-    setPossuiAgendamentos(true);
   };
 
-  // Verificar se o usuário é um Mecanico
   useEffect(() => {
-    if (usuario.tipo == "MECANICO") {
+    if (!usuario) return;
+
+    if (usuario.tipo === "MECANICO") {
       fetchOficinasAgendamentos();
     } else {
       fetchAgendamentos();
     }
-  }, [usuario]);
+  }, []);
+
+  if (loading) {
+    return (
+      <View
+        style={[
+          globalStyles.container,
+          { justifyContent: "center", alignItems: "center" },
+        ]}
+      >
+        <Text style={{ color: "white", fontSize: 18 }}>Carregando...</Text>
+      </View>
+    );
+  }
 
   return (
     <>
@@ -152,48 +202,95 @@ const TelaAgendamento = () => {
           </View>
 
           {possuiAgendamentos ? (
-            <>
-              <View style={globalStyles.homeButtons}>
-                {usuario.tipo == "CLIENTE" ? (
-                  <>
-                    <Text style={styles.title}>Agendamentos Pendentes</Text>
-                    {agendamentos_pendentes.length > 0 ? (
-                      agendamentos_pendentes.map((item) => (
+            usuario.tipo === "CLIENTE" ? (
+              <>
+                <View style={globalStyles.homeButtons}>
+                  <Text style={styles.title}>Agendamentos Pendentes</Text>
+                  {agendamentos_pendentes.length > 0 ? (
+                    agendamentos_pendentes.map((item) => (
+                      <AgendamentoCard
+                        key={item.id}
+                        servico={item.servico.nome}
+                        oficina={item.servico.oficina.nome}
+                        data={item.data}
+                        status={item.status}
+                        onPress={() => router.push(`agendamento/${item.id}`)}
+                      />
+                    ))
+                  ) : (
+                    <Text style={styles.normalText}>
+                      Sem agendamentos pendentes
+                    </Text>
+                  )}
+                </View>
+                <View style={globalStyles.homeButtons}>
+                  <Text style={styles.title}>Histórico de Agendamentos</Text>
+                  {agendamentos_historico.length > 0 ? (
+                    agendamentos_historico.map((item) => (
+                      <AgendamentoCard
+                        key={item.id}
+                        servico={item.servico.nome}
+                        oficina={item.servico.oficina.nome}
+                        data={item.data}
+                        status={item.status}
+                        onPress={() => router.push(`agendamento/${item.id}`)}
+                      />
+                    ))
+                  ) : (
+                    <Text style={styles.normalText}>
+                      Sem agendamentos no histórico
+                    </Text>
+                  )}
+                </View>
+              </>
+            ) : (
+              oficinaAgendamentos.map((item) => (
+                <View key={item.oficina}>
+                  <HorizontalRule />
+                  <Text style={styles.title}>{item.oficina}</Text>
+                  <View style={globalStyles.homeButtons}>
+                    <Text style={styles.oficinaTitle}>
+                      Agendamentos Pendentes
+                    </Text>
+                    {item.pendente_list.length > 0 ? (
+                      item.pendente_list.map((ag) => (
                         <AgendamentoCard
-                          key={item.id}
-                          servico={item.servico.nome}
-                          oficina={item.servico.oficina.nome}
-                          data={item.data}
-                          status={item.status}
-                          onPress={() => router.push(`agendamento/${item.id}`)}
+                          key={ag.id}
+                          servico={ag.servico.nome}
+                          oficina={ag.servico.oficina.nome}
+                          data={ag.data}
+                          status={ag.status}
+                          onPress={() => router.push(`agendamento/${ag.id}`)}
                         />
                       ))
                     ) : (
-                      <Text style={styles.normalText}>
-                        Sem agendamentos pendentes
-                      </Text>
+                      <Text style={styles.normalText}>Sem pendentes</Text>
                     )}
-                  </>
-                ) : (
-                  oficinas.map((item) => <h1 key={item.id}>Teste</h1>)
-                )}
-              </View>
-              <View style={globalStyles.homeButtons}>
-                <Text style={styles.title}>Histórico de Agendamentos</Text>
-                {agendamentos_historico.map((item) => (
-                  <AgendamentoCard
-                    key={item.id}
-                    servico={item.servico.nome}
-                    oficina={item.servico.oficina.nome}
-                    data={item.data}
-                    status={item.status}
-                    onPress={() => router.push(`agendamento/${item.id}`)}
-                  />
-                ))}
-              </View>
-            </>
+                  </View>
+                  <View style={globalStyles.homeButtons}>
+                    <Text style={styles.oficinaTitle}>
+                      Histórico de Agendamentos
+                    </Text>
+                    {item.historic_list.length > 0 ? (
+                      item.historic_list.map((ag) => (
+                        <AgendamentoCard
+                          key={ag.id}
+                          servico={ag.servico.nome}
+                          oficina={ag.servico.oficina.nome}
+                          data={ag.data}
+                          status={ag.status}
+                          onPress={() => router.push(`agendamento/${ag.id}`)}
+                        />
+                      ))
+                    ) : (
+                      <Text style={styles.normalText}>Sem histórico</Text>
+                    )}
+                  </View>
+                </View>
+              ))
+            )
           ) : (
-            <Text style={styles.normalText}>Não possui agendamentos. </Text>
+            <Text style={styles.normalText}>Não possui agendamentos.</Text>
           )}
         </ScrollView>
 
@@ -211,6 +308,13 @@ const styles = StyleSheet.create({
     margin: 10,
     color: "white",
     paddingBottom: 5,
+  },
+  oficinaTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "center",
+    margin: 5,
+    color: "white",
   },
   normalText: {
     fontSize: 14,
@@ -230,7 +334,6 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
   },
   telaServicos: {
-    // justifyContent: "flex-start",
     width: "100%",
     paddingTop: 30,
     height: "83%",
