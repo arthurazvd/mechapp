@@ -4,15 +4,12 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { CustomInput } from "../../../components/CustomInput";
-import { ExpandingTextArea } from "../../../components/ExpandingTextArea";
 import { CustomButton } from "../../../components/CustomButton";
-import { ImagePickerInput } from "../../../components/ImagePickerInput";
 import { BackButton } from "../../../components/BackButton";
 import { BottomNavigation } from "../../../components/BottomNavigation";
 
 import { globalStyles } from "../../../styles/globalStyles";
 import { pecStyles } from "../../../styles/pecStyles";
-import { formatarPreco } from "../../../utils/formatters";
 
 // API
 import { oficina } from "../../../api";

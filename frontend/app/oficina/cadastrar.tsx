@@ -1,18 +1,15 @@
 import React, { useState } from "react";
 import { View, Text, Image, StatusBar } from "react-native";
-import { useRootNavigationState, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { CustomInput } from "../../components/CustomInput";
-import { ExpandingTextArea } from "../../components/ExpandingTextArea";
 import { CustomButton } from "../../components/CustomButton";
-import { ImagePickerInput } from "../../components/ImagePickerInput";
 import { BackButton } from "../../components/BackButton";
 import { BottomNavigation } from "../../components/BottomNavigation";
 
 import { globalStyles } from "../../styles/globalStyles";
 import { pecStyles } from "../../styles/pecStyles";
-import { formatarPreco } from "../../utils/formatters";
 
 // API
 import { oficina, usuario } from "../../api";

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { View, StatusBar, Image, Text, FlatList } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { router, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 
 import { BackButton } from "../../components/BackButton";
 import { BottomNavigation } from "../../components/BottomNavigation";

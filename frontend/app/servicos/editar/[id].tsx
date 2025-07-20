@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { View, Text, StatusBar } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { Picker } from "@react-native-picker/picker";
-import { Checkbox } from "expo-checkbox";
 import { Image } from "react-native";
 import { CustomInput } from "../../../components/CustomInput";
 import { CustomButton } from "../../../components/CustomButton";

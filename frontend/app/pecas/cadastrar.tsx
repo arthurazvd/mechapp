@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, Image, StatusBar } from "react-native";
-import { useRootNavigationState, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { CustomInput } from "../../components/CustomInput";
