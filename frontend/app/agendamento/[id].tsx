@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 import { View, StatusBar, Image, Text, FlatList } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { router, useLocalSearchParams } from "expo-router";
 
 import { BackButton } from "../../components/BackButton";
 import { BottomNavigation } from "../../components/BottomNavigation";
 import { globalStyles } from "../../styles/globalStyles";
-import { useLocalSearchParams } from "expo-router";
+import CustomButton from "../../components/CustomButton";
+
+// Styles
+import { servStyles } from "../../styles/servStyles";
 
 // API
 import { agendamento as agendamento_api } from "../../api/index";
@@ -14,6 +18,12 @@ import { agendamento as agendamento_api } from "../../api/index";
 const DetalhesAgendamento = () => {
   const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams();
+
+  const [statusColor, setStatusColor] = useState("#00A100");
+  const [usuario, setUsuario] = useState(() => {
+    const data = localStorage.getItem("usuario_atual");
+    return data ? JSON.parse(data) : null;
+  });
 
   const [agendamento, setAgendamento] = useState<agendamento_api.Agendamento>({
     id: "",
@@ -51,6 +61,37 @@ const DetalhesAgendamento = () => {
     fetchAgendamento();
   }, []);
 
+  // Alterar cor de acordo com valor de status
+  useEffect(() => {
+    if (agendamento.status === "PENDENTE") {
+      setStatusColor("#FFA500");
+    } else if (agendamento.status === "CANCELADO") {
+      setStatusColor("#D00000");
+    } else if (agendamento.status === "CONFIRMADO") {
+      setStatusColor("#00A100");
+    } else if (agendamento.status === "CONCLUIDO") {
+      setStatusColor("#007BFF");
+    }
+  }, [agendamento]);
+
+  const handleEstado = async (estado: string) => {
+    const data = await agendamento_api.alterar_agendamento(
+      { status: estado },
+      id
+    );
+
+    alert(data.mensagem);
+    if (data.error) {
+      return;
+    }
+
+    const fetchAgendamento = async () => {
+      const data = await agendamento_api.consultar_agendamento(id);
+      setAgendamento(data);
+    };
+    fetchAgendamento();
+  };
+
   return (
     <>
       <StatusBar backgroundColor="#A10000" barStyle="light-content" />
@@ -69,50 +110,103 @@ const DetalhesAgendamento = () => {
           />
         </View>
 
-        <View style={globalStyles.telaServicos}>
-          <Text style={globalStyles.title}>Agendamento</Text>
+        <ScrollView
+          style={styles.telaServicos}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 20 }}
+        >
+          <View style={globalStyles.telaServicos}>
+            <Text style={globalStyles.title}>Agendamento</Text>
 
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Serviço</Text>
-            <Text style={styles.label}>Nome:</Text>
-            <Text style={styles.value}>{agendamento.servico.nome}</Text>
-            <Text style={styles.label}>Descrição:</Text>
-            <Text style={styles.value}>{agendamento.servico.descricao}</Text>
-            <Text style={styles.label}>Data:</Text>
-            <Text style={styles.value}>{agendamento.data}</Text>
-            <Text style={styles.label}>Status:</Text>
-            <Text style={[styles.value, { color: "#00A100" }]}>
-              {agendamento.status}
-            </Text>
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Serviço</Text>
+              <Text style={styles.label}>Nome:</Text>
+              <Text style={styles.value}>{agendamento.servico.nome}</Text>
+              <Text style={styles.label}>Descrição:</Text>
+              <Text style={styles.value}>{agendamento.servico.descricao}</Text>
+              <Text style={styles.label}>Data:</Text>
+              <Text style={styles.value}>{agendamento.data}</Text>
+              <Text style={styles.label}>Status:</Text>
+              <Text style={[styles.value, { color: statusColor }]}>
+                {agendamento.status}
+              </Text>
+            </View>
+
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Preço estimado</Text>
+              <Text style={styles.value}>
+                R${" "}
+                {(
+                  (agendamento.servico.preco_min +
+                    agendamento.servico.preco_max) /
+                  2
+                ).toFixed(2)}
+              </Text>
+            </View>
+
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Peças incluídas</Text>
+              <FlatList
+                data={agendamento.pecas_do_agendamento}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                  <View style={styles.pecaItem}>
+                    <Text style={styles.value}>{item.nome}</Text>
+                    <Text style={styles.quantidade}>x{item.quantidade}</Text>
+                  </View>
+                )}
+              />
+            </View>
+
+            {usuario.tipo === "CLIENTE" ? (
+              <View style={servStyles.crudButtons}>
+                <CustomButton
+                  style={{
+                    width: "100%",
+                    maxWidth: 300,
+                    height: 50,
+                    backgroundColor: "#D00000",
+                  }}
+                  title="Cancelar"
+                  onPress={() => handleEstado("CANCELADO")}
+                />
+              </View>
+            ) : (
+              <View style={servStyles.crudButtons}>
+                <CustomButton
+                  style={{
+                    width: "30%",
+                    maxWidth: 150,
+                    height: 50,
+                    backgroundColor: "#D00000",
+                  }}
+                  title="Cancelar"
+                  onPress={() => handleEstado("CANCELADO")}
+                />
+                <CustomButton
+                  style={{
+                    width: "30%",
+                    maxWidth: 150,
+                    height: 50,
+                    backgroundColor: "#00A100",
+                  }}
+                  title="Confirmar"
+                  onPress={() => handleEstado("CONFIRMADO")}
+                />
+                <CustomButton
+                  style={{
+                    width: "30%",
+                    maxWidth: 150,
+                    height: 50,
+                    backgroundColor: "#007BFF",
+                  }}
+                  title="Completar"
+                  onPress={() => handleEstado("CONCLUIDO")}
+                />
+              </View>
+            )}
           </View>
-
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Preço estimado</Text>
-            <Text style={styles.value}>
-              R${" "}
-              {(
-                (agendamento.servico.preco_min +
-                  agendamento.servico.preco_max) /
-                2
-              ).toFixed(2)}
-            </Text>
-          </View>
-
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Peças incluídas</Text>
-            <FlatList
-              data={agendamento.pecas_do_agendamento}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => (
-                <View style={styles.pecaItem}>
-                  <Text style={styles.value}>{item.nome}</Text>
-                  <Text style={styles.quantidade}>x{item.quantidade}</Text>
-                </View>
-              )}
-            />
-          </View>
-        </View>
-
+        </ScrollView>
         <BottomNavigation />
       </View>
     </>
@@ -154,5 +248,10 @@ const styles = StyleSheet.create({
   quantidade: {
     color: "#ccc",
     fontSize: 14,
+  },
+  telaServicos: {
+    width: "100%",
+    paddingTop: 30,
+    height: "83%",
   },
 });

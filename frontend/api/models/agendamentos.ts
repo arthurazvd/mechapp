@@ -57,15 +57,15 @@ export const criar_agendamento = async (agendamento: AgendamentoCreate) => {
 
 // Alterar um agendamento existente
 export const alterar_agendamento = async (
-  oficina: AgendamentoUpdate,
-  oficina_id: string | string[]
+  agendamento: AgendamentoUpdate,
+  agendamento_id: string | string[]
 ) => {
-  const response = await fetch(`${BASE_URL}/oficina/${oficina_id}`, {
+  const response = await fetch(`${BASE_URL}/agendamento/${agendamento_id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(oficina),
+    body: JSON.stringify(agendamento),
   });
   const data = await response.json();
   return data;
